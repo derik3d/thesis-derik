@@ -8,17 +8,37 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import idscrawler.entities.ResponseBigg;
+import idscrawler.entities.ResponseData;
 import idscrawler.entities.ResponseKegg;
 
 @Service
 public class IdCrawlerService {
-	
+
 	private static final String kegg2PubchemUrl = "http://rest.kegg.jp/conv/pubchem/";
+	private static final String bigg2KeggUrl = "http://bigg.ucsd.edu/api/v2/universal/metabolites/";
 	
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	public ResponseKegg fromKeggIdGetPubchem(String id) {
+	
+	
+	public ResponseData fromBiggIdGetKegg(String id) {
+		
+
+		try {
+			
+			ResponseBigg resp = restTemplate.getForObject(bigg2KeggUrl+id,ResponseBigg.class);		
+			return ResponseData.responseDataBuilder(resp);
+			
+		} catch (RestClientException e) {
+			System.out.println("400 from bigg");
+			return null;
+		}
+		
+				
+	}
+
+	public ResponseData fromKeggIdGetPubchem(String id) {
 		
 		try {
 			ResponseEntity<String> resp = restTemplate.getForEntity( kegg2PubchemUrl + id, String.class);		
@@ -45,32 +65,22 @@ public class IdCrawlerService {
 						
 						res.setCpd(cpd);
 						res.setPubchem(pubchem);
-						return res;
+						return ResponseData.responseDataBuilder(res);
 						
 					}
 				
 				}catch(Exception ex) {
 					System.out.println("not reading well kegg response");
-					//ex.printStackTrace();
 					return null;
 				}
 			}
 		} catch (RestClientException e) {
 			System.out.println("400 from kegg");
 			return null;
-			//e.printStackTrace();
 		}
 		
 		return null;
 		
 	}
 	
-	public ResponseBigg fromBiggIdGetKegg(String id) {
-		
-		
-		
-		return null;
-		
-	}
-
 }

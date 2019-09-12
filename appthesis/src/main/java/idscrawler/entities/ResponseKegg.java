@@ -1,6 +1,6 @@
 package idscrawler.entities;
 
-public class ResponseKegg {
+public class ResponseKegg extends ResponseData{
 
 	String cpd;
 	String pubchem;
@@ -10,12 +10,14 @@ public class ResponseKegg {
 	}
 	public void setCpd(String cpd) {
 		this.cpd = cpd;
+		this.query = cpd;
 	}
 	public String getPubchem() {
 		return pubchem;
 	}
 	public void setPubchem(String pubchem) {
 		this.pubchem = pubchem;
+		this.result = pubchem;
 	}
 
 }
