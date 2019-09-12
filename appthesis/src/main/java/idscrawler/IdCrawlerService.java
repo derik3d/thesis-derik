@@ -10,16 +10,35 @@ import org.springframework.web.client.RestTemplate;
 import idscrawler.entities.ResponseBigg;
 import idscrawler.entities.ResponseData;
 import idscrawler.entities.ResponseKegg;
+import idscrawler.entities.ResponseSMILESPubchem;
 
 @Service
 public class IdCrawlerService {
 
-	private static final String kegg2PubchemUrl = "http://rest.kegg.jp/conv/pubchem/";
-	private static final String bigg2KeggUrl = "http://bigg.ucsd.edu/api/v2/universal/metabolites/";
+	private static final String pubchem2SmilesUrl = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/%s/property/CanonicalSmiles/json";
+	private static final String kegg2PubchemUrl = "http://rest.kegg.jp/conv/pubchem/%s";
+	private static final String bigg2KeggUrl = "http://bigg.ucsd.edu/api/v2/universal/metabolites/%s";
 	
 	@Autowired
 	private RestTemplate restTemplate;
+
 	
+	
+	public ResponseData fromPubchemIdGetSmiles(String id) {
+		
+
+		try {
+			
+			ResponseSMILESPubchem resp = restTemplate.getForObject(String.format(pubchem2SmilesUrl, id),ResponseSMILESPubchem.class);		
+			return ResponseData.responseDataBuilder(resp);
+			
+		} catch (RestClientException e) {
+			System.out.println("400 from pubchem");
+			return null;
+		}
+		
+				
+	}
 	
 	
 	public ResponseData fromBiggIdGetKegg(String id) {
@@ -27,7 +46,7 @@ public class IdCrawlerService {
 
 		try {
 			
-			ResponseBigg resp = restTemplate.getForObject(bigg2KeggUrl+id,ResponseBigg.class);		
+			ResponseBigg resp = restTemplate.getForObject(String.format(bigg2KeggUrl, id),ResponseBigg.class);		
 			return ResponseData.responseDataBuilder(resp);
 			
 		} catch (RestClientException e) {
@@ -41,7 +60,7 @@ public class IdCrawlerService {
 	public ResponseData fromKeggIdGetPubchem(String id) {
 		
 		try {
-			ResponseEntity<String> resp = restTemplate.getForEntity( kegg2PubchemUrl + id, String.class);		
+			ResponseEntity<String> resp = restTemplate.getForEntity( String.format(kegg2PubchemUrl, id), String.class);		
 
 			if(resp.getStatusCode() == HttpStatus.OK) {
 				
