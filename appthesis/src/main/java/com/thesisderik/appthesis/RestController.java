@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import idscrawler.IdCrawlerService;
+import idscrawler.entities.ResponseBigg;
 import idscrawler.entities.ResponseKegg;
 
 @Controller
@@ -28,7 +29,7 @@ public class RestController {
 	
 	@RequestMapping("kegg2pubchem/")
 	@ResponseBody
-	public ResponseEntity kegg2pubchem(@RequestParam(value="id", defaultValue="") String id) {
+	public ResponseEntity<ResponseKegg> kegg2pubchem(@RequestParam(value="id", defaultValue="") String id) {
 		
 		ResponseKegg res = idCrawlerService.fromKeggIdGetPubchem(id);
 		
@@ -37,16 +38,19 @@ public class RestController {
 	    }
 		
 		return new ResponseEntity<>(res,HttpStatus.OK);
-		
-		//ResponseKegg res = new ResponseKegg();
-		//res.setCpd(id);
-		//return res;
 	}
 	
 	@RequestMapping("bigg2kegg/")
 	@ResponseBody
-	public String bigg2kegg() {
-		return idCrawlerService.fromBiggIdGetKegg();
+	public ResponseEntity<ResponseBigg> bigg2kegg(@RequestParam(value="id", defaultValue="") String id) {
+		
+		ResponseBigg res = idCrawlerService.fromBiggIdGetKegg(id);
+		
+		if (res == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+		
+		return new ResponseEntity<>(res,HttpStatus.OK);
 	}
 
 }
