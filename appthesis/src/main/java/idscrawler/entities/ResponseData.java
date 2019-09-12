@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ResponseData {
 
-	//@JsonIgnore
 	String query;
-	//@JsonIgnore
 	String result;
 	
 	public static ResponseData responseDataBuilder(ResponseData rs){
