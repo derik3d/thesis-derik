@@ -53,5 +53,41 @@ public class RestController {
 		
 		return new ResponseEntity<>(res,HttpStatus.OK);
 	}
+	
+	@RequestMapping("bigg2pubchem/")
+	@ResponseBody
+	public ResponseEntity<ResponseData> bigg2pubchem(@RequestParam(value="id", defaultValue="") String id) {
+		
+		ResponseData resinitial = idCrawlerService.fromBiggIdGetKegg(id);
+		
+		if (resinitial == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+		
+		ResponseData resfinal = idCrawlerService.fromKeggIdGetPubchem(resinitial.getResult());
+		
+		if (resfinal == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+		
+		resfinal.setQuery(resinitial.getQuery());
+		
+		return new ResponseEntity<>(resfinal,HttpStatus.OK);
+	}
+	
+
+	
+	@RequestMapping("pubchem2smiles/")
+	@ResponseBody
+	public ResponseEntity<ResponseData> pubchem2smiles(@RequestParam(value="id", defaultValue="") String id) {
+		
+		ResponseData res = idCrawlerService.fromPubchemIdGetSmiles(id);
+		
+		if (res == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+		
+		return new ResponseEntity<>(res,HttpStatus.OK);
+	}
 
 }
