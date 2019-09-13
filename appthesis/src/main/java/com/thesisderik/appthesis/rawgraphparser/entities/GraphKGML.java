@@ -1,4 +1,4 @@
-package com.thesisderik.appthesis.graphparser;
+package com.thesisderik.appthesis.rawgraphparser.entities;
 
 import java.util.List;
 

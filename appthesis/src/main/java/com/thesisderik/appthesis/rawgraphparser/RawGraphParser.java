@@ -1,4 +1,4 @@
-package com.thesisderik.appthesis.graphparser;
+package com.thesisderik.appthesis.rawgraphparser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,8 +10,10 @@ import javax.xml.bind.Unmarshaller;
 import org.springframework.util.ResourceUtils;
 
 import com.thesisderik.appthesis.entities.utilities.GraphBuilder;
+import com.thesisderik.appthesis.rawgraphparser.entities.GraphKGML;
+import com.thesisderik.appthesis.rawgraphparser.entities.GraphSBML;
 
-public class GraphParser {
+public class RawGraphParser {
 
 	
 	public static void runtestSBML() {
@@ -22,7 +24,7 @@ public class GraphParser {
 
 		try {
 			file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
-			GraphBuilder.createGraph(GraphParser.readFileSBML(file));
+			GraphBuilder.createGraph(RawGraphParser.readFileSBML(file));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -40,7 +42,7 @@ public class GraphParser {
 		
 		try {
 			file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00010.xml");
-			GraphBuilder.createGraph(GraphParser.readFileKGML(file));
+			GraphBuilder.createGraph(RawGraphParser.readFileKGML(file));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.out.println("bad");

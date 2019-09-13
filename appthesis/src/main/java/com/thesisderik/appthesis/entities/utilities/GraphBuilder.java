@@ -6,8 +6,8 @@ import java.util.Map;
 import com.thesisderik.appthesis.entities.graphentities.Graph;
 import com.thesisderik.appthesis.entities.graphentities.GraphNode;
 import com.thesisderik.appthesis.entities.graphentities.GraphNodeRelation;
-import com.thesisderik.appthesis.graphparser.GraphKGML;
-import com.thesisderik.appthesis.graphparser.GraphSBML;
+import com.thesisderik.appthesis.rawgraphparser.entities.GraphKGML;
+import com.thesisderik.appthesis.rawgraphparser.entities.GraphSBML;
 
 public class GraphBuilder{
 	
