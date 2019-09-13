@@ -37,7 +37,7 @@ public class GraphBuilder{
 			gnode.setFullName(entry.getName());
 			gnode.setnType(GraphNode.NType.REACTION);
 			
-			for(GraphKGML.ReactionProduct prod : entry.getProducts()) {
+			for(GraphKGML.ReactionSubstrate prod : entry.getSubstrates()) {
 
 				GraphNodeRelation gnorel = new GraphNodeRelation();
 				gnorel.setSource(gnode);
@@ -47,7 +47,7 @@ public class GraphBuilder{
 
 			}
 			
-			for(GraphKGML.ReactionSubstrate prod : entry.getSubstrates()) {
+			for(GraphKGML.ReactionProduct prod : entry.getProducts()) {
 
 				GraphNodeRelation gnorel = new GraphNodeRelation();
 				gnorel.setSource(gnode);
