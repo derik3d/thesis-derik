@@ -1,4 +1,4 @@
-package idscrawler.entities;
+package com.thesisderik.appthesis.idscrawler.entities;
 
 public class ResponseKegg extends ResponseData{
 

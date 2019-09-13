@@ -1,4 +1,4 @@
-package idscrawler;
+package com.thesisderik.appthesis.idscrawler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import idscrawler.entities.ResponseBigg;
-import idscrawler.entities.ResponseData;
-import idscrawler.entities.ResponseKegg;
-import idscrawler.entities.ResponseSMILESPubchem;
+import com.thesisderik.appthesis.idscrawler.entities.ResponseBigg;
+import com.thesisderik.appthesis.idscrawler.entities.ResponseData;
+import com.thesisderik.appthesis.idscrawler.entities.ResponseKegg;
+import com.thesisderik.appthesis.idscrawler.entities.ResponseSMILESPubchem;
 
 @Service
 public class IdCrawlerService {
