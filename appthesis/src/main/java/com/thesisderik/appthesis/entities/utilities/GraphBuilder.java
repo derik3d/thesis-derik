@@ -42,6 +42,8 @@ public class GraphBuilder{
 				GraphNodeRelation gnorel = new GraphNodeRelation();
 				gnorel.setSource(gnode);
 				gnorel.setTarget(mappingForCompounds.get(prod.getId()));
+				gnorel.setrGroup(GraphNodeRelation.RGroup.REACTANT);
+
 				
 				if(gnorel.getTarget() instanceof Object)formatted.getNodeRelations().add(gnorel);
 
@@ -52,6 +54,8 @@ public class GraphBuilder{
 				GraphNodeRelation gnorel = new GraphNodeRelation();
 				gnorel.setSource(gnode);
 				gnorel.setTarget(mappingForCompounds.get(prod.getId()));
+				gnorel.setrGroup(GraphNodeRelation.RGroup.PRODUCT);
+
 				
 				if(gnorel.getTarget() instanceof Object)formatted.getNodeRelations().add(gnorel);
 
@@ -96,6 +100,7 @@ public class GraphBuilder{
 				gnorel.setTarget(formatted.getNodes().stream()
 						.filter(x -> x.getFullName().equals(ref.getSpecies()))
 				        .findFirst().orElse(null));
+				gnorel.setrGroup(GraphNodeRelation.RGroup.REACTANT);
 				
 				if(gnorel.getTarget() instanceof Object)formatted.getNodeRelations().add(gnorel);
 
@@ -108,6 +113,8 @@ public class GraphBuilder{
 				gnorel.setTarget(formatted.getNodes().stream()
 						.filter(x -> x.getFullName().equals(ref.getSpecies()))
 				        .findFirst().orElse(null));
+				gnorel.setrGroup(GraphNodeRelation.RGroup.PRODUCT);
+				
 				
 				if(gnorel.getTarget() instanceof Object)formatted.getNodeRelations().add(gnorel);
 

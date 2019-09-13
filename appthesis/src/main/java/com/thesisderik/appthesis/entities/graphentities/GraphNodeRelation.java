@@ -5,10 +5,16 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public class GraphNodeRelation {
 
-	//current node
+	//reaction node
 	GraphNode source;
-	//relation node target
+	//substrate or product node target
 	GraphNode target;
+	//reaction group
+	RGroup rGroup;
+	
+	public enum RGroup {
+		REACTANT, PRODUCT
+	}
 	
 	public GraphNodeRelation() {
 		super();
@@ -34,18 +40,31 @@ public class GraphNodeRelation {
                 .appendSuper(super.equals(obj))
                 .append(source, rhs.source)
                 .append(target, rhs.target)
+                .append(rGroup, rhs.rGroup)
                 .isEquals();
 	}
 	
+	
 	@Override
 	public String toString() {
-		return "\n GraphNodeRelation [source=" + source + ", target=" + target + "]";
+		return "GraphNodeRelation [source=" + source + ", target=" + target + ", rGroup=" + rGroup + "]";
 	}
 
-	public GraphNodeRelation(GraphNode source, GraphNode target) {
+
+
+	public GraphNodeRelation(GraphNode source, GraphNode target, RGroup rGroup) {
 		super();
 		this.source = source;
 		this.target = target;
+		this.rGroup = rGroup;
+	}
+
+	public RGroup getrGroup() {
+		return rGroup;
+	}
+
+	public void setrGroup(RGroup rGroup) {
+		this.rGroup = rGroup;
 	}
 
 	public GraphNode getSource() {
