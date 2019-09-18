@@ -8,12 +8,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 //import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.thesisderik.appthesis.idscrawler.IdCrawlerService;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseBigg;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseData;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseKegg;
 
+@RestController
+@RequestMapping("idmanager/")
 public class ManagerController {
 
 	
@@ -22,14 +25,12 @@ public class ManagerController {
 	
 	
 	@RequestMapping("/")
-	@ResponseBody
 	public String gretings() {
 		return "hola";
 	}
 
 	
 	@RequestMapping("kegg2pubchem/")
-	@ResponseBody
 	public ResponseEntity<ResponseData> kegg2pubchem(@RequestParam(value="id", defaultValue="") String id) {
 		
 		ResponseData res = idCrawlerService.fromKeggIdGetPubchem(id);
@@ -42,7 +43,6 @@ public class ManagerController {
 	}
 	
 	@RequestMapping("bigg2kegg/")
-	@ResponseBody
 	public ResponseEntity<ResponseData> bigg2kegg(@RequestParam(value="id", defaultValue="") String id) {
 		
 		ResponseData res = idCrawlerService.fromBiggIdGetKegg(id);
@@ -55,7 +55,6 @@ public class ManagerController {
 	}
 	
 	@RequestMapping("bigg2pubchem/")
-	@ResponseBody
 	public ResponseEntity<ResponseData> bigg2pubchem(@RequestParam(value="id", defaultValue="") String id) {
 		
 		ResponseData resinitial = idCrawlerService.fromBiggIdGetKegg(id);
@@ -78,7 +77,6 @@ public class ManagerController {
 
 	
 	@RequestMapping("pubchem2smiles/")
-	@ResponseBody
 	public ResponseEntity<ResponseData> pubchem2smiles(@RequestParam(value="id", defaultValue="") String id) {
 		
 		ResponseData res = idCrawlerService.fromPubchemIdGetSmiles(id);
