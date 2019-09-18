@@ -7,14 +7,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+//import org.springframework.web.bind.annotation.RestController;
 
 import com.thesisderik.appthesis.idscrawler.IdCrawlerService;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseBigg;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseData;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseKegg;
 
-@Controller
-public class RestController {
+public class ManagerController {
 
 	
 	@Autowired
