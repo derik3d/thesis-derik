@@ -9,10 +9,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.ResourceUtils;
+
+import com.thesisderik.appthesis.entities.utilities.GraphBuilder;
+import com.thesisderik.appthesis.rawgraphparser.RawGraphParser;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -55,6 +62,23 @@ public class AppthesisApplicationTests {
 	@Test
 	public void test_bigg2pubchem_endpoint_bad() throws Exception {
 		this.mvc.perform(get("/idmanager/bigg2pubchem/?id=badidtest")).andExpect(status().isBadRequest());
+	}
+
+	@Test
+	public void testGraphReadingSBML() throws Exception {
+
+		File file = null;
+		file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
+		GraphBuilder.createGraph(RawGraphParser.readFileSBML(file));
+	}
+
+	@Test
+	public void testGraphReadingKGML() throws Exception {
+
+		File file = null;
+		file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00010.xml");
+		GraphBuilder.createGraph(RawGraphParser.readFileKGML(file));
+		
 	}
 
 }
