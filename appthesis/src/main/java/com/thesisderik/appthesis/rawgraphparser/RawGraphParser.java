@@ -14,71 +14,22 @@ import com.thesisderik.appthesis.rawgraphparser.entities.GraphKGML;
 import com.thesisderik.appthesis.rawgraphparser.entities.GraphSBML;
 
 public class RawGraphParser {
-
 	
-	public static void runtestSBML() {
+	public static GraphSBML readFileSBML(File file) throws Exception{
 		
-		
-		File file = null;
-		
-
-		try {
-			file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
-			GraphBuilder.createGraph(RawGraphParser.readFileSBML(file));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-	}
-
-	
-	public static void runtestKGML() {
-		
-		
-		File file = null;
-		
-		
-		try {
-			file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00010.xml");
-			GraphBuilder.createGraph(RawGraphParser.readFileKGML(file));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			System.out.println("bad");
-			e.printStackTrace();
-		}
-		
-		
-	}
-	
-	public static GraphSBML readFileSBML(File file) {
-		
-		try {
-			JAXBContext jaxbContext  = JAXBContext.newInstance(GraphSBML.class);
-			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-			GraphSBML myGraph = (GraphSBML) jaxbUnmarshaller.unmarshal(file);
-			System.out.println(myGraph);
-			return myGraph;
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-		return null;
+		JAXBContext jaxbContext  = JAXBContext.newInstance(GraphSBML.class);
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		GraphSBML myGraph = (GraphSBML) jaxbUnmarshaller.unmarshal(file);
+		return myGraph;
 	
 	}
 	
-	public static GraphKGML readFileKGML(File file) {
+	public static GraphKGML readFileKGML(File file) throws Exception {
 		
-		try {
-			JAXBContext jaxbContext  = JAXBContext.newInstance(GraphKGML.class);
-			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            GraphKGML myGraph = (GraphKGML) jaxbUnmarshaller.unmarshal(file);
-            System.out.println(myGraph);
-            return myGraph;
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-		return null;
+		JAXBContext jaxbContext  = JAXBContext.newInstance(GraphKGML.class);
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        GraphKGML myGraph = (GraphKGML) jaxbUnmarshaller.unmarshal(file);
+        return myGraph;
 	
 	}
 	
