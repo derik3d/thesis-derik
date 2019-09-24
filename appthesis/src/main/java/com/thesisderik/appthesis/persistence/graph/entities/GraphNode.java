@@ -1,4 +1,4 @@
-package com.thesisderik.appthesis.entities.graphentities;
+package com.thesisderik.appthesis.persistence.graph.entities;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;

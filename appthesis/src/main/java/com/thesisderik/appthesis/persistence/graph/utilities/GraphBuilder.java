@@ -1,11 +1,12 @@
-package com.thesisderik.appthesis.entities.utilities;
+package com.thesisderik.appthesis.persistence.graph.utilities;
 
 import java.util.HashMap;
+
 import java.util.Map;
 
-import com.thesisderik.appthesis.entities.graphentities.Graph;
-import com.thesisderik.appthesis.entities.graphentities.GraphNode;
-import com.thesisderik.appthesis.entities.graphentities.GraphNodeRelation;
+import com.thesisderik.appthesis.persistence.graph.entities.Graph;
+import com.thesisderik.appthesis.persistence.graph.entities.GraphNode;
+import com.thesisderik.appthesis.persistence.graph.entities.GraphNodeRelation;
 import com.thesisderik.appthesis.rawgraphparser.entities.GraphKGML;
 import com.thesisderik.appthesis.rawgraphparser.entities.GraphSBML;
 

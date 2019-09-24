@@ -1,4 +1,4 @@
-package com.thesisderik.appthesis.entities.graphentities;
+package com.thesisderik.appthesis.persistence.graph.entities;
 
 import java.util.ArrayList;
 import java.util.HashSet;

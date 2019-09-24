@@ -9,7 +9,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.springframework.util.ResourceUtils;
 
-import com.thesisderik.appthesis.entities.utilities.GraphBuilder;
+import com.thesisderik.appthesis.persistence.graph.utilities.GraphBuilder;
 import com.thesisderik.appthesis.rawgraphparser.entities.GraphKGML;
 import com.thesisderik.appthesis.rawgraphparser.entities.GraphSBML;
 

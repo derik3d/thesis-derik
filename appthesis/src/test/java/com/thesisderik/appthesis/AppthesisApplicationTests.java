@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.ResourceUtils;
 
-import com.thesisderik.appthesis.entities.utilities.GraphBuilder;
+import com.thesisderik.appthesis.persistence.graph.utilities.GraphBuilder;
 import com.thesisderik.appthesis.rawgraphparser.RawGraphParser;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
