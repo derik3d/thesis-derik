@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 //import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.thesisderik.appthesis.services.IdCrawlerService;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseBigg;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseData;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseKegg;
+import com.thesisderik.appthesis.services.INamesCrawlerService;
 
 @RestController
 @RequestMapping("idmanager/")
@@ -21,7 +21,7 @@ public class ManagerController {
 
 	
 	@Autowired
-	private IdCrawlerService idCrawlerService;
+	private INamesCrawlerService idCrawlerService;
 	
 	
 	@RequestMapping("/")
