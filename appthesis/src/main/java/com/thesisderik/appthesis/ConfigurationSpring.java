@@ -3,14 +3,14 @@ import org.springframework.context.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import com.thesisderik.appthesis.services.INamesCrawlerService;
-import com.thesisderik.appthesis.services.IdCrawlerService;
+import com.thesisderik.appthesis.services.NameCrawlerService;
 
 @Configuration
 public class ConfigurationSpring {
 	
 	   @Bean 
-	   public IdCrawlerService beanCrawler(){
-	      return new IdCrawlerService();
+	   public NameCrawlerService beanCrawler(){
+	      return new NameCrawlerService();
 	   }
 	   
 

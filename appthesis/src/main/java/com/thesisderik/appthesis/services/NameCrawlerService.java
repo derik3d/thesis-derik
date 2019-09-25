@@ -13,7 +13,7 @@ import com.thesisderik.appthesis.idscrawler.entities.ResponseKegg;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseSMILESPubchem;
 
 @Service
-public class IdCrawlerService implements INamesCrawlerService{
+public class NameCrawlerService implements INamesCrawlerService{
 
 	private static final String pubchem2SmilesUrl = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/%s/property/CanonicalSmiles/json";
 	private static final String kegg2PubchemUrl = "http://rest.kegg.jp/conv/pubchem/%s";
