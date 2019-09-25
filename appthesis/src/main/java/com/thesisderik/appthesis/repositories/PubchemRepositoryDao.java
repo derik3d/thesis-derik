@@ -8,4 +8,6 @@ import com.thesisderik.appthesis.persistence.identifiers.entities.PubchemIdentif
 @Repository
 public interface PubchemRepositoryDao extends CrudRepository<PubchemIdentifier, Integer>{
 
+	PubchemIdentifier findByName(String string);
+
 }

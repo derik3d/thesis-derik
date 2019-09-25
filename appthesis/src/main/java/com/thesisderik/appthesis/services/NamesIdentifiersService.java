@@ -24,6 +24,21 @@ public class NamesIdentifiersService implements INamesIdentifiersService{
 	SbmlRepositoryDao sbmlRepository;
 
 
+
+	@Override
+	public PubchemIdentifier createPubchemEntry() {
+		PubchemIdentifier pubchemIdentifier = new PubchemIdentifier();
+		pubchemIdentifier.setName("archer");
+		PubchemIdentifier res = pubchemRepository.save(pubchemIdentifier);
+		return res;
+	}
+
+
+	@Override
+	public PubchemIdentifier getPubchemEntry() {
+		PubchemIdentifier res = pubchemRepository.findByName("archer");
+		return res;
+	}
 	
 	
 }

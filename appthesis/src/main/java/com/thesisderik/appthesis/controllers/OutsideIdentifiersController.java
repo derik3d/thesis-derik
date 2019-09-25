@@ -17,7 +17,7 @@ import com.thesisderik.appthesis.services.INamesCrawlerService;
 
 @RestController
 @RequestMapping("idmanager/")
-public class ManagerController {
+public class OutsideIdentifiersController {
 
 	
 	@Autowired

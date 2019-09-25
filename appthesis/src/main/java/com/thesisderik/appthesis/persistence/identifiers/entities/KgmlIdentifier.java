@@ -55,7 +55,7 @@ public class KgmlIdentifier {
 		this.target = target;
 	}
 
-	public KgmlIdentifier(Long id, String name, PubchemIdentifier target) {
+	public KgmlIdentifier( String name, PubchemIdentifier target) {
 		super();
 		this.id = id;
 		this.name = name;

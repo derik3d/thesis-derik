@@ -31,7 +31,7 @@ public class SbmlIdentifier {
 		return "SbmlIdentifier [id=" + id + ", name=" + name + ", target=" + target + "]";
 	}
 
-	public SbmlIdentifier(Long id, String name, KgmlIdentifier target) {
+	public SbmlIdentifier( String name, KgmlIdentifier target) {
 		super();
 		this.id = id;
 		this.name = name;

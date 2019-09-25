@@ -8,5 +8,8 @@ import com.thesisderik.appthesis.persistence.identifiers.entities.SbmlIdentifier
 
 public interface INamesIdentifiersService {
 
+	PubchemIdentifier createPubchemEntry();
+
+	PubchemIdentifier getPubchemEntry();
 
 }

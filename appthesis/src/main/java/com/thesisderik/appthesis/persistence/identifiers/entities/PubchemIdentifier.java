@@ -20,7 +20,7 @@ public class PubchemIdentifier {
 	@Column(name = "NAME", unique = true, nullable = false, length = 100)
 	private String name;
 
-	public PubchemIdentifier(Long id, String name) {
+	public PubchemIdentifier( String name) {
 		super();
 		this.id = id;
 		this.name = name;
