@@ -7,21 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.thesisderik.appthesis.persistence.identifiers.entities.KgmlIdentifier;
 import com.thesisderik.appthesis.persistence.identifiers.entities.PubchemIdentifier;
 import com.thesisderik.appthesis.persistence.identifiers.entities.SbmlIdentifier;
-import com.thesisderik.appthesis.repositories.KgmlRepository;
-import com.thesisderik.appthesis.repositories.PubchemRepository;
-import com.thesisderik.appthesis.repositories.SbmlRepository;
+import com.thesisderik.appthesis.repositories.KgmlRepositoryDao;
+import com.thesisderik.appthesis.repositories.PubchemRepositoryDao;
+import com.thesisderik.appthesis.repositories.SbmlRepositoryDao;
 
 public class NamesIdentifiersService implements INamesIdentifiersService{
 
 
 	@Autowired
-	PubchemRepository pubchemRepository;
+	PubchemRepositoryDao pubchemRepository;
 	
 	@Autowired
-	KgmlRepository kgmlRepository;
+	KgmlRepositoryDao kgmlRepository;
 	
 	@Autowired
-	SbmlRepository sbmlRepository;
+	SbmlRepositoryDao sbmlRepository;
 
 
 	@Override

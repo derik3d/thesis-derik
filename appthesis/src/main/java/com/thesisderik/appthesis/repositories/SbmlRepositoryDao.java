@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.thesisderik.appthesis.persistence.identifiers.entities.SbmlIdentifier;
 
 @Repository
-public interface SbmlRepository extends CrudRepository<SbmlIdentifier, Integer>{
+public interface SbmlRepositoryDao extends CrudRepository<SbmlIdentifier, Integer>{
 
 }
