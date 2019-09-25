@@ -25,6 +25,47 @@ public class KgmlIdentifier {
 	
 	@ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private PubchemIdentifier target;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return "KgmlIdentifier [id=" + id + ", name=" + name + ", target=" + target + "]";
+	}
+
+	public PubchemIdentifier getTarget() {
+		return target;
+	}
+
+	public void setTarget(PubchemIdentifier target) {
+		this.target = target;
+	}
+
+	public KgmlIdentifier(Long id, String name, PubchemIdentifier target) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.target = target;
+	}
+
+	public KgmlIdentifier() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	
 	
 	
