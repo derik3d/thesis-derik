@@ -24,6 +24,6 @@ public class SbmlIdentifier {
 	private String name;
 	
 	@ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private KeggIdentifier customer;
+    private KgmlIdentifier customer;
 	
 }

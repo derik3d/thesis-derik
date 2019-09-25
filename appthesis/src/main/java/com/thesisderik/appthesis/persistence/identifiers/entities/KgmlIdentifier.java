@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Table(
 	name = "KEGG_IDENTIFIERS"
 )
-public class KeggIdentifier {
+public class KgmlIdentifier {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
