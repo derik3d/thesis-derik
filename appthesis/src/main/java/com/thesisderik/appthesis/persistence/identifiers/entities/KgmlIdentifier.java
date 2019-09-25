@@ -24,6 +24,8 @@ public class KgmlIdentifier {
 	private String name;
 	
 	@ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private PubchemIdentifier customer;
+    private PubchemIdentifier target;
+	
+	
 	
 }
