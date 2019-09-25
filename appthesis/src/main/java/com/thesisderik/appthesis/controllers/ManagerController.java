@@ -1,4 +1,4 @@
-package com.thesisderik.appthesis;
+package com.thesisderik.appthesis.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 //import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.thesisderik.appthesis.idscrawler.IdCrawlerService;
+import com.thesisderik.appthesis.services.IdCrawlerService;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseBigg;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseData;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseKegg;
