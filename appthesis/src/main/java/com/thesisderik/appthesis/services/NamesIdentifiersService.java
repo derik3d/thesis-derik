@@ -24,61 +24,6 @@ public class NamesIdentifiersService implements INamesIdentifiersService{
 	SbmlRepositoryDao sbmlRepository;
 
 
-	@Override
-	public boolean persistPubchem(PubchemIdentifier data) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public PubchemIdentifier getPubchemIdentifier(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<PubchemIdentifier> getPubchemIdentifiers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean persistKgml(KgmlIdentifier data) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public PubchemIdentifier getKgmlIdentifier(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<PubchemIdentifier> getKgmlIdentifiers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean persistSbml(SbmlIdentifier data) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public PubchemIdentifier getSbmlIdentifier(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<PubchemIdentifier> getSbmlIdentifiers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
 	
 	
 }
