@@ -7,14 +7,8 @@ import com.thesisderik.appthesis.services.NameCrawlerService;
 
 @Configuration
 public class ConfigurationSpring {
-	
-	   @Bean 
-	   public NameCrawlerService beanCrawler(){
-	      return new NameCrawlerService();
-	   }
-	   
-
 		
+	
 	   @Bean 
 	   public RestTemplate restTemplateBean(){
 	      return new RestTemplate();

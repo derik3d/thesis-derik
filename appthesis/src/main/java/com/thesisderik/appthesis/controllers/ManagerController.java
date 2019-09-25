@@ -21,10 +21,10 @@ public class ManagerController {
 
 	
 	@Autowired
-	private INamesCrawlerService idCrawlerService;
+	private INamesCrawlerService iNamesCrawlerService;
 	
 	
-	@RequestMapping("/")
+	@RequestMapping("/") 
 	public String gretings() {
 		return "hola";
 	}
@@ -33,7 +33,7 @@ public class ManagerController {
 	@RequestMapping("kegg2pubchem/")
 	public ResponseEntity<ResponseData> kegg2pubchem(@RequestParam(value="id", defaultValue="") String id) {
 		
-		ResponseData res = idCrawlerService.fromKeggIdGetPubchem(id);
+		ResponseData res = iNamesCrawlerService.fromKeggIdGetPubchem(id);
 		
 		if (res == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -45,7 +45,7 @@ public class ManagerController {
 	@RequestMapping("bigg2kegg/")
 	public ResponseEntity<ResponseData> bigg2kegg(@RequestParam(value="id", defaultValue="") String id) {
 		
-		ResponseData res = idCrawlerService.fromBiggIdGetKegg(id);
+		ResponseData res = iNamesCrawlerService.fromBiggIdGetKegg(id);
 		
 		if (res == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -57,13 +57,13 @@ public class ManagerController {
 	@RequestMapping("bigg2pubchem/")
 	public ResponseEntity<ResponseData> bigg2pubchem(@RequestParam(value="id", defaultValue="") String id) {
 		
-		ResponseData resinitial = idCrawlerService.fromBiggIdGetKegg(id);
+		ResponseData resinitial = iNamesCrawlerService.fromBiggIdGetKegg(id);
 		
 		if (resinitial == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	    }
 		
-		ResponseData resfinal = idCrawlerService.fromKeggIdGetPubchem(resinitial.getResult());
+		ResponseData resfinal = iNamesCrawlerService.fromKeggIdGetPubchem(resinitial.getResult());
 		
 		if (resfinal == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -79,7 +79,7 @@ public class ManagerController {
 	@RequestMapping("pubchem2smiles/")
 	public ResponseEntity<ResponseData> pubchem2smiles(@RequestParam(value="id", defaultValue="") String id) {
 		
-		ResponseData res = idCrawlerService.fromPubchemIdGetSmiles(id);
+		ResponseData res = iNamesCrawlerService.fromPubchemIdGetSmiles(id);
 		
 		if (res == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
