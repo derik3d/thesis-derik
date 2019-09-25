@@ -1,4 +1,4 @@
-package com.thesisderik.appthesis.persistence.identifiers.utilities;
+package com.thesisderik.appthesis.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 
