@@ -1,17 +1,21 @@
 package com.thesisderik.appthesis;
 
+import com.thesisderik.appthesis.persistence.identifiers.entities.KgmlIdentifier;
 import com.thesisderik.appthesis.persistence.identifiers.entities.PubchemIdentifier;
+import com.thesisderik.appthesis.persistence.identifiers.entities.SbmlIdentifier;
 import com.thesisderik.appthesis.repositories.KgmlRepositoryDao;
 import com.thesisderik.appthesis.repositories.PubchemRepositoryDao;
 import com.thesisderik.appthesis.repositories.SbmlRepositoryDao;
 import com.thesisderik.appthesis.services.INamesIdentifiersService;
 import com.thesisderik.appthesis.services.NamesIdentifiersService;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -24,65 +28,35 @@ import java.util.Optional;
 @DataJpaTest
 public class PersistenceTest {
 	
-	
+	@Autowired
+	PubchemRepositoryDao pubchemRepositoryDao;
 	
 	@Autowired
-	PubchemRepositoryDao pubchemRepository;
+	KgmlRepositoryDao kgmlRepositoryDao;
 	
 	@Autowired
-	KgmlRepositoryDao kgmlRepository;
+	SbmlRepositoryDao sbmlRepositoryDao;
 	
-	@Autowired
-	SbmlRepositoryDao sbmlRepository;
-	
-	@Autowired
-	INamesIdentifiersService iNamesIdentifiersService;
-
     @Test
-    public void testFindByName() throws InterruptedException {
+    public void testFindByName(){
 
     	
-    	pubchemRepository.save(new PubchemIdentifier("Bratislava"));
+    	sbmlRepositoryDao.save(new SbmlIdentifier("sbmlid",(new KgmlIdentifier("kgmlId", new PubchemIdentifier( "pubchemId" )))));
+    	
 
-    	Optional<PubchemIdentifier> data = pubchemRepository.findByName("Bratislava");
+    	Optional<SbmlIdentifier> datasbml = sbmlRepositoryDao.findByName("sbmlid");
      	
-    	
-        assertThat(data.get()).extracting(PubchemIdentifier::getName).asString().isEqualTo("Bratislava");
+        assertThat(datasbml.get()).extracting(SbmlIdentifier::getName).asString().isEqualTo("sbmlid");
+
+    	Optional<KgmlIdentifier> datagkml = kgmlRepositoryDao.findByName("kgmlId");
+     	
+        assertThat(datagkml.get()).extracting(KgmlIdentifier::getName).asString().isEqualTo("kgmlId");
+
+    	Optional<PubchemIdentifier> datapubchem = pubchemRepositoryDao.findByName("pubchemId");
+     	
+        assertThat(datapubchem.get()).extracting(PubchemIdentifier::getName).asString().isEqualTo("pubchemId");
         
         
-    }
-/*
-    @Test
-    public void testInterface() throws InterruptedException {
-    	
-    	PubchemIdentifier pubchemIdentifier= new PubchemIdentifier();
-    	
-    	pubchemIdentifier.setName("pubchemid1");
-
-		iNamesIdentifiersService.saveIdentifier(pubchemIdentifier);
-    	
-    	pubchemIdentifier= new PubchemIdentifier();
-    	
-    	pubchemIdentifier.setName("pubchemid2");
-
-		iNamesIdentifiersService.saveIdentifier(pubchemIdentifier);
-		
-		Optional<PubchemIdentifier> data1 = iNamesIdentifiersService.getPubchemIdentifierByName("pubchemid1");
-		
-        assertThat(data1.get()).extracting(PubchemIdentifier::getId).asString().isEqualTo(1);
-        assertThat(data1.get()).extracting(PubchemIdentifier::getName).asString().isEqualTo("pubchemid1");
-
-
-		
-		Optional<PubchemIdentifier> data2 = iNamesIdentifiersService.getPubchemIdentifierByName("pubchemid2");
-		
-        assertThat(data2.get()).extracting(PubchemIdentifier::getId).asString().isEqualTo(2);
-        assertThat(data2.get()).extracting(PubchemIdentifier::getName).asString().isEqualTo("pubchemid2");
-
-
-        
-    }
-    
-    */
+    }    
     
 }

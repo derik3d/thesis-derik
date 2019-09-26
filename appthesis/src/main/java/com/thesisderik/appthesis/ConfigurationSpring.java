@@ -15,11 +15,6 @@ public class ConfigurationSpring {
 	   public RestTemplate restTemplateBean(){
 	      return new RestTemplate();
 	   }
-	
-	   @Bean 
-	   public INamesIdentifiersService INamesIdentifiersServicebean(){
-	      return new NamesIdentifiersService();
-	   }
 	   
 	   
    

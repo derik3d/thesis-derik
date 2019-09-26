@@ -16,7 +16,7 @@ import com.thesisderik.appthesis.idscrawler.entities.ResponseKegg;
 import com.thesisderik.appthesis.services.INamesCrawlerService;
 
 @RestController
-@RequestMapping("idmanager/")
+@RequestMapping("outsideidmanager/")
 public class OutsideIdentifiersController {
 
 	
