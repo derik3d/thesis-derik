@@ -1,8 +1,9 @@
 package com.thesisderik.appthesis.services;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.thesisderik.appthesis.persistence.identifiers.entities.KgmlIdentifier;
 import com.thesisderik.appthesis.persistence.identifiers.entities.PubchemIdentifier;
@@ -11,6 +12,8 @@ import com.thesisderik.appthesis.repositories.KgmlRepositoryDao;
 import com.thesisderik.appthesis.repositories.PubchemRepositoryDao;
 import com.thesisderik.appthesis.repositories.SbmlRepositoryDao;
 
+
+@Service
 public class NamesIdentifiersService implements INamesIdentifiersService{
 
 
@@ -23,22 +26,41 @@ public class NamesIdentifiersService implements INamesIdentifiersService{
 	@Autowired
 	SbmlRepositoryDao sbmlRepository;
 
-
+	@Override
+	public Optional<PubchemIdentifier> getPubchemIdentifierByName(String identifier) {
+		Optional<PubchemIdentifier> byName = pubchemRepository.findByName(identifier);
+		return byName;
+	}
 
 	@Override
-	public PubchemIdentifier createPubchemEntry() {
-		PubchemIdentifier pubchemIdentifier = new PubchemIdentifier();
-		pubchemIdentifier.setName("archer");
-		PubchemIdentifier res = pubchemRepository.save(pubchemIdentifier);
+	public Optional<KgmlIdentifier> getKgmlIdentifierByName(String identifier) {
+		Optional<KgmlIdentifier> byName = kgmlRepository.findByName(identifier);
+		return byName;
+	}
+
+	@Override
+	public Optional<SbmlIdentifier> getSbmlIdentifierByName(String identifier) {
+		Optional<SbmlIdentifier> byName = sbmlRepository.findByName(identifier);
+		return byName;
+	}
+
+	@Override
+	public PubchemIdentifier saveIdentifier(PubchemIdentifier identifier) {
+		PubchemIdentifier res = pubchemRepository.save(identifier);
 		return res;
 	}
 
-
 	@Override
-	public PubchemIdentifier getPubchemEntry() {
-		PubchemIdentifier res = pubchemRepository.findByName("archer");
+	public KgmlIdentifier saveIdentifier(KgmlIdentifier identifier) {
+		KgmlIdentifier res = kgmlRepository.save(identifier);
 		return res;
 	}
-	
+
+	@Override
+	public SbmlIdentifier saveIdentifier(SbmlIdentifier identifier) {
+		SbmlIdentifier res = sbmlRepository.save(identifier);
+		return res;
+	}
+
 	
 }
