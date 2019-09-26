@@ -26,7 +26,7 @@ import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class PersistenceTest {
+public class PersistenceTests {
 	
 	@Autowired
 	PubchemRepositoryDao pubchemRepositoryDao;

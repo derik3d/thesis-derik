@@ -24,61 +24,44 @@ import java.io.FileNotFoundException;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AppthesisApplicationTests {
+public class OutsideIdentifiersTests {
 
 	@Autowired
 	private MockMvc mvc;
 
 	@Test
 	public void testHello() throws Exception {
-		this.mvc.perform(get("/idmanager/")).andExpect(status().isOk()).andExpect(content().string("hola"));
+		this.mvc.perform(get("/outsideidmanager/")).andExpect(status().isOk()).andExpect(content().string("hola"));
 	}
 
 	@Test
 	public void test_kegg2pubchem_endpoint_good() throws Exception {
-		this.mvc.perform(get("/idmanager/kegg2pubchem/?id=C00002")).andExpect(status().isOk()).andExpect(content().json("{\"query\":\"C00002\",\"result\":\"3304\"}"));
+		this.mvc.perform(get("/outsideidmanager/kegg2pubchem/?id=C00002")).andExpect(status().isOk()).andExpect(content().json("{\"query\":\"C00002\",\"result\":\"3304\"}"));
 	}
 
 	@Test
 	public void test_kegg2pubchem_endpoint_bad() throws Exception {
-		this.mvc.perform(get("/idmanager/kegg2pubchem/?id=badidtest")).andExpect(status().isBadRequest());
+		this.mvc.perform(get("/outsideidmanager/kegg2pubchem/?id=badidtest")).andExpect(status().isBadRequest());
 	}
 
 	@Test
 	public void test_bigg2kegg_endpoint_good() throws Exception {
-		this.mvc.perform(get("/idmanager/bigg2kegg/?id=atp")).andExpect(status().isOk()).andExpect(content().json("{\"query\":\"atp\",\"result\":\"C00002\"}"));
+		this.mvc.perform(get("/outsideidmanager/bigg2kegg/?id=atp")).andExpect(status().isOk()).andExpect(content().json("{\"query\":\"atp\",\"result\":\"C00002\"}"));
 	}
 
 	@Test
 	public void test_bigg2kegg_endpoint_bad() throws Exception {
-		this.mvc.perform(get("/idmanager/bigg2kegg/?id=badidtest")).andExpect(status().isBadRequest());
+		this.mvc.perform(get("/outsideidmanager/bigg2kegg/?id=badidtest")).andExpect(status().isBadRequest());
 	}
 
 	@Test
 	public void test_bigg2pubchem_endpoint_good() throws Exception {
-		this.mvc.perform(get("/idmanager/bigg2pubchem/?id=atp")).andExpect(status().isOk()).andExpect(content().json("{\"query\":\"atp\",\"result\":\"3304\"}"));
+		this.mvc.perform(get("/outsideidmanager/bigg2pubchem/?id=atp")).andExpect(status().isOk()).andExpect(content().json("{\"query\":\"atp\",\"result\":\"3304\"}"));
 	}
 
 	@Test
 	public void test_bigg2pubchem_endpoint_bad() throws Exception {
-		this.mvc.perform(get("/idmanager/bigg2pubchem/?id=badidtest")).andExpect(status().isBadRequest());
-	}
-
-	@Test
-	public void testGraphReadingSBML() throws Exception {
-
-		File file = null;
-		file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
-		GraphBuilder.createGraph(RawGraphParser.readFileSBML(file));
-	}
-
-	@Test
-	public void testGraphReadingKGML() throws Exception {
-
-		File file = null;
-		file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00010.xml");
-		GraphBuilder.createGraph(RawGraphParser.readFileKGML(file));
-		
+		this.mvc.perform(get("/outsideidmanager/bigg2pubchem/?id=badidtest")).andExpect(status().isBadRequest());
 	}
 
 }
