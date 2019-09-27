@@ -9,9 +9,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(
-	name = "PUBCHEM_IDENTIFIERS"
+	name = "ERRORS"
 )
-public class PubchemIdentifier {
+public class ErrorFound {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,23 +20,25 @@ public class PubchemIdentifier {
 	@Column(name = "NAME", unique = true, nullable = false, length = 100)
 	private String name;
 
-	public PubchemIdentifier( String name) {
+	@Column(name = "TYPE", unique = true, nullable = false, length = 100)
+	private String type;
+
+	public ErrorFound(String name) {
 		super();
 		this.name = name;
 	}
 
-	public PubchemIdentifier() {
+	public ErrorFound() {
 		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	public String toString() {
-		return "PubchemIdentifier [id=" + id + ", name=" + name + "]";
 	}
 
 	public Long getId() {
 		return id;
+	}
+
+	@Override
+	public String toString() {
+		return "ErrorFound [id=" + id + ", name=" + name + ", type=" + type + "]";
 	}
 
 	public void setId(Long id) {
@@ -49,6 +51,14 @@ public class PubchemIdentifier {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	
