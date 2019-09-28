@@ -1,6 +1,7 @@
 package com.thesisderik.appthesis;
 
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.results.ResultMatchers;
 import org.junit.runner.RunWith;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.thesisderik.appthesis.persistence.identifiers.entities.PubchemIdentifier;
 import com.thesisderik.appthesis.services.INamesIdentifiersService;
+import com.thesisderik.appthesis.services.INamesIntegrator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -32,65 +34,76 @@ import java.util.Optional;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class IdenditfiersDBTests {
+public class ManagerIdentifiersTests {
 
 	@Autowired
 	private MockMvc mvc;
 	
 	@Autowired
-	private INamesIdentifiersService iNamesIdentifiersService;
+	private INamesIntegrator iNamesIntegrator;
 
+	
+	
+	
 	@Test
 	public void test_Hello() throws Exception {
-		this.mvc.perform(get("/identifierspersist/")).andExpect(status().isOk()).andExpect(content().string("hola"));
+		this.mvc.perform(get("/identifiersmanager/")).andExpect(status().isOk()).andExpect(content().string("hola"));
 	}
 
-	
 
 	@Test
-	public void test_save_success() throws Exception {
-		this.mvc.perform(MockMvcRequestBuilders.post("/identifierspersist/persist/pubchem/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"idtest1\"}")).andExpect(status().isOk()).andExpect(content().json("{\"name\":\"idtest1\"}"));
+	public void test_interface_savedb_consult_kgml() throws Exception {
 		
-	}
-	
-
-	@Test
-	public void test_save_consult() throws Exception {
-		this.mvc.perform(MockMvcRequestBuilders.post("/identifierspersist/persist/pubchem/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"idtest2\"}")).andExpect(status().isOk()).andExpect(content().json("{\"name\":\"idtest2\"}"));
+		Optional<PubchemIdentifier> pubchemIdentifierByName = iNamesIntegrator.processKgmlIdentifier("C00003");
 		
-		
-		this.mvc.perform(get("/identifierspersist/getByName/pubchem/?id=idtest2")).andExpect(status().isOk()).andExpect(content().json("{\"name\":\"idtest2\"}"));
-
-	}
-	
-
-	
-
-	@Test
-	public void test_interface_save_consult() throws Exception {
-		
-		iNamesIdentifiersService.saveIdentifier(new PubchemIdentifier("idtest3"));
-		Optional<PubchemIdentifier> pubchemIdentifierByName = iNamesIdentifiersService.getPubchemIdentifierByName("idtest3");
 		assertTrue(pubchemIdentifierByName.isPresent());
+		assertEquals(pubchemIdentifierByName.get().getName(),"3305");
+		
+		Optional<PubchemIdentifier> result2 = iNamesIntegrator.processKgmlIdentifier("C00003");
+
+		assertTrue(result2.isPresent());
+		assertEquals(result2.get().getName(),"3305");
 		
 
 	}
-	
 
-	
 
 	@Test
-	public void test_interface__consult_error() throws Exception {
+	public void test_interface_savedb_consult_kgml_error() throws Exception {
 		
-		Optional<PubchemIdentifier> pubchemIdentifierByName = iNamesIdentifiersService.getPubchemIdentifierByName("idtest4");
+		Optional<PubchemIdentifier> pubchemIdentifierByName = iNamesIntegrator.processKgmlIdentifier("C000000error003");
+
+		assertFalse(pubchemIdentifierByName.isPresent());		
+
+	}
+
+
+	@Test
+	public void test_interface_savedb_consult_sbml() throws Exception {
+		
+		Optional<PubchemIdentifier> pubchemIdentifierByName = iNamesIntegrator.processSbmlIdentifier("atp");
+		
+		assertTrue(pubchemIdentifierByName.isPresent());
+		assertEquals(pubchemIdentifierByName.get().getName(),"3304");
+		
+		Optional<PubchemIdentifier> result2 = iNamesIntegrator.processSbmlIdentifier("atp");
+
+		assertTrue(result2.isPresent());
+		assertEquals(result2.get().getName(),"3304");
+		
+
+	}
+
+
+	@Test
+	public void test_interface_savedb_consult_sbml_error() throws Exception {
+		
+		Optional<PubchemIdentifier> pubchemIdentifierByName = iNamesIntegrator.processSbmlIdentifier("atperroratp");
+		
 		assertFalse(pubchemIdentifierByName.isPresent());
 		
 
 	}
 	
-
+	
 }

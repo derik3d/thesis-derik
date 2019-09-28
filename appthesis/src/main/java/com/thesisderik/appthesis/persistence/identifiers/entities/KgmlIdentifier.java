@@ -23,7 +23,7 @@ public class KgmlIdentifier {
 	@Column(name = "NAME", unique = true, nullable = false, length = 100)
 	private String name;
 	
-	@ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(optional = false, cascade = {CascadeType.MERGE,CascadeType.REFRESH}, fetch = FetchType.EAGER)
     private PubchemIdentifier target;
 
 	public Long getId() {

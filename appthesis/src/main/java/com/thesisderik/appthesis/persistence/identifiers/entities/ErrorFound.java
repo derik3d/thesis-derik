@@ -23,9 +23,12 @@ public class ErrorFound {
 	@Column(name = "TYPE", unique = true, nullable = false, length = 100)
 	private String type;
 
-	public ErrorFound(String name) {
+	
+
+	public ErrorFound(String name, String type) {
 		super();
 		this.name = name;
+		this.type = type;
 	}
 
 	public ErrorFound() {

@@ -8,18 +8,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.thesisderik.appthesis.persistence.identifiers.entities.KgmlIdentifier;
 import com.thesisderik.appthesis.persistence.identifiers.entities.PubchemIdentifier;
 import com.thesisderik.appthesis.services.INamesIntegrator;
 
-@Controller
+@RestController
 @RequestMapping("identifiersmanager/")
 public class IdentifiersManagerController {
 	
 	@Autowired
 	INamesIntegrator iNamesIntegrator;
-	
+
+
+	@RequestMapping("/") 
+	public String gretings() {
+		return "hola";
+	}
+
 
 	@RequestMapping("process/kgml/")
 	public ResponseEntity<PubchemIdentifier> getKgmlByName(@RequestParam(value="id", defaultValue="") String name) {
