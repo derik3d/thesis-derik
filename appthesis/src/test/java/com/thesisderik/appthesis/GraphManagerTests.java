@@ -60,10 +60,10 @@ public class GraphManagerTests {
     @Test
     public void test_graph_processing() throws Exception{
 
-    	//iGraphManagerService.processSbml("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
+    	iGraphManagerService.processSbml("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
     	iGraphManagerService.processSbml("classpath:testdata/biologicalsourcefiles/sbmlfiles/e_coli_corefrombigg.xml");
     	//iGraphManagerService.processSbml("classpath:testdata/biologicalsourcefiles/sbmlfiles/recon2model.v02.xml");
-  /* 	
+  	
     	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00010.xml");
     	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00020.xml");
     	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00030.xml");
@@ -76,7 +76,7 @@ public class GraphManagerTests {
     	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00630.xml");
     	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00640.xml");
     	assertTrue(true);
-    */	
+    
     	
         System.out.println("roorrrooo");
 
