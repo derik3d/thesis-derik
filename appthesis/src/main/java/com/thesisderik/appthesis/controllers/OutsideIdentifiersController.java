@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 //import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.thesisderik.appthesis.idscrawler.entities.ResponseBigg;
+import com.thesisderik.appthesis.idscrawler.entities.ResponseBiggKegg;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseData;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseKegg;
 import com.thesisderik.appthesis.services.INamesCrawlerService;
@@ -54,6 +54,30 @@ public class OutsideIdentifiersController {
 		return new ResponseEntity<>(res,HttpStatus.OK);
 	}
 	
+	@RequestMapping("bigg2biocyc/")
+	public ResponseEntity<ResponseData> bigg2biocyc(@RequestParam(value="id", defaultValue="") String id) {
+		
+		ResponseData res = iNamesCrawlerService.fromBiggIdGetBiocyc(id);
+		
+		if (res == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+		
+		return new ResponseEntity<>(res,HttpStatus.OK);
+	}
+	
+	@RequestMapping("biocyc2pubchem/")
+	public ResponseEntity<ResponseData> biocyc2pubchem(@RequestParam(value="id", defaultValue="") String id) {
+		
+		ResponseData res = iNamesCrawlerService.fromBiocycIdGetPubchem(id);
+		
+		if (res == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+		
+		return new ResponseEntity<>(res,HttpStatus.OK);
+	}
+	
 	@RequestMapping("bigg2pubchem/")
 	public ResponseEntity<ResponseData> bigg2pubchem(@RequestParam(value="id", defaultValue="") String id) {
 		
@@ -64,6 +88,26 @@ public class OutsideIdentifiersController {
 	    }
 		
 		ResponseData resfinal = iNamesCrawlerService.fromKeggIdGetPubchem(resinitial.getResult());
+		
+		if (resfinal == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+		
+		resfinal.setQuery(resinitial.getQuery());
+		
+		return new ResponseEntity<>(resfinal,HttpStatus.OK);
+	}
+	
+	@RequestMapping("bigg2biocyc2pubchem/")
+	public ResponseEntity<ResponseData> bigg2biocyc2pubchem(@RequestParam(value="id", defaultValue="") String id) {
+		
+		ResponseData resinitial = iNamesCrawlerService.fromBiggIdGetBiocyc(id);
+		
+		if (resinitial == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+		
+		ResponseData resfinal = iNamesCrawlerService.fromBiocycIdGetPubchem(resinitial.getResult());
 		
 		if (resfinal == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -87,5 +131,9 @@ public class OutsideIdentifiersController {
 		
 		return new ResponseEntity<>(res,HttpStatus.OK);
 	}
+	
+	
+
+
 
 }

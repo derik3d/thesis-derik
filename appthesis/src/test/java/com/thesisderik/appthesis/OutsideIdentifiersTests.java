@@ -11,8 +11,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.ResourceUtils;
 
-import com.thesisderik.appthesis.persistence.graph.utilities.GraphBuilder;
 import com.thesisderik.appthesis.rawgraphparser.RawGraphParser;
+import com.thesisderik.appthesis.services.GraphBuilder;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -64,4 +64,28 @@ public class OutsideIdentifiersTests {
 		this.mvc.perform(get("/outsideidmanager/bigg2pubchem/?id=badidtest")).andExpect(status().isBadRequest());
 	}
 
+	
+	
+	
+	@Test
+	public void test_bigg2biocyc_endpoint_good() throws Exception {
+		this.mvc.perform(get("/outsideidmanager/bigg2biocyc/?id=q8h2")).andExpect(status().isOk()).andExpect(content().json("{\"query\":\"q8h2\",\"result\":\"META:CPD-9956\"}"));
+	}
+
+	@Test
+	public void test_bigg2biocyc_endpoint_bad() throws Exception {
+		this.mvc.perform(get("/outsideidmanager/bigg2biocyc/?id=badidtest")).andExpect(status().isBadRequest());
+	}
+
+	@Test
+	public void test_bigg2biocyc2pubchem_endpoint_good() throws Exception {
+		this.mvc.perform(get("/outsideidmanager/bigg2biocyc2pubchem/?id=q8h2")).andExpect(status().isOk()).andExpect(content().json("{\"query\":\"q8h2\",\"result\":\"25074411\"}"));
+	}
+
+	@Test
+	public void test_bigg2biocyc2pubchem_endpoint_bad() throws Exception {
+		this.mvc.perform(get("/outsideidmanager/bigg2biocyc2pubchem/?id=badidtest")).andExpect(status().isBadRequest());
+	}
+
+	
 }

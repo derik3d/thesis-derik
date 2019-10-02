@@ -3,6 +3,8 @@ package com.thesisderik.appthesis.persistence.graph.entities;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import com.thesisderik.appthesis.persistence.graph.entities.GraphNode.NType;
+
 public class GraphNodeRelation {
 
 	//reaction node
@@ -72,6 +74,9 @@ public class GraphNodeRelation {
 	}
 
 	public void setSource(GraphNode source) {
+		if(!NType.REACTION.equals(source.getnType()))
+			throw new RuntimeException("bad_node_type_not_reaction");
+			
 		this.source = source;
 	}
 
@@ -80,6 +85,8 @@ public class GraphNodeRelation {
 	}
 
 	public void setTarget(GraphNode target) {
+		if(!NType.COMPOUND.equals(target.getnType()))
+			throw new RuntimeException("bad_node_type_not_reaction");
 		this.target = target;
 	}
 }

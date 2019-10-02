@@ -17,10 +17,10 @@ public class ErrorFound {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "NAME", unique = true, nullable = false, length = 100)
+	@Column(name = "NAME", unique = false, nullable = false, length = 100)
 	private String name;
 
-	@Column(name = "TYPE", unique = true, nullable = false, length = 100)
+	@Column(name = "TYPE", unique = false, nullable = false, length = 100)
 	private String type;
 
 	

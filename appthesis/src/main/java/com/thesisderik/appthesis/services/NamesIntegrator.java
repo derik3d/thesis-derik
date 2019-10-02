@@ -26,7 +26,7 @@ public class NamesIntegrator implements INamesIntegrator{
 	INamesCrawlerService iNamesCrawlerService;
 
 	@Override
-	public Optional<PubchemIdentifier> processKgmlIdentifier(String name) {
+	public Optional<PubchemIdentifier> processKgmlIdentifier(String name,boolean saveError) {
 
 		PubchemIdentifier pubchemIdentifier;
 		
@@ -70,8 +70,8 @@ public class NamesIntegrator implements INamesIntegrator{
 				}
 			//not found a result
 			else {
-				
-				iNamesIdentifiersService.saveErrorFound(new ErrorFound(name,"Kgml"));
+				if(saveError)
+					iNamesIdentifiersService.saveErrorFound(new ErrorFound(name,"Kgml"));
 				
 				pubchemIdentifier = null;
 				
@@ -89,7 +89,7 @@ public class NamesIntegrator implements INamesIntegrator{
 	}
 
 	@Override
-	public Optional<PubchemIdentifier> processSbmlIdentifier(String name) {
+	public Optional<PubchemIdentifier> processSbmlIdentifier(String name, boolean saveError) {
 
 		KgmlIdentifier kgmlIdentifier;
 		PubchemIdentifier pubchemIdentifier;
@@ -122,7 +122,7 @@ public class NamesIntegrator implements INamesIntegrator{
 				// we dont have a record, create it
 				else {
 					
-					Optional<PubchemIdentifier> resultKgmlAfterTryToSaveOnDB = processKgmlIdentifier(fromBiggIdGetKegg.getResult());
+					Optional<PubchemIdentifier> resultKgmlAfterTryToSaveOnDB = processKgmlIdentifier(fromBiggIdGetKegg.getResult(),saveError);
 					
 					if(resultKgmlAfterTryToSaveOnDB.isPresent())
 					{
@@ -147,7 +147,8 @@ public class NamesIntegrator implements INamesIntegrator{
 			//not found a result
 			else {
 				
-				iNamesIdentifiersService.saveErrorFound(new ErrorFound(name,"Sbml"));
+				if(saveError)
+					iNamesIdentifiersService.saveErrorFound(new ErrorFound(name,"Sbml"));
 				
 				pubchemIdentifier = null;
 				
@@ -156,12 +157,28 @@ public class NamesIntegrator implements INamesIntegrator{
 			
 		}
 		
-		if(pubchemIdentifier == null)
+		if(pubchemIdentifier == null) {
+			////byocyc query????
+		}
+
+		
+		
+		if(pubchemIdentifier == null) 
 			return Optional.empty();
 		
 		Optional<PubchemIdentifier> res = Optional.of(pubchemIdentifier);
 		
 		return res;
+	}
+
+	@Override
+	public Optional<PubchemIdentifier> processKgmlIdentifierNotSavingError(String name) {
+		return processKgmlIdentifier(name,false);
+	}
+
+	@Override
+	public Optional<PubchemIdentifier> processSbmlIdentifierNotSavingError(String name) {
+		return processSbmlIdentifier(name,false);
 	}
 	
 

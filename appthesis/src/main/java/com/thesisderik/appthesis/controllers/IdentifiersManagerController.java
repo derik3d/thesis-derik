@@ -31,7 +31,7 @@ public class IdentifiersManagerController {
 	@RequestMapping("process/kgml/")
 	public ResponseEntity<PubchemIdentifier> getKgmlByName(@RequestParam(value="id", defaultValue="") String name) {
 		
-		PubchemIdentifier res = iNamesIntegrator.processKgmlIdentifier(name).get();
+		PubchemIdentifier res = iNamesIntegrator.processKgmlIdentifier(name,true).get();
 		
 		if (res == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -44,7 +44,7 @@ public class IdentifiersManagerController {
 	@RequestMapping("process/sbml/")
 	public ResponseEntity<PubchemIdentifier> getSbmlByName(@RequestParam(value="id", defaultValue="") String name) {
 		
-		PubchemIdentifier res = iNamesIntegrator.processSbmlIdentifier(name).get();
+		PubchemIdentifier res = iNamesIntegrator.processSbmlIdentifier(name,true).get();
 		
 		if (res == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

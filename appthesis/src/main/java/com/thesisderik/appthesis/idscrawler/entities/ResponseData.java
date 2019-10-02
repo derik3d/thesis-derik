@@ -8,7 +8,7 @@ public class ResponseData {
 	String result;
 	
 	public static ResponseData responseDataBuilder(ResponseData rs){
-		ResponseData res = new ResponseData();;
+		ResponseData res = new ResponseData();
 		res.query = rs.query;
 		res.result = rs.result;
 		return res;

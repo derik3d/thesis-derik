@@ -54,12 +54,12 @@ public class ManagerIdentifiersTests {
 	@Test
 	public void test_interface_savedb_consult_kgml() throws Exception {
 		
-		Optional<PubchemIdentifier> pubchemIdentifierByName = iNamesIntegrator.processKgmlIdentifier("C00003");
+		Optional<PubchemIdentifier> pubchemIdentifierByName = iNamesIntegrator.processKgmlIdentifier("C00003",true);
 		
 		assertTrue(pubchemIdentifierByName.isPresent());
 		assertEquals(pubchemIdentifierByName.get().getName(),"3305");
 		
-		Optional<PubchemIdentifier> result2 = iNamesIntegrator.processKgmlIdentifier("C00003");
+		Optional<PubchemIdentifier> result2 = iNamesIntegrator.processKgmlIdentifier("C00003",true);
 
 		assertTrue(result2.isPresent());
 		assertEquals(result2.get().getName(),"3305");
@@ -71,7 +71,7 @@ public class ManagerIdentifiersTests {
 	@Test
 	public void test_interface_savedb_consult_kgml_error() throws Exception {
 		
-		Optional<PubchemIdentifier> pubchemIdentifierByName = iNamesIntegrator.processKgmlIdentifier("C000000error003");
+		Optional<PubchemIdentifier> pubchemIdentifierByName = iNamesIntegrator.processKgmlIdentifier("C000000error003",true);
 
 		assertFalse(pubchemIdentifierByName.isPresent());		
 
@@ -81,12 +81,12 @@ public class ManagerIdentifiersTests {
 	@Test
 	public void test_interface_savedb_consult_sbml() throws Exception {
 		
-		Optional<PubchemIdentifier> pubchemIdentifierByName = iNamesIntegrator.processSbmlIdentifier("atp");
+		Optional<PubchemIdentifier> pubchemIdentifierByName = iNamesIntegrator.processSbmlIdentifier("atp",true);
 		
 		assertTrue(pubchemIdentifierByName.isPresent());
 		assertEquals(pubchemIdentifierByName.get().getName(),"3304");
 		
-		Optional<PubchemIdentifier> result2 = iNamesIntegrator.processSbmlIdentifier("atp");
+		Optional<PubchemIdentifier> result2 = iNamesIntegrator.processSbmlIdentifier("atp",true);
 
 		assertTrue(result2.isPresent());
 		assertEquals(result2.get().getName(),"3304");
@@ -98,7 +98,7 @@ public class ManagerIdentifiersTests {
 	@Test
 	public void test_interface_savedb_consult_sbml_error() throws Exception {
 		
-		Optional<PubchemIdentifier> pubchemIdentifierByName = iNamesIntegrator.processSbmlIdentifier("atperroratp");
+		Optional<PubchemIdentifier> pubchemIdentifierByName = iNamesIntegrator.processSbmlIdentifier("atperroratp",true);
 		
 		assertFalse(pubchemIdentifierByName.isPresent());
 		

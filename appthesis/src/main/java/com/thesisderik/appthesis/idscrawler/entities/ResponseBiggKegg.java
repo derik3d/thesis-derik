@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ResponseBigg extends ResponseData {
+public class ResponseBiggKegg extends ResponseData {
 	
 	private String bigg_id;
 	private DatabaseLinks database_links;
@@ -28,21 +28,34 @@ public class ResponseBigg extends ResponseData {
 	}
 
 	public static class DatabaseLinks{
-		
-		@JsonProperty("KEGG Compound")
-		private List<KEGGCompound> KEGGCompound;
 
-		public List<KEGGCompound> getKEGGCompound() {
+		@JsonProperty("KEGG Compound")
+		private List<LinkObject> KEGGCompound;
+		
+		@JsonProperty("BioCyc")
+		private List<LinkObject> BioCycCompound;
+
+		public List<LinkObject> getKEGGCompound() {
 			return KEGGCompound;
 		}
 
-		public void setKEGGCompound(List<KEGGCompound> kEGGCompound) {
+		public void setKEGGCompound(List<LinkObject> kEGGCompound) {
 			KEGGCompound = kEGGCompound;
 		}
+
+		public List<LinkObject> getBioCycCompound() {
+			return BioCycCompound;
+		}
+
+		public void setBioCycCompound(List<LinkObject> bioCycCompound) {
+			BioCycCompound = bioCycCompound;
+		}
+		
+		
 		
 	}
 	
-	public static class KEGGCompound{
+	public static class LinkObject{
 	
 		private String id;
 

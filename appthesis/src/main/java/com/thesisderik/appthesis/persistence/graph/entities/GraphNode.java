@@ -1,11 +1,14 @@
 package com.thesisderik.appthesis.persistence.graph.entities;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public class GraphNode {
 
-	//node name trimmed for better processing
+	//node name trimmed for save
 	String name;
 	
 	//real name without trimming
@@ -16,6 +19,10 @@ public class GraphNode {
 	
 	//node type
 	NType nType;
+	
+	
+	public Set<String> tempNames = new TreeSet<String>();
+	
 	
 	public enum NType {
 		//if the node corresponds to a compound, reaction or other thing like a outside connection or input

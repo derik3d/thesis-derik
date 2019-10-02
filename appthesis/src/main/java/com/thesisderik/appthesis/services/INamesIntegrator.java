@@ -6,7 +6,9 @@ import com.thesisderik.appthesis.persistence.identifiers.entities.PubchemIdentif
 
 public interface INamesIntegrator {
 
-	Optional<PubchemIdentifier> processKgmlIdentifier(String name);
-	Optional<PubchemIdentifier> processSbmlIdentifier(String name);
+	Optional<PubchemIdentifier> processKgmlIdentifierNotSavingError(String name);
+	Optional<PubchemIdentifier> processSbmlIdentifierNotSavingError(String name);
+	Optional<PubchemIdentifier> processSbmlIdentifier(String name, boolean saveError);
+	Optional<PubchemIdentifier> processKgmlIdentifier(String name, boolean saveError);
 
 }

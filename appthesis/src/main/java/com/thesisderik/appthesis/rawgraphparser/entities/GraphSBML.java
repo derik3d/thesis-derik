@@ -8,10 +8,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 
-@XmlRootElement(name = "sbml" , namespace="http://www.sbml.org/sbml/level2")
+@XmlRootElement(name = "sbml")
 public class GraphSBML{
 	
-	@XmlElement(name = "model" , namespace="http://www.sbml.org/sbml/level2")
+	@XmlElement(name = "model" )
 	private SBMLModel model;
 
 
@@ -38,11 +38,12 @@ public class GraphSBML{
 		@XmlAttribute(name = "name")
 		private String name;
 		
-		@XmlElement(name = "listOfSpecies" , namespace="http://www.sbml.org/sbml/level2")
+		
+		@XmlElement(name = "listOfSpecies" )
 		private SBMLListSpecies listOfSpecies;
 		
 	
-		@XmlElement(name = "listOfReactions" , namespace="http://www.sbml.org/sbml/level2")
+		@XmlElement(name = "listOfReactions" )
 		private SBMLListReactions listOfReactions;
 
 		
@@ -90,7 +91,7 @@ public class GraphSBML{
 	}
 
 	public static class SBMLListSpecies{
-		@XmlElement(name = "species" , namespace="http://www.sbml.org/sbml/level2")
+		@XmlElement(name = "species" )
 		private List<SBMLSpecie> species;
 
 		@Override
@@ -111,7 +112,7 @@ public class GraphSBML{
 	}
 	
 	public static class SBMLListReactions{
-		@XmlElement(name = "reaction" , namespace="http://www.sbml.org/sbml/level2")
+		@XmlElement(name = "reaction" )
 		private List<SBMLReaction> entries;
 
 		@Override
@@ -168,10 +169,10 @@ public class GraphSBML{
 		@XmlAttribute(name = "name")
 		private String name;
 		
-		@XmlElement(name = "listOfReactants" , namespace="http://www.sbml.org/sbml/level2")
+		@XmlElement(name = "listOfReactants" )
 		ReferencesList listOfReactants;
 		
-		@XmlElement(name = "listOfProducts" , namespace="http://www.sbml.org/sbml/level2")
+		@XmlElement(name = "listOfProducts" )
 		ReferencesList listOfProducts;
 
 		@Override
@@ -219,7 +220,7 @@ public class GraphSBML{
 	}
 	
 	public static class ReferencesList{
-		@XmlElement(name = "speciesReference" , namespace="http://www.sbml.org/sbml/level2")
+		@XmlElement(name = "speciesReference" )
 		private List<SBMLSpeciesReference> entries;
 
 		public List<SBMLSpeciesReference> getEntries() {
