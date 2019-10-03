@@ -18,6 +18,6 @@ public class PlainRelation {
 	private Long id;
 	
 	@Column(name = "NAME",  nullable = false, length = 200)
-	private String NAME;
+	private String name;
 
 }

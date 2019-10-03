@@ -17,7 +17,7 @@ public class PlainGroup {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "GROUP",  nullable = false, length = 200)
-	private String group;
+	@Column(name = "NAME",  nullable = false, length = 200)
+	private String name;
 
 }
