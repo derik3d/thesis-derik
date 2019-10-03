@@ -1,4 +1,4 @@
-package com.thesisderik.appthesis.services;
+package com.thesisderik.appthesis.interfaces;
 
 import java.util.Optional;
 

@@ -10,15 +10,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ResourceUtils;
 
+import com.thesisderik.appthesis.interfaces.IAnalisysService;
+import com.thesisderik.appthesis.interfaces.IGraphBuilder;
+import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
 import com.thesisderik.appthesis.persistence.graph.entities.Graph;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentRequestFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentResultsFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.GroupFileDataStructure;
 import com.thesisderik.appthesis.rawgraphparser.RawGraphParser;
 import com.thesisderik.appthesis.services.GraphBuilder;
-import com.thesisderik.appthesis.services.IAnalisysService;
-import com.thesisderik.appthesis.services.IGraphBuilder;
-import com.thesisderik.appthesis.services.ISimpleGraphManager;
 
 import java.io.File;
 import java.util.ArrayList;

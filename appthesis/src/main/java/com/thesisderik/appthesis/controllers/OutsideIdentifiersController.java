@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseBiggKegg;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseData;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseKegg;
-import com.thesisderik.appthesis.services.INamesCrawlerService;
+import com.thesisderik.appthesis.interfaces.INamesCrawlerService;
 
 @RestController
 @RequestMapping("outsideidmanager/")

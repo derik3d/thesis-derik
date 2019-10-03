@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.thesisderik.appthesis.interfaces.INamesIntegrator;
 import com.thesisderik.appthesis.persistence.identifiers.entities.KgmlIdentifier;
 import com.thesisderik.appthesis.persistence.identifiers.entities.PubchemIdentifier;
-import com.thesisderik.appthesis.services.INamesIntegrator;
 
 @RestController
 @RequestMapping("identifiersmanager/")

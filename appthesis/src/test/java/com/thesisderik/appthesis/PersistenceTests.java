@@ -1,12 +1,12 @@
 package com.thesisderik.appthesis;
 
+import com.thesisderik.appthesis.interfaces.INamesIdentifiersService;
 import com.thesisderik.appthesis.persistence.identifiers.entities.KgmlIdentifier;
 import com.thesisderik.appthesis.persistence.identifiers.entities.PubchemIdentifier;
 import com.thesisderik.appthesis.persistence.identifiers.entities.SbmlIdentifier;
 import com.thesisderik.appthesis.repositories.KgmlRepositoryDao;
 import com.thesisderik.appthesis.repositories.PubchemRepositoryDao;
 import com.thesisderik.appthesis.repositories.SbmlRepositoryDao;
-import com.thesisderik.appthesis.services.INamesIdentifiersService;
 import com.thesisderik.appthesis.services.NamesIdentifiersService;
 
 import org.junit.Before;

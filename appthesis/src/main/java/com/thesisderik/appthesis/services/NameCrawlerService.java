@@ -13,6 +13,7 @@ import com.thesisderik.appthesis.idscrawler.entities.ResponseBiocyc;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseData;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseKegg;
 import com.thesisderik.appthesis.idscrawler.entities.ResponseSMILESPubchem;
+import com.thesisderik.appthesis.interfaces.INamesCrawlerService;
 
 @Service
 public class NameCrawlerService implements INamesCrawlerService{

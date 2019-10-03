@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thesisderik.appthesis.idscrawler.entities.ResponseData;
+import com.thesisderik.appthesis.interfaces.INamesCrawlerService;
+import com.thesisderik.appthesis.interfaces.INamesIdentifiersService;
+import com.thesisderik.appthesis.interfaces.INamesIntegrator;
 import com.thesisderik.appthesis.persistence.identifiers.entities.ErrorFound;
 import com.thesisderik.appthesis.persistence.identifiers.entities.KgmlIdentifier;
 import com.thesisderik.appthesis.persistence.identifiers.entities.PubchemIdentifier;

@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.thesisderik.appthesis.idscrawler.entities.ResponseData;
+import com.thesisderik.appthesis.interfaces.INamesCrawlerService;
+import com.thesisderik.appthesis.interfaces.INamesIdentifiersService;
 import com.thesisderik.appthesis.persistence.identifiers.entities.KgmlIdentifier;
 import com.thesisderik.appthesis.persistence.identifiers.entities.PubchemIdentifier;
 import com.thesisderik.appthesis.persistence.identifiers.entities.SbmlIdentifier;
-import com.thesisderik.appthesis.services.INamesCrawlerService;
-import com.thesisderik.appthesis.services.INamesIdentifiersService;
 
 @RestController
 @RequestMapping("identifierspersist/")

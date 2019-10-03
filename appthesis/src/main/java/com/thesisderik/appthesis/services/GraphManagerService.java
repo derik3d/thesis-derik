@@ -4,6 +4,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.thesisderik.appthesis.interfaces.IGraphBuilder;
+import com.thesisderik.appthesis.interfaces.IGraphManagerService;
+import com.thesisderik.appthesis.interfaces.INamesIntegrator;
 import com.thesisderik.appthesis.persistence.graph.entities.Graph;
 import com.thesisderik.appthesis.persistence.graph.entities.GraphNode;
 import com.thesisderik.appthesis.persistence.graph.entities.GraphNode.NType;

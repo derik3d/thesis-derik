@@ -2,12 +2,12 @@ package com.thesisderik.appthesis;
 import org.springframework.context.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import com.thesisderik.appthesis.interfaces.IGraphBuilder;
+import com.thesisderik.appthesis.interfaces.IGraphManagerService;
+import com.thesisderik.appthesis.interfaces.INamesCrawlerService;
+import com.thesisderik.appthesis.interfaces.INamesIdentifiersService;
 import com.thesisderik.appthesis.services.GraphBuilder;
 import com.thesisderik.appthesis.services.GraphManagerService;
-import com.thesisderik.appthesis.services.IGraphBuilder;
-import com.thesisderik.appthesis.services.IGraphManagerService;
-import com.thesisderik.appthesis.services.INamesCrawlerService;
-import com.thesisderik.appthesis.services.INamesIdentifiersService;
 import com.thesisderik.appthesis.services.NameCrawlerService;
 import com.thesisderik.appthesis.services.NamesIdentifiersService;
 

@@ -2,6 +2,7 @@ package com.thesisderik.appthesis.services;
 
 import java.util.ArrayList;
 
+import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentRequestFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentResultsFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.GroupFileDataStructure;

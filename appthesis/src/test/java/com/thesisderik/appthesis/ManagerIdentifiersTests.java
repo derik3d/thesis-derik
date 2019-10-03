@@ -16,9 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.thesisderik.appthesis.interfaces.INamesIdentifiersService;
+import com.thesisderik.appthesis.interfaces.INamesIntegrator;
 import com.thesisderik.appthesis.persistence.identifiers.entities.PubchemIdentifier;
-import com.thesisderik.appthesis.services.INamesIdentifiersService;
-import com.thesisderik.appthesis.services.INamesIntegrator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

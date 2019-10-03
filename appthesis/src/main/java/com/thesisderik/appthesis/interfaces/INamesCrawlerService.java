@@ -1,4 +1,4 @@
-package com.thesisderik.appthesis.services;
+package com.thesisderik.appthesis.interfaces;
 
 import com.thesisderik.appthesis.idscrawler.entities.ResponseData;
 

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.util.ResourceUtils;
 
+import com.thesisderik.appthesis.interfaces.IGraphBuilder;
 import com.thesisderik.appthesis.persistence.graph.entities.Graph;
 import com.thesisderik.appthesis.persistence.graph.entities.GraphNode;
 import com.thesisderik.appthesis.persistence.graph.entities.GraphNodeRelation;
