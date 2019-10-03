@@ -9,9 +9,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(
-	name = "GRAPH_PLAIN_FEATURES"
+	name = "GRAPH_PLAIN_TASKS"
 )
-public class PlainFeature {
+public class PlainTask {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

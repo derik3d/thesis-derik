@@ -1,9 +1,12 @@
 package com.thesisderik.appthesis.services;
 
+import org.springframework.stereotype.Service;
+
 import com.thesisderik.appthesis.interfaces.IAnalisysService;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentRequestFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentResultsFileDataStructure;
 
+@Service
 public class AnalisysService implements IAnalisysService {
 
 	@Override

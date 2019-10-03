@@ -15,20 +15,18 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(uniqueConstraints={
 	    @UniqueConstraint(columnNames = {"FK_NODE","FK_FEATURE"})
-	}, name = "GRAPH_NODE_FEATURES") 
-public class NodeFeatures {
+	}, name = "GRAPH_NODE_FEATURE_RELATION") 
+public class NodeFeatureRelation {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
     @JoinColumn(name = "FK_NODE", nullable = false)
-	@ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private PlainNode node;
 
     @JoinColumn(name = "FK_FEATURE", nullable = false)
-	@ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private String feature;
+	private PlainFeature feature;
 	
 	@Column(name = "VALUE",  nullable = false, length = 200)
 	private String value;

@@ -37,8 +37,8 @@ public interface ISimpleGraphManager {
 			String description,
 			ArrayList<String> groups,
 			ArrayList<String> features,
-			String targetService,
-			String query,
+			String targetTask,
+			String taskQuery,
 			String featureNameOverride
 			);
 	
@@ -47,7 +47,7 @@ public interface ISimpleGraphManager {
 			String description,
 			ArrayList<String> groups,
 			ArrayList<String> features,
-			String targetService,
+			String taskQuery,
 			String query
 			);
 	

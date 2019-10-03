@@ -17,7 +17,7 @@ public class PlainRelation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "RELATION",  nullable = false, length = 200)
-	private String relation;
+	@Column(name = "NAME",  nullable = false, length = 200)
+	private String NAME;
 
 }

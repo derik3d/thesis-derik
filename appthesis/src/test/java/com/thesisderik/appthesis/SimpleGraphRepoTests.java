@@ -39,7 +39,7 @@ public class SimpleGraphRepoTests {
 	
 
 	@Test
-	public void testGraphReadingSBML() throws Exception {
+	public void simpleLeadGraphTest() throws Exception {
 
 		//create nodes
 		iSimpleGraphManager.createNode("A");
@@ -109,7 +109,7 @@ public class SimpleGraphRepoTests {
 
 	@Test
 	@Ignore
-	public void testGraphReadingKGML() throws Exception {
+	public void simpleGraphFailTest() throws Exception {
 
 		iSimpleGraphManager.createGroup("mygroup15","A");
 		iSimpleGraphManager.createGroup("mygroup15","A");
