@@ -34,4 +34,36 @@ public class NodeNodeRelation {
     @ManyToOne
 	private PlainNode nodeB;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public PlainRelation getRelation() {
+		return relation;
+	}
+
+	public void setRelation(PlainRelation relation) {
+		this.relation = relation;
+	}
+
+	public PlainNode getNodeA() {
+		return nodeA;
+	}
+
+	public void setNodeA(PlainNode nodeA) {
+		this.nodeA = nodeA;
+	}
+
+	public PlainNode getNodeB() {
+		return nodeB;
+	}
+
+	public void setNodeB(PlainNode nodeB) {
+		this.nodeB = nodeB;
+	}
+
 }

@@ -5,55 +5,84 @@ import java.util.ArrayList;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentRequestFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentResultsFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.GroupFileDataStructure;
+import com.thesisderik.appthesis.persistence.simplegraph.entities.NodeFeatureRelation;
+import com.thesisderik.appthesis.persistence.simplegraph.entities.NodeGroupRelation;
+import com.thesisderik.appthesis.persistence.simplegraph.entities.NodeNodeRelation;
+import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainExperiment;
+import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainFeature;
+import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainGroup;
+import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainNode;
+import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainRelation;
+import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainTask;
 
 public interface ISimpleGraphManager {
 
-	void createNode(
-			String node
+	public PlainNode doNode(
+			String nodeName
+			);
+	
+	public PlainFeature doFeature(
+			String featureName
+			);
+	
+	public PlainRelation doRelation(
+			String featureName
+			);
+	
+	public PlainGroup doGroup(
+			String groupName
+			);
+	
+	public PlainTask doTask(
+			String taskName
 			);
 
-	void createFeature(
+
+
+	public NodeFeatureRelation createFeature(
 			String featureName,
 			String value,
-			String node
+			String nodeName
 			);
 
 	
-	void createRelation(
+	public NodeNodeRelation createRelation(
 			String relationName,
-			String nodeA,
-			String nodeB
+			String nodeNameA,
+			String nodeNameB
 			);
 
-	void createGroup(
+	public NodeGroupRelation createGroupRel(
 			String groupName,
-			String node
+			String nodeName
 			);
-	
-	void createGroupBulk(GroupFileDataStructure newGroup);
-	
-	void createExperiment(
+		
+	public PlainExperiment createExperiment(
 			String title,
 			String description,
 			ArrayList<String> groups,
 			ArrayList<String> features,
-			String targetTask,
+			String targetTaskCommand,
 			String taskQuery,
 			String featureNameOverride
 			);
 	
-	void createExperiment(
+	public PlainExperiment createExperiment(
 			String title,
 			String description,
 			ArrayList<String> groups,
 			ArrayList<String> features,
-			String taskQuery,
-			String query
+			String targetTaskCommand,
+			String taskQuery
 			);
 	
-	ExperimentRequestFileDataStructure getExperimentData(String string);
+	
+	
+	public ExperimentRequestFileDataStructure getExperimentData(String string);
 
-	void integrateExperimentResult(ExperimentResultsFileDataStructure expRes);
+	public void integrateExperimentResult(ExperimentResultsFileDataStructure expRes);
+
+	public void createGroupBulk(GroupFileDataStructure newGroup);
 
 
 

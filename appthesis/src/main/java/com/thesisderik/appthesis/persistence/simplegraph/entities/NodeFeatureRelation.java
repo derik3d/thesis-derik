@@ -33,4 +33,36 @@ public class NodeFeatureRelation {
 	@Column(name = "VALUE",  nullable = false, length = 200)
 	private String value;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public PlainNode getNode() {
+		return node;
+	}
+
+	public void setNode(PlainNode node) {
+		this.node = node;
+	}
+
+	public PlainFeature getFeature() {
+		return feature;
+	}
+
+	public void setFeature(PlainFeature feature) {
+		this.feature = feature;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
 }

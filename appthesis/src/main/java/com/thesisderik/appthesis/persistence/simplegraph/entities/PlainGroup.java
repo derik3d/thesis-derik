@@ -28,4 +28,40 @@ public class PlainGroup {
 	@OneToMany(mappedBy="plainGroups")
 	private Set<PlainExperiment> plainExperiments;
 
+
+
+	public Long getId() {
+		return id;
+	}
+
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+
+	public String getName() {
+		return name;
+	}
+
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+
+	public Set<PlainExperiment> getPlainExperiments() {
+		return plainExperiments;
+	}
+
+
+
+	public void setPlainExperiments(Set<PlainExperiment> plainExperiments) {
+		this.plainExperiments = plainExperiments;
+	}
+
 }

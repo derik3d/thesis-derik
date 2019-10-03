@@ -42,10 +42,10 @@ public class SimpleGraphRepoTests {
 	public void simpleLeadGraphTest() throws Exception {
 
 		//create nodes
-		iSimpleGraphManager.createNode("A");
-		iSimpleGraphManager.createNode("B");
-		iSimpleGraphManager.createNode("C");
-		iSimpleGraphManager.createNode("D");
+		iSimpleGraphManager.doNode("A");
+		iSimpleGraphManager.doNode("B");
+		iSimpleGraphManager.doNode("C");
+		iSimpleGraphManager.doNode("D");
 		
 		//features
 
@@ -71,16 +71,16 @@ public class SimpleGraphRepoTests {
 		
 		
 		//group creation
-		iSimpleGraphManager.createGroup("mygroup1","A");
-		iSimpleGraphManager.createGroup("mygroup1","B");
-		iSimpleGraphManager.createGroup("mygroup1","C");
-		iSimpleGraphManager.createGroup("mygroup1","D");
+		iSimpleGraphManager.createGroupRel("mygroup1","A");
+		iSimpleGraphManager.createGroupRel("mygroup1","B");
+		iSimpleGraphManager.createGroupRel("mygroup1","C");
+		iSimpleGraphManager.createGroupRel("mygroup1","D");
 		
-		iSimpleGraphManager.createGroup("mygroup2","A");
-		iSimpleGraphManager.createGroup("mygroup2","B");
-		iSimpleGraphManager.createGroup("mygroup2","C");
+		iSimpleGraphManager.createGroupRel("mygroup2","A");
+		iSimpleGraphManager.createGroupRel("mygroup2","B");
+		iSimpleGraphManager.createGroupRel("mygroup2","C");
 		
-		iSimpleGraphManager.createGroup("mygroup3","D");
+		iSimpleGraphManager.createGroupRel("mygroup3","D");
 		
 		GroupFileDataStructure newGroup = new GroupFileDataStructure();
 		newGroup.setFileName("testbulkgroup");
@@ -111,8 +111,8 @@ public class SimpleGraphRepoTests {
 	@Ignore
 	public void simpleGraphFailTest() throws Exception {
 
-		iSimpleGraphManager.createGroup("mygroup15","A");
-		iSimpleGraphManager.createGroup("mygroup15","A");
+		iSimpleGraphManager.createGroupRel("mygroup15","A");
+		iSimpleGraphManager.createGroupRel("mygroup15","A");
 
 		iSimpleGraphManager.createFeature("Height12","12","C");
 		iSimpleGraphManager.createFeature("Height12","12","C");

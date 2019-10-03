@@ -9,4 +9,6 @@ import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainNode;
 @Repository
 public interface SimpleNodeDAO extends CrudRepository<PlainNode, Long>{
 
+	PlainNode findByName(String nodeName);
+
 }
