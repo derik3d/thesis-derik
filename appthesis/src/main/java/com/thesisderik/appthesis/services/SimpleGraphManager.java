@@ -2,6 +2,7 @@ package com.thesisderik.appthesis.services;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
@@ -11,6 +12,10 @@ import com.thesisderik.appthesis.persistence.simplegraph.datastructure.GroupFile
 
 @Service
 public class SimpleGraphManager implements ISimpleGraphManager {
+	
+	
+	
+	
 
 	@Override
 	public void createNode(String node) {
