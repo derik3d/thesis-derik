@@ -82,7 +82,7 @@ public interface ISimpleGraphManager {
 
 	public void integrateExperimentResult(ExperimentResultsFileDataStructure expRes);
 
-	public void createGroupBulk(GroupFileDataStructure newGroup);
+	public ArrayList<NodeGroupRelation> createGroupBulk(GroupFileDataStructure newGroup);
 
 
 

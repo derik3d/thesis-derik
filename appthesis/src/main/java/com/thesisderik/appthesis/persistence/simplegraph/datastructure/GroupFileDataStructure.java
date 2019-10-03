@@ -4,7 +4,11 @@ import java.util.ArrayList;
 
 public class GroupFileDataStructure {
 	
+	//without extension
+	//becomes group name
 	String fileName;
+	
+	//string names of the nodes
 	ArrayList<String> nodes;
 	
 	public String getFileName() {

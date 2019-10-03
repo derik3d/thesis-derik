@@ -211,9 +211,21 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	}
 
 	@Override
-	public void createGroupBulk(GroupFileDataStructure newGroup) {
-		// TODO Auto-generated method stub
+	public ArrayList<NodeGroupRelation> createGroupBulk(GroupFileDataStructure newGroup) {
 		
+		ArrayList<NodeGroupRelation> resNodes = new ArrayList<>();
+		
+		NodeGroupRelation createGroupRel;
+		
+		for(String nodeName: newGroup.getNodes()) {
+			createGroupRel = createGroupRel(newGroup.getFileName(),nodeName);
+			resNodes.add(createGroupRel);
+		}
+		
+		if(resNodes.size()==0)
+			return null;
+		
+		return resNodes;
 	}
 	
 	
