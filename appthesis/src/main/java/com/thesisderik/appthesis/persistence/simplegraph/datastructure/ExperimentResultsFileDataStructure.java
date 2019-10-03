@@ -8,9 +8,38 @@ public class ExperimentResultsFileDataStructure {
 	//new group name for all the nodes involved
 	String fileName;
 	
-	//rows
-	//cols =>>>> name / data1(key:value) / data2(key:value)
-	ArrayList<ArrayList<String>> nodes;
-	
+	//titlesrow ->>>>>> nodenames, propertyname, propertyname
+	ArrayList<String> firstRow;
 
+	//rows
+	//cols =>>>> name / data1 / data2
+	ArrayList<ArrayList<String>> dataRows;
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	
+	public ArrayList<ArrayList<String>> getDataRows() {
+		return dataRows;
+	}
+
+	public void setDataRows(ArrayList<ArrayList<String>> dataRows) {
+		this.dataRows = dataRows;
+	}
+
+	public ArrayList<String> getFirstRow() {
+		return firstRow;
+	}
+
+	public void setFirstRow(ArrayList<String> firstRow) {
+		this.firstRow = firstRow;
+	}
+	
+	
+	
+	
 }

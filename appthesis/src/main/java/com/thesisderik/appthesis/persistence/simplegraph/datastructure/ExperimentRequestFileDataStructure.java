@@ -7,11 +7,37 @@ public class ExperimentRequestFileDataStructure {
 	
 	String fileName;
 	
-	//names  ->>> name / class / data1 / data2
+	//names  ->>> nodename / classname / data1name / data2name
 	ArrayList<String> firstRow;
 	
 	//row
 	//cols ->->->-> name / class / data / data2
 	ArrayList<ArrayList<String>> dataRows;
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public ArrayList<String> getFirstRow() {
+		return firstRow;
+	}
+
+	public void setFirstRow(ArrayList<String> firstRow) {
+		this.firstRow = firstRow;
+	}
+
+	public ArrayList<ArrayList<String>> getDataRows() {
+		return dataRows;
+	}
+
+	public void setDataRows(ArrayList<ArrayList<String>> dataRows) {
+		this.dataRows = dataRows;
+	}
+	
+	
 
 }

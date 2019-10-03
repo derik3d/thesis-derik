@@ -200,13 +200,37 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 
 	@Override
 	public ExperimentRequestFileDataStructure getExperimentData(String string) {
-		// TODO Auto-generated method stub
-		return null;
+
+
+		PlainExperiment experiment = simpleExperimentDAO.getByName(string);
+		
+		ExperimentRequestFileDataStructure result = new ExperimentRequestFileDataStructure();
+		
+		
+		
+		
+		
+		return result;
 	}
 
 	@Override
 	public void integrateExperimentResult(ExperimentResultsFileDataStructure expRes) {
-		// TODO Auto-generated method stub
+
+		ArrayList<ArrayList<String>> nodes = expRes.getDataRows();
+		 
+		ArrayList<String> namesRow = expRes.getFirstRow(); 
+
+		for(int i = 0; i< nodes.size(); i++) {
+			
+			ArrayList<String> row = nodes.get(i);
+			
+			createGroupRel("RESULT_GP_"+ expRes.getFileName(),row.get(0)); // getting node name, first field
+			
+			for(int j = 1; j<row.size(); j++) {
+				createFeature("RESULT_FT_"+ expRes.getFileName() +"_PROPNAME_"+ namesRow.get(j) + "_DIM_"+j, row.get(j), row.get(0));
+			}
+			
+		}
 		
 	}
 
