@@ -1,10 +1,13 @@
 package com.thesisderik.appthesis.persistence.simplegraph.entities;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -19,5 +22,10 @@ public class PlainGroup {
 	
 	@Column(name = "NAME",  nullable = false, length = 200)
 	private String name;
+
+	
+	
+	@OneToMany(mappedBy="plainGroups")
+	private Set<PlainExperiment> plainExperiments;
 
 }

@@ -15,7 +15,7 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(uniqueConstraints={
 	    @UniqueConstraint(columnNames = {"FK_NODE","FK_FEATURE"})
-	}, name = "GRAPH_NODE_FEATURE_RELATION") 
+	}, name = "GRAPH_REL_NODE_FEATURE") 
 public class NodeFeatureRelation {
 	
 	@Id
@@ -23,9 +23,11 @@ public class NodeFeatureRelation {
 	private Long id;
 	
     @JoinColumn(name = "FK_NODE", nullable = false)
+    @ManyToOne
 	private PlainNode node;
 
     @JoinColumn(name = "FK_FEATURE", nullable = false)
+    @ManyToOne
 	private PlainFeature feature;
 	
 	@Column(name = "VALUE",  nullable = false, length = 200)

@@ -15,7 +15,7 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(uniqueConstraints={
 	    @UniqueConstraint(columnNames = {"FK_RELATION","FK_NODE_A","FK_NODE_B"})
-	}, name = "GRAPH_NODE_NODE_RELATION_RELATION") 
+	}, name = "GRAPH_REL_NODE_NODE_RELATION") 
 public class NodeNodeRelation {
 	
 	@Id
@@ -23,12 +23,15 @@ public class NodeNodeRelation {
 	private Long id;
 	
     @JoinColumn(name = "FK_RELATION", nullable = false)
+    @ManyToOne
 	private PlainRelation relation;
 	
     @JoinColumn(name = "FK_NODE_A", nullable = false)
+    @ManyToOne
 	private PlainNode nodeA;
 	
     @JoinColumn(name = "FK_NODE_B", nullable = false)
+    @ManyToOne
 	private PlainNode nodeB;
 
 }

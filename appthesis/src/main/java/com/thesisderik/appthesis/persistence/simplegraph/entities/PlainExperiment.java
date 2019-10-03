@@ -24,10 +24,10 @@ public class PlainExperiment {
 	private String description;
 
 	@ManyToMany
-	private Set<PlainGroup> groups;
+	private Set<PlainGroup> plainGroups;
 	
 	@ManyToMany
-	private Set<PlainFeature> features;
+	private Set<PlainFeature> plainFeatures;
 	
 	@ManyToOne
 	private PlainTask task;
