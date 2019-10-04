@@ -14,6 +14,6 @@ import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainNode;
 @Repository
 public interface SimpleGroupDAO extends CrudRepository<PlainGroup, Long>{
 
-	Set<PlainGroup> findByNameIn(ArrayList<String> groups);
+	Set<PlainGroup> findAllByNameIn(ArrayList<String> groups);
 
 }

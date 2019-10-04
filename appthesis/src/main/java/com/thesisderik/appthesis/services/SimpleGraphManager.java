@@ -2,6 +2,9 @@ package com.thesisderik.appthesis.services;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -173,8 +176,8 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 
 		PlainTask task = simpleTaskDAO.findByName(targetTaskCommand);
-		Set<PlainGroup> plainGroups = simpleGroupDAO.findByNameIn(groups);
-		Set<PlainFeature> plainFeatures = simpleFeatureDAO.findByNameIn(groups);
+		Set<PlainGroup> plainGroups = simpleGroupDAO.findAllByNameIn(groups);
+		Set<PlainFeature> plainFeatures = simpleFeatureDAO.findAllByNameIn(groups);
 		
 		
 		PlainExperiment pe = new PlainExperiment();
@@ -197,6 +200,66 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		return createExperiment(title,description,groups,features,targetTask,taskQuery,null);
 		
 	}
+	
+	
+	public ArrayList<PlainNode> findNodesForExperiment(PlainExperiment experiment){
+		
+		
+		//Nodes at least in one of the groups
+		//Nodes That has all the features, ignoring the features that all nodes doesnt have
+
+		
+		TreeSet<NodeGroupRelation> groupsUseByGroup = relSimpleNodeGroupDAO.
+				findAllByGroupIn(experiment.getPlainGroups());
+		
+		
+		ArrayList<PlainNode> byGroupNodes = new ArrayList<>( groupsUseByGroup.stream().
+				map(NodeGroupRelation::getNode).collect(Collectors.toSet()) );
+		
+		for( PlainFeature pf : experiment.getPlainFeatures()) {
+			
+			TreeSet<NodeFeatureRelation> relationsUseByFeatures = relSimpleNodeFeatureDAO.
+					findAllByFeature(pf);
+		
+			byGroupNodes.retainAll(relationsUseByFeatures.stream().map(NodeFeatureRelation::getNode).
+					collect(Collectors.toSet()));
+		
+		}
+		
+		return byGroupNodes;
+	}
+	
+	public ArrayList<PlainFeature> featuresOfNodesToUseInRange(ArrayList<PlainNode> nodes, Set<PlainFeature> setFeaturesRequired ){
+		
+		
+		for(PlainNode node: nodes) {
+			
+			TreeSet<NodeFeatureRelation> nodeFeatures = relSimpleNodeFeatureDAO.findAllByNode(node);
+			
+			setFeaturesRequired.retainAll(nodeFeatures.stream().map(NodeFeatureRelation::getFeature).collect(Collectors.toSet()));
+			
+		}
+		
+		
+		return null;
+		
+	}
+	
+
+	
+	public PlainGroup groupOfNodeInRange(PlainNode node, Set<PlainGroup> setFeaturesRequired ){
+		
+		TreeSet<NodeGroupRelation> groupRelations = relSimpleNodeGroupDAO.findAllByNode(node);
+		
+		TreeSet<PlainGroup> pgs = (TreeSet<PlainGroup>) groupRelations.stream().map(NodeGroupRelation::getGroup).collect(Collectors.toSet());
+		
+		pgs.retainAll(setFeaturesRequired);
+		
+		return pgs.stream().findFirst().get();
+		
+	}
+	
+	
 
 	@Override
 	public ExperimentRequestFileDataStructure getExperimentData(String string) {
@@ -204,12 +267,47 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 
 		PlainExperiment experiment = simpleExperimentDAO.getByName(string);
 		
+		ArrayList<PlainNode> nodesToUse = findNodesForExperiment(experiment);
+		
+		ArrayList<PlainFeature> featuresToUse = featuresOfNodesToUseInRange(nodesToUse, experiment.getPlainFeatures());
+		
+		ArrayList<ArrayList<String>> dataRows = new ArrayList<>();
+		
+		//first row
+		
+		ArrayList<String> firstRow = new ArrayList<>();
+		firstRow.add("nombre");
+		firstRow.add("clase");
+		firstRow.addAll(featuresToUse.stream().map(PlainFeature::getName).collect(Collectors.toList()));
+		
+		//next data
+
+		for(int i=0; i<nodesToUse.size(); i++) {
+			
+			ArrayList<String> row = new ArrayList<>();
+			
+			PlainNode currRowNode = nodesToUse.get(i);
+			//add name
+			row.add(currRowNode.getName());
+			
+			//add class
+			row.add(groupOfNodeInRange(currRowNode,experiment.getPlainGroups()).getName());
+			
+			for(int j = 0; j<featuresToUse.size(); j++ ) {
+				NodeFeatureRelation nfr = relSimpleNodeFeatureDAO.findByNodeAndFeature(currRowNode, featuresToUse.get(j));
+				row.add(nfr.getValue());
+			}
+			
+			dataRows.add(row);
+		}
+		
+		
 		ExperimentRequestFileDataStructure result = new ExperimentRequestFileDataStructure();
 		
-		
-		
-		
-		
+		result.setFileName(experiment.getFeatureNameOverride());
+		result.setFirstRow(firstRow);
+		result.setDataRows(dataRows);
+
 		return result;
 	}
 

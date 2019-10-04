@@ -1,5 +1,9 @@
 package com.thesisderik.appthesis.simplerepositories;
 
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +18,9 @@ import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainTask;
 
 @Repository
 public interface RelSimpleNodeGroupDAO extends CrudRepository<NodeGroupRelation, Long>{
+
+	TreeSet<NodeGroupRelation> findAllByGroupIn(Set<PlainGroup> plainGroups);
+
+	TreeSet<NodeGroupRelation> findAllByNode(PlainNode node);
 
 }

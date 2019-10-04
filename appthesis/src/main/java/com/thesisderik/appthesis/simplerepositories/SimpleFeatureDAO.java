@@ -16,6 +16,6 @@ import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainTask;
 @Repository
 public interface SimpleFeatureDAO extends CrudRepository<PlainFeature, Long>{
 
-	Set<PlainFeature> findByNameIn(ArrayList<String> groups);
+	Set<PlainFeature> findAllByNameIn(ArrayList<String> groups);
 
 }
