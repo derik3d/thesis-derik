@@ -4,6 +4,12 @@ import java.util.ArrayList;
 
 public class ExperimentResultsFileDataStructure {
 	
+	@Override
+	public String toString() {
+		return "ExperimentResultsFileDataStructure [fileName=" + fileName + ", firstRow=" + firstRow + ", dataRows="
+				+ dataRows + "]";
+	}
+
 	//new feature name + number according to the dimension
 	//new group name for all the nodes involved
 	String fileName;

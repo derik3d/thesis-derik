@@ -16,4 +16,6 @@ public interface SimpleGroupDAO extends CrudRepository<PlainGroup, Long>{
 
 	Set<PlainGroup> findAllByNameIn(ArrayList<String> groups);
 
+	PlainGroup findByName(String groupName);
+
 }

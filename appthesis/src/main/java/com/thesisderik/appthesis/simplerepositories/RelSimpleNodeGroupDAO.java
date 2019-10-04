@@ -23,4 +23,6 @@ public interface RelSimpleNodeGroupDAO extends CrudRepository<NodeGroupRelation,
 
 	TreeSet<NodeGroupRelation> findAllByNode(PlainNode node);
 
+	NodeGroupRelation findByGroupAndNode(PlainGroup group, PlainNode node);
+
 }

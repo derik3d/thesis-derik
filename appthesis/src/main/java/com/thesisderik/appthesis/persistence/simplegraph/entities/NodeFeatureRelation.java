@@ -1,5 +1,7 @@
 package com.thesisderik.appthesis.persistence.simplegraph.entities;
 
+import java.util.Objects;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,8 +18,16 @@ import javax.persistence.UniqueConstraint;
 @Table(uniqueConstraints={
 	    @UniqueConstraint(columnNames = {"FK_NODE","FK_FEATURE"})
 	}, name = "GRAPH_REL_NODE_FEATURE") 
-public class NodeFeatureRelation {
+public class NodeFeatureRelation implements Comparable<NodeFeatureRelation>{
 	
+	@Override
+	public String toString() {
+		return "NodeFeatureRelation [id=" + id + ", node=" + node + ", feature=" + feature + ", value=" + value + "]";
+	}
+
+
+
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -32,6 +42,28 @@ public class NodeFeatureRelation {
 	
 	@Column(name = "VALUE",  nullable = false, length = 200)
 	private String value;
+	
+	
+	
+	
+	
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(feature, node);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof NodeFeatureRelation)) {
+			return false;
+		}
+		NodeFeatureRelation other = (NodeFeatureRelation) obj;
+		return Objects.equals(feature, other.feature) && Objects.equals(node, other.node);
+	}
 
 	public Long getId() {
 		return id;
@@ -63,6 +95,15 @@ public class NodeFeatureRelation {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+	
+	
+
+
+	@Override
+	public int compareTo(NodeFeatureRelation o) {
+
+		return this.getId().compareTo(o.getId());
 	}
 
 }

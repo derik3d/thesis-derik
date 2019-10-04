@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 public class GroupFileDataStructure {
 	
+	@Override
+	public String toString() {
+		return "GroupFileDataStructure [fileName=" + fileName + ", nodes=" + nodes + "]";
+	}
 	//without extension
 	//becomes group name
 	String fileName;

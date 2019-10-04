@@ -54,7 +54,6 @@ public class SimpleGraphRepoTests {
 		iSimpleGraphManager.createFeature("Height","12","C");
 		iSimpleGraphManager.createFeature("Height","12","D");
 		
-
 		iSimpleGraphManager.createFeature("Age","3","A");
 		iSimpleGraphManager.createFeature("Age","3","B");
 		iSimpleGraphManager.createFeature("Age","7","C");
@@ -68,7 +67,7 @@ public class SimpleGraphRepoTests {
 		iSimpleGraphManager.createRelation("Graph2","C","B");
 		iSimpleGraphManager.createRelation("Graph2","A","D");
 		iSimpleGraphManager.createRelation("Graph2","D","A");
-		
+				
 		
 		//group creation
 		iSimpleGraphManager.createGroupRel("mygroup1","A");
@@ -88,6 +87,8 @@ public class SimpleGraphRepoTests {
 		
 		iSimpleGraphManager.createGroupBulk(newGroup);
 		
+		iSimpleGraphManager.doTask("AgeAnalizer");
+		
 		iSimpleGraphManager.createExperiment(
 				"analisis1",
 				"sirve para analizar el comportamiento de la edad y la estatura",
@@ -97,10 +98,17 @@ public class SimpleGraphRepoTests {
 				"no query",
 				"ageanalisisresult"
 				);
-
+		
 		ExperimentRequestFileDataStructure data = iSimpleGraphManager.getExperimentData("analisis1");
+
+		System.out.println(data);
+
+		
+		System.out.println();
 		
 		ExperimentResultsFileDataStructure ExpRes = iAnalisysService.processData(data);
+
+		System.out.println();
 		
 		iSimpleGraphManager.integrateExperimentResult(ExpRes);
 

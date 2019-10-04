@@ -78,7 +78,7 @@ public interface ISimpleGraphManager {
 	
 	
 	
-	public ExperimentRequestFileDataStructure getExperimentData(String string);
+	public ExperimentRequestFileDataStructure getExperimentData(String experimentName);
 
 	public void integrateExperimentResult(ExperimentResultsFileDataStructure expRes);
 

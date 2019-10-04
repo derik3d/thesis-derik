@@ -5,6 +5,12 @@ import java.util.ArrayList;
 public class ExperimentRequestFileDataStructure {
 	
 	
+	@Override
+	public String toString() {
+		return "ExperimentRequestFileDataStructure [fileName=" + fileName + ", firstRow=" + firstRow + ", dataRows="
+				+ dataRows + "]";
+	}
+
 	String fileName;
 	
 	//names  ->>> nodename / classname / data1name / data2name

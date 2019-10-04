@@ -67,7 +67,14 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	@Override
 	public PlainNode doNode(String name) {
 		
-		PlainNode pn = new PlainNode();
+		
+		PlainNode pn = simpleNodeDAO.findByName(name);
+		
+		if(pn!=null) {
+			return pn;
+		}
+		
+		pn = new PlainNode();
 		pn.setName(name);
 		simpleNodeDAO.save(pn);
 		
@@ -78,7 +85,14 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	@Override
 	public PlainFeature doFeature(String featureName) {
 		
-		PlainFeature feature = new PlainFeature();
+		PlainFeature feature = simpleFeatureDAO.findByName(featureName);
+		
+		if(feature!=null) {
+			return feature;
+		}
+		
+		feature = new PlainFeature();
+		
 		feature.setName(featureName);
 		feature = simpleFeatureDAO.save(feature);
 		return feature;
@@ -86,10 +100,17 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	}
 	
 	@Override
-	public PlainRelation doRelation(String featureName) {
+	public PlainRelation doRelation(String relationName) {
 		
-		PlainRelation relation = new PlainRelation();
-		relation.setName(featureName);
+		PlainRelation relation = simpleRelationDAO.findByName(relationName);
+		
+		if(relation!=null) {
+			return relation;
+		}
+		
+		relation = new PlainRelation();
+		
+		relation.setName(relationName);
 		relation = simpleRelationDAO.save(relation);
 		return relation;
 		
@@ -98,7 +119,14 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	@Override
 	public PlainTask doTask(String taskName) {
 		
-		PlainTask task = new PlainTask();
+		PlainTask task = simpleTaskDAO.findByName(taskName);
+				
+		if(task!=null) {
+			return task;
+		}
+		
+		task = new PlainTask();
+		
 		task.setName(taskName);
 		task = simpleTaskDAO.save(task);
 		return task;
@@ -109,10 +137,17 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	@Override
 	public PlainGroup doGroup(String groupName) {
 		
-		PlainGroup task = new PlainGroup();
-		task.setName(groupName);
-		task = simpleGroupDAO.save(task);
-		return task;
+		PlainGroup group = simpleGroupDAO.findByName(groupName);
+		
+		if(group!=null) {
+			return group;
+		}
+		
+		group = new PlainGroup();
+		
+		group.setName(groupName);
+		group = simpleGroupDAO.save(group);
+		return group;
 	}
 
 	
@@ -124,12 +159,17 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 		PlainNode node = doNode(nodeName);
 		
-		NodeFeatureRelation nfr = new NodeFeatureRelation();
-		nfr.setFeature(feature);
-		nfr.setNode(node);
+		NodeFeatureRelation nfr = relSimpleNodeFeatureDAO.findByNodeAndFeature(node, feature);
+		
+		if(nfr==null) {
+			nfr = new NodeFeatureRelation();
+			nfr.setNode(node);
+			nfr.setFeature(feature);
+		}
+		
 		nfr.setValue(value);
 		
-		relSimpleNodeFeatureDAO.save(nfr);
+		nfr = relSimpleNodeFeatureDAO.save(nfr);
 		
 		return nfr;
 
@@ -144,10 +184,19 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 
 		PlainNode nodeB = doNode(nodeNameB);
 		
-		NodeNodeRelation nodenode = new NodeNodeRelation();
-		nodenode.setRelation(relation);
-		nodenode.setNodeA(nodeA);
-		nodenode.setNodeB(nodeB);
+		NodeNodeRelation nodenode = relSimpleNodeNodeDAO.findByNodeAAndNodeBAndRelation(nodeA,nodeB,relation);
+
+		if(nodenode==null) {
+			nodenode = relSimpleNodeNodeDAO.findByNodeAAndNodeBAndRelation(nodeB,nodeA,relation);
+		}
+		
+		if(nodenode==null) {
+			nodenode = new NodeNodeRelation();
+			nodenode.setRelation(relation);
+			nodenode.setNodeA(nodeA);
+			nodenode.setNodeB(nodeB);
+			
+		}
 		
 		nodenode = relSimpleNodeNodeDAO.save(nodenode);
 		
@@ -161,10 +210,15 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 		PlainNode node = doNode(nodeName);
 		
-		NodeGroupRelation ngr = new NodeGroupRelation();
-		ngr.setGroup(group);
-		ngr.setNode(node);
-		relSimpleNodeGroupDAO.save(ngr);
+		NodeGroupRelation ngr = relSimpleNodeGroupDAO.findByGroupAndNode(group,node);
+		
+		if(ngr==null) {
+			ngr = new NodeGroupRelation();
+			ngr.setGroup(group);
+			ngr.setNode(node);
+		}
+		
+		ngr = relSimpleNodeGroupDAO.save(ngr);
 		
 		return ngr;
 	}
@@ -176,19 +230,33 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 
 		PlainTask task = simpleTaskDAO.findByName(targetTaskCommand);
+		
+		if(task==null) {
+			throw new RuntimeException("invalid service");
+		}
+		
 		Set<PlainGroup> plainGroups = simpleGroupDAO.findAllByNameIn(groups);
-		Set<PlainFeature> plainFeatures = simpleFeatureDAO.findAllByNameIn(groups);
+		Set<PlainFeature> plainFeatures = simpleFeatureDAO.findAllByNameIn(features);
 		
 		
 		PlainExperiment pe = new PlainExperiment();
 		pe.setTitle(title);
 		pe.setDescription(description);
-		pe.setPlainGroups(plainGroups);
-		pe.setPlainFeatures(plainFeatures);
+
+		//pe.setPlainGroups(plainGroups);
+		//pe.setPlainFeatures(plainFeatures);
+		
 		pe.setTask(task);
 		pe.setTaskDescriptionCommand(taskQuery);
 		pe.setFeatureNameOverride(featureNameOverride);
 		pe = simpleExperimentDAO.save(pe);
+		
+		pe.getPlainFeatures().addAll(plainFeatures);
+		
+		pe.getPlainGroups().addAll(plainGroups);
+		
+		pe = simpleExperimentDAO.save(pe);
+
 		
 		return pe;
 	}
@@ -229,7 +297,7 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		return byGroupNodes;
 	}
 	
-	public ArrayList<PlainFeature> featuresOfNodesToUseInRange(ArrayList<PlainNode> nodes, Set<PlainFeature> setFeaturesRequired ){
+	public TreeSet<PlainFeature> featuresOfNodesToUseInRange(ArrayList<PlainNode> nodes, Set<PlainFeature> setFeaturesRequired ){
 		
 		
 		for(PlainNode node: nodes) {
@@ -241,7 +309,7 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		}
 		
 		
-		return null;
+		return new TreeSet<>(setFeaturesRequired);
 		
 	}
 	
@@ -251,7 +319,7 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 		TreeSet<NodeGroupRelation> groupRelations = relSimpleNodeGroupDAO.findAllByNode(node);
 		
-		TreeSet<PlainGroup> pgs = (TreeSet<PlainGroup>) groupRelations.stream().map(NodeGroupRelation::getGroup).collect(Collectors.toSet());
+		TreeSet<PlainGroup> pgs = new TreeSet<> (groupRelations.stream().map(NodeGroupRelation::getGroup).collect(Collectors.toSet()));
 		
 		pgs.retainAll(setFeaturesRequired);
 		
@@ -262,14 +330,14 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	
 
 	@Override
-	public ExperimentRequestFileDataStructure getExperimentData(String string) {
+	public ExperimentRequestFileDataStructure getExperimentData(String experimentName) {
 
 
-		PlainExperiment experiment = simpleExperimentDAO.getByName(string);
+		PlainExperiment experiment = simpleExperimentDAO.findByTitle(experimentName);
 		
 		ArrayList<PlainNode> nodesToUse = findNodesForExperiment(experiment);
 		
-		ArrayList<PlainFeature> featuresToUse = featuresOfNodesToUseInRange(nodesToUse, experiment.getPlainFeatures());
+		ArrayList<PlainFeature> featuresToUse = new ArrayList<>(featuresOfNodesToUseInRange(nodesToUse, experiment.getPlainFeatures()));
 		
 		ArrayList<ArrayList<String>> dataRows = new ArrayList<>();
 		

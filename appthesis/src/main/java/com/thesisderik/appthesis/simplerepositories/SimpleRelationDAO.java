@@ -12,4 +12,6 @@ import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainRelation;
 @Repository
 public interface SimpleRelationDAO extends CrudRepository<PlainRelation, Long>{
 
+	PlainRelation findByName(String relationName);
+
 }

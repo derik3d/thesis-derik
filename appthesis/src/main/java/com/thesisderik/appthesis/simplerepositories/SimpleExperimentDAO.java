@@ -14,6 +14,6 @@ import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainTask;
 @Repository
 public interface SimpleExperimentDAO extends CrudRepository<PlainExperiment, Long>{
 
-	PlainExperiment getByName(String string);
+	PlainExperiment findByTitle(String title);
 
 }

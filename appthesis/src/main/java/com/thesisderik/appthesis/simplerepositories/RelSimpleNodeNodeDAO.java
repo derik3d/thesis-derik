@@ -10,9 +10,12 @@ import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainExperimen
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainFeature;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainGroup;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainNode;
+import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainRelation;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainTask;
 
 @Repository
 public interface RelSimpleNodeNodeDAO extends CrudRepository<NodeNodeRelation, Long>{
+
+	NodeNodeRelation findByNodeAAndNodeBAndRelation(PlainNode nodeA, PlainNode nodeB, PlainRelation relation);
 
 }
