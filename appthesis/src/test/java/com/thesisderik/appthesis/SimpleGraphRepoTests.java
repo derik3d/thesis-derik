@@ -50,13 +50,13 @@ public class SimpleGraphRepoTests {
 		//features
 
 		iSimpleGraphManager.createFeature("Height","5","A");
-		iSimpleGraphManager.createFeature("Height","10,5","B");
+		iSimpleGraphManager.createFeature("Height","10.5","B");
 		iSimpleGraphManager.createFeature("Height","12","C");
 		iSimpleGraphManager.createFeature("Height","12","D");
 		
 		iSimpleGraphManager.createFeature("Age","3","A");
 		iSimpleGraphManager.createFeature("Age","3","B");
-		iSimpleGraphManager.createFeature("Age","7","C");
+		iSimpleGraphManager.createFeature("Age","7","D");
 
 		
 		//relation created with nodes and relation names
@@ -78,8 +78,9 @@ public class SimpleGraphRepoTests {
 		iSimpleGraphManager.createGroupRel("mygroup2","A");
 		iSimpleGraphManager.createGroupRel("mygroup2","B");
 		iSimpleGraphManager.createGroupRel("mygroup2","C");
-		
+
 		iSimpleGraphManager.createGroupRel("mygroup3","D");
+		iSimpleGraphManager.createGroupRel("mygroup3","A");
 		
 		GroupFileDataStructure newGroup = new GroupFileDataStructure();
 		newGroup.setFileName("testbulkgroup");
@@ -112,7 +113,8 @@ public class SimpleGraphRepoTests {
 		
 		iSimpleGraphManager.integrateExperimentResult(ExpRes);
 
-		
+		System.out.println();
+
 	}
 
 	@Test

@@ -45,7 +45,38 @@ public class ExperimentResultsFileDataStructure {
 		this.firstRow = firstRow;
 	}
 	
+	public ArrayList<String> getDataOfRow(int index) {
+		return new ArrayList<>(dataRows.get(index));
+	}
 	
+	public ArrayList<String> getDataOfCol(int dataCol) {
+		
+		ArrayList<String> resp = new ArrayList<String>();
+		
+		for(int i=0; i<dataRows.size();i++) {
+			
+			resp.add(dataRows.get(i).get(dataCol));
+			
+		}
+		
+		return resp;
+		
+	}
+	
+	public ArrayList<ArrayList<String>> deleteFirstCols(int num){
+		
+		ArrayList<ArrayList<String>> resp = new ArrayList<>();
+		
+		for(int i = 0; i<dataRows.size(); i++) {
+			
+			resp.add(new ArrayList<String>());
+			resp.get(i).addAll(dataRows.get(i).subList(num, dataRows.get(i).size()));
+			
+		}
+		
+		return resp;
+		
+	}
 	
 	
 }
