@@ -67,8 +67,8 @@ public class PlainGroup implements Comparable<PlainGroup>{
 			return false;
 		}
 		PlainGroup other = (PlainGroup) obj;
-		return Objects.equals(id, other.id) && Objects.equals(name, other.name)
-				&& Objects.equals(plainExperiments, other.plainExperiments);
+		return Objects.equals(id, other.id) && Objects.equals(name, other.name
+		);
 	}
 
 

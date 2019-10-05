@@ -88,10 +88,11 @@ public class SimpleGraphRepoTests {
 		
 		iSimpleGraphManager.createGroupBulk(newGroup);
 		
+		iAnalisysService.setExperimentDataIntegrator(iSimpleGraphManager);
+
 		
-		iSimpleGraphManager.doTask("SmilesCrawler");
-		iSimpleGraphManager.doTask("Statistics");
-		iSimpleGraphManager.doTask("Clustering");
+		for(String serviceName : iAnalisysService.getServices())
+			iSimpleGraphManager.doTask(serviceName);
 		
 		iSimpleGraphManager.createExperiment(
 				"smilesbasic",
@@ -99,7 +100,7 @@ public class SimpleGraphRepoTests {
 				new ArrayList<String>(Arrays.asList("ALL")),
 				new ArrayList<String>(Arrays.asList("NAME")),
 				"SmilesCrawler",
-				"",
+				"s",
 				"SMILES_PROPERTY"
 				);
 		
@@ -122,12 +123,11 @@ public class SimpleGraphRepoTests {
 				new ArrayList<String>(Arrays.asList("mygroup2","mygroup3")),
 				new ArrayList<String>(Arrays.asList("Age","Height")),
 				"Clustering",
-				""
+				"2"
 				);
 
 		
 		
-		iAnalisysService.setExperimentDataIntegrator(iSimpleGraphManager);
 
 		
 		
@@ -138,15 +138,15 @@ public class SimpleGraphRepoTests {
 
 
 		System.out.println(data0);
-		//System.out.println(data1);
-		//System.out.println(data2);
+		System.out.println(data1);
+		System.out.println(data2);
 
 		
 		System.out.println();
 		
 		iAnalisysService.processData(data0);
-		//iAnalisysService.processData(data1);
-		//iAnalisysService.processData(data2);
+		iAnalisysService.processData(data1);
+		iAnalisysService.processData(data2);
 
 
 		System.out.println();

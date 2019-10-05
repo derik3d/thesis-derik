@@ -1,6 +1,7 @@
 package com.thesisderik.appthesis.services;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -36,6 +37,8 @@ import com.thesisderik.appthesis.simplerepositories.SimpleTaskDAO;
 
 @Service
 public class SimpleGraphManager implements ISimpleGraphManager {
+	
+	String sep = "_CMDSEP_";
 	
 	@Autowired
 	RelSimpleNodeFeatureDAO relSimpleNodeFeatureDAO;
@@ -329,26 +332,35 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 		TreeSet<NodeGroupRelation> groupRelations = relSimpleNodeGroupDAO.findAllByNode(node);
 		
-		List<PlainGroup> ls = groupRelations.stream().map(NodeGroupRelation::getGroup).collect(Collectors.toList());
 		
-		ls.retainAll(setFeaturesRequired);
+		List<Long> collectIds = setFeaturesRequired.stream().map(PlainGroup::getId).collect(Collectors.toList());
+		
+		Iterator<NodeGroupRelation> iterator = groupRelations.iterator();
+		
+		while(iterator.hasNext()) {
+			
+			
+			long gindex = iterator.next().getGroup().getId();
+			
+			if(collectIds.contains(simpleGroupDAO.findById(gindex).get().getId()))
+				return simpleGroupDAO.findById(gindex).get();
+			
+			
+		}
 		
 		
-		return ls.get(0);
+		return null;
 		
 		/*
-		Set<PlainGroup> pgs = new TreeSet<>();//groupRelations.stream().map(NodeGroupRelation::getGroup).collect(Collectors.toSet()));
+		TreeSet<PlainGroup> pgs = new TreeSet<>();//groupRelations.stream().map(NodeGroupRelation::getGroup).collect(Collectors.toSet()));
 		
-		for(NodeGroupRelation ngr : groupRelations) {
-			PlainGroup pg = ngr.getGroup();
-			pgs.add(pg);
-		}
+		for(NodeGroupRelation ngr : groupRelations)
+			pgs.add( simpleGroupDAO.findById(ngr.getGroup().getId()).get() );
 		
 		pgs.retainAll(setFeaturesRequired);
 		
 		return pgs.stream().findFirst().get();
-		
-		*/
+	*/	
 		
 	}
 	
@@ -406,9 +418,8 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 		ExperimentRequestFileDataStructure result = new ExperimentRequestFileDataStructure();
 		
-		String sep = "_CMDSEP_";
 		
-		String cmdPart = experiment.getTask()+sep+experiment.getTaskDescriptionCommand()+sep;
+		String cmdPart = experiment.getTask().getName()+sep+experiment.getTaskDescriptionCommand()+sep;
 		
 		
 		

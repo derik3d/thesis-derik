@@ -28,7 +28,10 @@ public class StatisticsProcessService extends BaseProcessService{
 	
 	
 	
-	public StatisticsProcessService(ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames) {
+	public void setData(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames) {
+		
+		
+
 		
 		
 		int instancesFeaturesLength = dataForEveryInstance.get(0).size();

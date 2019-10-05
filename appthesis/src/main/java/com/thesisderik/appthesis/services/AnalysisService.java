@@ -14,23 +14,25 @@ import com.thesisderik.appthesis.interfaces.IExperimentDataIntegrator;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentRequestFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentResultsFileDataStructure;
 import com.thesisderik.appthesis.processservices.BaseProcessService;
+import com.thesisderik.appthesis.processservices.ClusteringProcessService;
+import com.thesisderik.appthesis.processservices.IProcessService;
+import com.thesisderik.appthesis.processservices.SmilesCrawlerProcessService;
 import com.thesisderik.appthesis.processservices.StatisticsProcessService;
 
 @Service
 public class AnalysisService implements IAnalysisService {
 	
 	private IExperimentDataIntegrator iExperimentDataIntegrator;
-	private ArrayList<BaseProcessService> suscribedServices;
+	private ArrayList<IProcessService> suscribedServices = new ArrayList<>();
 
 	@Override
 	public ArrayList<String> getServices() {
 		
-		ArrayList<String> myList = new ArrayList<>();
-		myList.add("SmilesCrawler");
-		myList.add("Statistics");
-		myList.add("Clustering");
+		suscribedServices.add(new StatisticsProcessService());
+		suscribedServices.add(new ClusteringProcessService());
+		suscribedServices.add(new SmilesCrawlerProcessService());
 		
-		return myList;
+		return new ArrayList<>(suscribedServices.stream().map(IProcessService::getServiceName).collect(Collectors.toList()));
 	}
 
 	@Override
@@ -46,9 +48,16 @@ public class AnalysisService implements IAnalysisService {
 		ArrayList<ArrayList<String>> dataForInstances = data.deleteFirstCols(2);
 		ArrayList<String> featureNames = new ArrayList<String>( data.getFirstRow().subList(2, data.getFirstRow().size()));
 		
+		String[] fullName = data.getFileName().split("_CMDSEP_");
 		
-		//StatisticsProcessService service = new StatisticsProcessService( data.getDataRows() , data.getFirstRow());		
-		StatisticsProcessService service = new StatisticsProcessService( dataForInstances , featureNames);		
+		
+		
+		String serviceName = fullName[0];
+		String serviceArgs = fullName[1];
+		String name = fullName[2];
+		
+		IProcessService service = selectService(serviceName);
+		service.setData(serviceArgs, dataForInstances , featureNames);		
 		
 		
 		ArrayList<String> resultsTags = service.getFeaturesNames();
@@ -57,7 +66,7 @@ public class AnalysisService implements IAnalysisService {
 		
 		
 		ExperimentResultsFileDataStructure response = new ExperimentResultsFileDataStructure();
-		response.setFileName(data.getFileName());
+		response.setFileName(name);
 
 		
 		response.setFirstRow(new ArrayList<>());
@@ -80,7 +89,16 @@ public class AnalysisService implements IAnalysisService {
 	}
 	
 
-	
+	public IProcessService selectService(String serviceName) {
+		
+		for(IProcessService ps : suscribedServices) {
+			if(ps.getServiceName().equals(serviceName)) {
+				return ps;
+			}
+		}
+		return null;
+		
+	}
 	
 
 

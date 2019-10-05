@@ -35,10 +35,10 @@ public class PlainExperiment implements Comparable<PlainExperiment>{
 	@Column(name = "DESCRIPTION",  nullable = false)
 	private String description;
 
-	@ManyToMany(cascade = CascadeType.PERSIST, fetch=FetchType.EAGER)
+	@ManyToMany(cascade = {CascadeType.REMOVE,CascadeType.REFRESH,CascadeType.PERSIST,CascadeType.DETACH }, fetch=FetchType.EAGER)
 	private Set<PlainGroup> plainGroups = new HashSet<>();
 	
-	@ManyToMany(cascade = CascadeType.PERSIST, fetch=FetchType.EAGER)
+	@ManyToMany(cascade = {CascadeType.REMOVE,CascadeType.REFRESH,CascadeType.PERSIST,CascadeType.DETACH }, fetch=FetchType.EAGER)
 	private Set<PlainFeature> plainFeatures = new HashSet<>();
 	
 	@JoinColumn(name = "TASK_ID")
