@@ -15,7 +15,7 @@ import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainNode;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainRelation;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainTask;
 
-public interface ISimpleGraphManager {
+public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 
 	public PlainNode doNode(
 			String nodeName

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class ExperimentRequestFileDataStructure extends ExperimentResultsFileDataStructure{
 	
 	
+	//fileName = service:commands:name
 	
 	//names  ->>> nodename  / data1name / data2name
 	//ArrayList<String> firstRow;

@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ResourceUtils;
 
-import com.thesisderik.appthesis.interfaces.IAnalisysService;
+import com.thesisderik.appthesis.interfaces.IAnalysisService;
 import com.thesisderik.appthesis.interfaces.IGraphBuilder;
 import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
 import com.thesisderik.appthesis.persistence.graph.entities.Graph;
@@ -35,7 +35,7 @@ public class SimpleGraphRepoTests {
 	
 
 	@Autowired
-	IAnalisysService iAnalisysService;
+	IAnalysisService iAnalisysService;
 	
 
 	@Test
@@ -88,30 +88,66 @@ public class SimpleGraphRepoTests {
 		
 		iSimpleGraphManager.createGroupBulk(newGroup);
 		
-		iSimpleGraphManager.doTask("AgeAnalizer");
+		
+		iSimpleGraphManager.doTask("SmilesCrawler");
+		iSimpleGraphManager.doTask("Statistics");
+		iSimpleGraphManager.doTask("Clustering");
 		
 		iSimpleGraphManager.createExperiment(
-				"analisis1",
-				"sirve para analizar el comportamiento de la edad y la estatura",
-				new ArrayList<String>(Arrays.asList("mygroup2","mygroup3")),
-				new ArrayList<String>(Arrays.asList("Age","Height")),
-				"AgeAnalizer",
-				"no query",
-				"ageanalisisresult"
+				"smilesbasic",
+				"analizar y obtener la representacion SMILES de los datos",
+				new ArrayList<String>(Arrays.asList("ALL")),
+				new ArrayList<String>(Arrays.asList("NAME")),
+				"SmilesCrawler",
+				"",
+				"SMILES_PROPERTY"
 				);
 		
-		ExperimentRequestFileDataStructure data = iSimpleGraphManager.getExperimentData("analisis1");
 
-		System.out.println(data);
+		
+		iSimpleGraphManager.createExperiment(
+				"statisticsbasic",
+				"sirve para analizar estadisticamente algunas las variables",
+				new ArrayList<String>(Arrays.asList("mygroup1","mygroup2","mygroup3")),
+				new ArrayList<String>(Arrays.asList("Age","Height")),
+				"Statistics",
+				""
+				);
+		
+
+		
+		iSimpleGraphManager.createExperiment(
+				"clusterbasic",
+				"intenta hacer un clustering con las c",
+				new ArrayList<String>(Arrays.asList("mygroup2","mygroup3")),
+				new ArrayList<String>(Arrays.asList("Age","Height")),
+				"Clustering",
+				""
+				);
+
+		
+		
+		iAnalisysService.setExperimentDataIntegrator(iSimpleGraphManager);
+
+		
+		
+		ExperimentRequestFileDataStructure data0 = iSimpleGraphManager.getExperimentData("smilesbasic");
+		ExperimentRequestFileDataStructure data1 = iSimpleGraphManager.getExperimentData("statisticsbasic");
+		ExperimentRequestFileDataStructure data2 = iSimpleGraphManager.getExperimentData("clusterbasic");
+
+
+
+		System.out.println(data0);
+		//System.out.println(data1);
+		//System.out.println(data2);
 
 		
 		System.out.println();
 		
-		ExperimentResultsFileDataStructure ExpRes = iAnalisysService.processData(data);
+		iAnalisysService.processData(data0);
+		//iAnalisysService.processData(data1);
+		//iAnalisysService.processData(data2);
 
-		System.out.println();
-		
-		iSimpleGraphManager.integrateExperimentResult(ExpRes);
 
 		System.out.println();
 

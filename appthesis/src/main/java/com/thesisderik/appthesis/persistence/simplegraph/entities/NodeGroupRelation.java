@@ -3,6 +3,7 @@ package com.thesisderik.appthesis.persistence.simplegraph.entities;
 import java.util.Objects;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,7 +30,7 @@ public class NodeGroupRelation implements Comparable<NodeGroupRelation>{
 	private Long id;
 	
     @JoinColumn(name = "FK_GROUP", nullable = false)
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.EAGER )
 	private PlainGroup group;
 	
     @JoinColumn(name = "FK_NODE", nullable = false)

@@ -39,7 +39,8 @@ public class PlainTask implements Comparable<PlainTask> {
     @OneToMany(
         mappedBy = "task",
         cascade = CascadeType.ALL,
-        orphanRemoval = true
+        orphanRemoval = true,
+        fetch = FetchType.EAGER
     )
     private Set<PlainExperiment> plainExperiments = new TreeSet<>();
 

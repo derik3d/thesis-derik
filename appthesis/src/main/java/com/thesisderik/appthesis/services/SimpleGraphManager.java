@@ -1,6 +1,8 @@
 package com.thesisderik.appthesis.services;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Predicate;
@@ -77,6 +79,14 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		pn = new PlainNode();
 		pn.setName(name);
 		simpleNodeDAO.save(pn);
+		
+		
+		////ALL NODES WITH NAME AND ALL PROPERTY
+		
+		
+		createFeature("NAME",name,name);
+		createGroupRel("ALL",name);
+		
 		
 		return pn;
 		
@@ -265,7 +275,7 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	public PlainExperiment createExperiment(String title, String description, ArrayList<String> groups, ArrayList<String> features,
 			String targetTask, String taskQuery) {
 
-		return createExperiment(title,description,groups,features,targetTask,taskQuery,null);
+		return createExperiment(title,description,groups,features,targetTask,taskQuery,"");
 		
 	}
 	
@@ -319,14 +329,38 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 		TreeSet<NodeGroupRelation> groupRelations = relSimpleNodeGroupDAO.findAllByNode(node);
 		
-		TreeSet<PlainGroup> pgs = new TreeSet<> (groupRelations.stream().map(NodeGroupRelation::getGroup).collect(Collectors.toSet()));
+		List<PlainGroup> ls = groupRelations.stream().map(NodeGroupRelation::getGroup).collect(Collectors.toList());
+		
+		ls.retainAll(setFeaturesRequired);
+		
+		
+		return ls.get(0);
+		
+		/*
+		Set<PlainGroup> pgs = new TreeSet<>();//groupRelations.stream().map(NodeGroupRelation::getGroup).collect(Collectors.toSet()));
+		
+		for(NodeGroupRelation ngr : groupRelations) {
+			PlainGroup pg = ngr.getGroup();
+			pgs.add(pg);
+		}
 		
 		pgs.retainAll(setFeaturesRequired);
 		
 		return pgs.stream().findFirst().get();
 		
+		*/
+		
 	}
 	
+	
+	public PlainExperiment saveOverrideExperimentName(PlainExperiment experiment, String givenName) {
+		
+		experiment.setFeatureNameOverride(givenName);
+		
+		experiment = simpleExperimentDAO.save(experiment);
+		
+		return experiment;
+	}
 	
 
 	@Override
@@ -372,7 +406,27 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 		ExperimentRequestFileDataStructure result = new ExperimentRequestFileDataStructure();
 		
-		result.setFileName(experiment.getFeatureNameOverride());
+		String sep = "_CMDSEP_";
+		
+		String cmdPart = experiment.getTask()+sep+experiment.getTaskDescriptionCommand()+sep;
+		
+		
+		
+		if(experiment.getFeatureNameOverride().length()>0) {
+			
+			result.setFileName(cmdPart + experiment.getFeatureNameOverride());
+			
+		}else {
+			
+			String givenName = (""+Objects.hash( experiment.getTitle(),experiment.getDescription(),experiment.getTask(),experiment.getTaskDescriptionCommand()));
+			
+			experiment = saveOverrideExperimentName(experiment,givenName);
+			
+			result.setFileName(cmdPart + givenName);
+			
+		}
+		
+		
 		result.setFirstRow(firstRow);
 		result.setDataRows(dataRows);
 

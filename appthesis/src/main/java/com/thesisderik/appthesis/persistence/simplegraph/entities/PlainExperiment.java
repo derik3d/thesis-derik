@@ -23,12 +23,7 @@ import javax.persistence.Table;
 @Table( name = "GRAPH_EXPERIMENTS" )
 public class PlainExperiment implements Comparable<PlainExperiment>{
 	
-	@Override
-	public String toString() {
-		return "PlainExperiment [id=" + id + ", title=" + title + ", description=" + description + ", plainGroups="
-				+ plainGroups + ", plainFeatures=" + plainFeatures + ", task=" + task + ", taskDescriptionCommand="
-				+ taskDescriptionCommand + ", featureNameOverride=" + featureNameOverride + "]";
-	}
+	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,10 +35,10 @@ public class PlainExperiment implements Comparable<PlainExperiment>{
 	@Column(name = "DESCRIPTION",  nullable = false)
 	private String description;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch=FetchType.EAGER)
 	private Set<PlainGroup> plainGroups = new HashSet<>();
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch=FetchType.EAGER)
 	private Set<PlainFeature> plainFeatures = new HashSet<>();
 	
 	@JoinColumn(name = "TASK_ID")
