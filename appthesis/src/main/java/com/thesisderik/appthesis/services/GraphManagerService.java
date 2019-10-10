@@ -1,15 +1,19 @@
 package com.thesisderik.appthesis.services;
 
+import java.util.Iterator;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.thesisderik.appthesis.interfaces.IAnalysisService;
 import com.thesisderik.appthesis.interfaces.IGraphBuilder;
 import com.thesisderik.appthesis.interfaces.IGraphManagerService;
 import com.thesisderik.appthesis.interfaces.INamesIntegrator;
+import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
 import com.thesisderik.appthesis.persistence.graph.entities.Graph;
 import com.thesisderik.appthesis.persistence.graph.entities.GraphNode;
 import com.thesisderik.appthesis.persistence.graph.entities.GraphNode.NType;
+import com.thesisderik.appthesis.persistence.graph.entities.GraphNodeRelation;
 import com.thesisderik.appthesis.persistence.identifiers.entities.PubchemIdentifier;
 
 
@@ -21,6 +25,14 @@ public class GraphManagerService implements IGraphManagerService{
 	
 	@Autowired
 	IGraphBuilder iGraphBuilder;
+	
+
+	@Autowired
+	ISimpleGraphManager iSimpleGraphManager;
+	
+
+	@Autowired
+	IAnalysisService iAnalisysService;
 	
 
 	@Override
@@ -95,7 +107,8 @@ public class GraphManagerService implements IGraphManagerService{
 	}
 	
 	private void persistOnDBSbml(Graph gp) {
-		// persist graph on db
+		
+		persistOnDB(gp);
 		
 	}
 	
@@ -141,10 +154,47 @@ public class GraphManagerService implements IGraphManagerService{
 	}
 	
 	private void persistOnDBKgml(Graph gp) {
-		// persist graph on db
+		
+		persistOnDB(gp);
 		
 	}
 	
+	private void persistOnDB(Graph gp) {
+		
+		Iterator<GraphNodeRelation> iterator = gp.getNodeRelations().iterator();
+		
+		while(iterator.hasNext()) {
+			
+			
+			GraphNodeRelation relation = iterator.next();
+			
+			
+			String reactionNode = relation.getSource().getName();
+			
+			if(reactionNode.length()>10)
+				reactionNode = reactionNode.substring(0, 10);
+			
+			String compoundNode = relation.getTarget().getName();
+			
+			if(compoundNode.length()>10)
+				compoundNode = compoundNode.substring(0, 10);
+
+			iSimpleGraphManager.doNode(reactionNode);
+			iSimpleGraphManager.createFeature("METABOLITE_TYPE","REACTION",reactionNode);
+
+			iSimpleGraphManager.doNode(compoundNode);
+			iSimpleGraphManager.createFeature("METABOLITE_TYPE","COMPOUND",compoundNode);
+			
+			iSimpleGraphManager.createRelation("METABOLITE_"+gp.getName(), reactionNode, compoundNode);
+			
+			iSimpleGraphManager.createGroupRel(gp.getName(),reactionNode);
+			iSimpleGraphManager.createGroupRel(gp.getName(),compoundNode);
+
+			
+		}
+		
+		
+	}
 	
 	
 
