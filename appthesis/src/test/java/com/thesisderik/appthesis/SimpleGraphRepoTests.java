@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ResourceUtils;
 
@@ -21,6 +22,7 @@ import com.thesisderik.appthesis.rawgraphparser.RawGraphParser;
 import com.thesisderik.appthesis.services.GraphBuilder;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -161,6 +163,16 @@ public class SimpleGraphRepoTests {
 		iAnalisysService.processData(data1);
 		iAnalisysService.processData(data2);
 
+		
+		ArrayList<String> arr = new ArrayList<>();
+		
+		arr.add("test_loader_file");
+		
+		File resource = new ClassPathResource("pendingfeatures/"+arr.get(0)+".ans").getFile();
+		
+		arr.add(new String(Files.readAllBytes(resource.toPath())));
+		
+		iAnalisysService.integrateFeaturesFile(arr);
 
 		System.out.println();
 

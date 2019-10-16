@@ -24,6 +24,49 @@ public class AnalysisService implements IAnalysisService {
 	
 	private IExperimentDataIntegrator iExperimentDataIntegrator;
 	private ArrayList<IProcessService> suscribedServices = new ArrayList<>();
+	
+	
+	
+
+	@Override
+	public void integrateFeaturesFile(ArrayList<String> file) {
+
+		ExperimentResultsFileDataStructure erde = new ExperimentResultsFileDataStructure();
+		
+		
+		erde.setFileName(file.get(0));
+		
+		boolean firstRow=true;
+		
+		ArrayList<ArrayList<String>> tempCont = new ArrayList<>();
+		
+		for(String row : file.get(1).split("\n")) {
+			
+			if(firstRow) {
+				if(row.length()>2) {
+					erde.setFirstRow(new ArrayList<>(Arrays.asList( row.split(",")) ));
+					firstRow=false;
+				}
+			}else{
+			
+	
+				if(row.length()>2) {
+					tempCont.add(new ArrayList<>(Arrays.asList( row.split(",")) ));
+				}
+			
+			}
+			
+		}
+		
+		erde.setDataRows(tempCont);
+
+		
+		System.out.println(erde);
+
+		
+		iExperimentDataIntegrator.integrateExperimentResult( erde );
+
+	}
 
 	@Override
 	public ArrayList<String> getServices() {

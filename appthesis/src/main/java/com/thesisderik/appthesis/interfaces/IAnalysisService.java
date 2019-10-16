@@ -10,6 +10,8 @@ public interface IAnalysisService {
 	public ArrayList<String> getServices();
 
 	public void processData(ExperimentRequestFileDataStructure data);
+	
+	public void integrateFeaturesFile(ArrayList<String> file);
 
 	public void setExperimentDataIntegrator(IExperimentDataIntegrator results);
 	
