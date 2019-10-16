@@ -1,6 +1,7 @@
 package com.thesisderik.appthesis.persistence.simplegraph.datastructure;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class ExperimentResultsFileDataStructure {
 	
@@ -75,6 +76,29 @@ public class ExperimentResultsFileDataStructure {
 		}
 		
 		return resp;
+		
+	}
+	
+	public ArrayList<String> buildCSVFile(){
+		
+		
+		ArrayList<String> fileData =new ArrayList<String>();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(firstRow.stream().collect(Collectors.joining(",")));
+		sb.append("\n");
+		
+		
+		for(ArrayList<String> data: dataRows) {
+			sb.append(data.stream().collect(Collectors.joining(",")));
+			sb.append("\n");
+		}
+		
+		fileData.add(fileName+".csv");
+		fileData.add(sb.toString());
+		
+		return fileData;
 		
 	}
 	

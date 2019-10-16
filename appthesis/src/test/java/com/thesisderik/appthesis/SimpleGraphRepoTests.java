@@ -141,6 +141,19 @@ public class SimpleGraphRepoTests {
 		System.out.println(data1);
 		System.out.println(data2);
 
+		System.out.println();
+		System.out.println();
+		System.out.println(data0.buildCSVFile());
+		System.out.println();
+		System.out.println();
+		System.out.println(data1.buildCSVFile());
+		System.out.println();
+		System.out.println();
+		System.out.println(data2.buildCSVFile());
+		System.out.println();
+		System.out.println();
+
+		
 		
 		System.out.println();
 		
