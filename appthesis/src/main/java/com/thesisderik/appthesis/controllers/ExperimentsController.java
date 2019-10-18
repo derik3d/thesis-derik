@@ -55,9 +55,10 @@ public class ExperimentsController {
 	public ResponseEntity<String> saveModel(
 			@RequestParam(value="uqname") String uqName,
 			@RequestParam(value="model") String model,
+			@RequestParam(value="classes") String classes,
 			@RequestParam(value="features") String features) {
 		
-		boolean res = iSimpleGraphManager.saveModelDataWithExperimentUQName(uqName, model, features);
+		boolean res = iSimpleGraphManager.saveModelDataWithExperimentUQName(uqName, model, classes, features);
 
 		
 		if (!res) {
@@ -84,11 +85,25 @@ public class ExperimentsController {
 	}
 	
 	
-	@RequestMapping(value = "getModelLabelsTrained/")
-	public ResponseEntity<String> returnModelLabels(
+	@RequestMapping(value = "getModelClassesTrained/")
+	public ResponseEntity<String> returnModelClasses(
 			@RequestParam(value="uqname") String uqName) {
 		
-		String res =iSimpleGraphManager.getExperimentModelLabelsWithUQName(uqName);
+		String res =iSimpleGraphManager.getExperimentModelClassesWithUQName(uqName);
+		
+		if (res == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+		
+		return new ResponseEntity<>(res,HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "getModelFeaturesTrained/")
+	public ResponseEntity<String> returnModelFeatures(
+			@RequestParam(value="uqname") String uqName) {
+		
+		String res =iSimpleGraphManager.getExperimentModelFeaturesWithUQName(uqName);
 		
 		if (res == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

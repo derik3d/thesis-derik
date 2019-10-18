@@ -528,13 +528,14 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	}
 
 	@Override
-	public boolean saveModelDataWithExperimentUQName(String uqName, String modelObjectData, String modelTitlesData) {
+	public boolean saveModelDataWithExperimentUQName(String uqName, String modelObjectData,String modelClassesData, String modelFeaturesData) {
 
 
 		PlainExperiment experiment = simpleExperimentDAO.findByFeatureNameOverride(uqName);
 
+		experiment.setModelClassesData(modelClassesData);
+		experiment.setModelFeaturesData(modelFeaturesData);
 		experiment.setModelObjectData(modelObjectData);
-		experiment.setModelTitlesData(modelTitlesData);
 		
 		experiment = simpleExperimentDAO.save(experiment);
 
@@ -556,10 +557,24 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	}
 
 	@Override
-	public String getExperimentModelLabelsWithUQName(String uqName) {
+	public String getExperimentModelFeaturesWithUQName(String uqName) {
 		PlainExperiment experiment = simpleExperimentDAO.findByFeatureNameOverride(uqName);
 
-		String res = experiment.getModelTitlesData();
+		String res = experiment.getModelFeaturesData();
+		
+		if(res.length()>0) {
+			return res;
+		}
+		
+		return null;
+
+	}
+
+	@Override
+	public String getExperimentModelClassesWithUQName(String uqName) {
+		PlainExperiment experiment = simpleExperimentDAO.findByFeatureNameOverride(uqName);
+
+		String res = experiment.getModelClassesData();
 		
 		if(res.length()>0) {
 			return res;
