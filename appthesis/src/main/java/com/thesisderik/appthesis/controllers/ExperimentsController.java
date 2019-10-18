@@ -30,10 +30,10 @@ public class ExperimentsController {
 	}
 
 	
-	@RequestMapping("dataforexperiment/")
-	public ResponseEntity<String> getDataForExperiment(@RequestParam(value="id", defaultValue="") String id) {
+	@RequestMapping(value = "datafortrain/", produces = "text/plain")
+	public ResponseEntity<String> getDataForExperiment(@RequestParam(value="uqname", defaultValue="") String uqName) {
 
-		String res = iSimpleGraphManager.getExperimentDataRawContent(id);
+		String res = iSimpleGraphManager.getExperimentDataRawContentUQName(uqName);
 		
 		if (res == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -42,18 +42,5 @@ public class ExperimentsController {
 		return new ResponseEntity<>(res,HttpStatus.OK);
 	}
 
-	
-	@RequestMapping("filenameforexperiment/")
-	public ResponseEntity<String> getExchangeNameForExperiment(@RequestParam(value="id", defaultValue="") String id) {
-		
-		String res = iSimpleGraphManager.getExperimentDataRawName(id);
-		
-		if (res == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-	    }
-		
-		return new ResponseEntity<>(res,HttpStatus.OK);
-	}
-	
 
 }

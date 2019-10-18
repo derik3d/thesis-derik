@@ -145,10 +145,10 @@ public class SimpleGraphRepoTests {
 
 		System.out.println();
 		System.out.println();
-		System.out.println(iSimpleGraphManager.getExperimentDataRawName("smilesbasic"));
+		//System.out.println(iSimpleGraphManager.getExperimentDataRawName("smilesbasic"));
 		System.out.println();
 		System.out.println();
-		System.out.println(iSimpleGraphManager.getExperimentDataRawContent("smilesbasic"));
+		//System.out.println(iSimpleGraphManager.getExperimentDataRawContent("smilesbasic"));
 		System.out.println();
 		System.out.println();
 		System.out.println(data2.buildCSVFile());

@@ -16,4 +16,6 @@ public interface SimpleExperimentDAO extends CrudRepository<PlainExperiment, Lon
 
 	PlainExperiment findByTitle(String title);
 
+	PlainExperiment findByFeatureNameOverride(String uqName);
+
 }

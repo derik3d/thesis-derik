@@ -43,8 +43,8 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	final String defaultGroupAll = "ALL";
 
 	
-	final String defaultCSVName = "defcsvname";
-	final String defaultCSVGroup = "defcsvclass";
+	final String defaultCSVName = "DEFCSVNAME";
+	final String defaultCSVGroup = "DEFCSVGROUP";
 	
 	
 	final String resultGroupSegment = "RESULT_GP_";
@@ -506,14 +506,11 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	}
 
 	@Override
-	public String getExperimentDataRawName(String experimentName) {
-		ExperimentRequestFileDataStructure data = getExperimentData(experimentName);
-		return data.buildCSVFile().get(0);
-	}
+	public String getExperimentDataRawContentUQName(String uqName) {
+		
+		PlainExperiment experiment = simpleExperimentDAO.findByFeatureNameOverride(uqName);
 
-	@Override
-	public String getExperimentDataRawContent(String experimentName) {
-		ExperimentRequestFileDataStructure data = getExperimentData(experimentName);
+		ExperimentRequestFileDataStructure data = getExperimentData(experiment.getTitle());
 		return data.buildCSVFile().get(1);
 	}
 	
