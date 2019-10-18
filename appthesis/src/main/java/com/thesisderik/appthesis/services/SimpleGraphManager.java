@@ -38,7 +38,19 @@ import com.thesisderik.appthesis.simplerepositories.SimpleTaskDAO;
 @Service
 public class SimpleGraphManager implements ISimpleGraphManager {
 	
-	String sep = "_CMDSEP_";
+	final String defaultSeparator = "_CMDSEP_";
+	final String defaultFeatureName = "NAME";
+	final String defaultGroupAll = "ALL";
+
+	
+	final String defaultCSVName = "defcsvname";
+	final String defaultCSVGroup = "defcsvclass";
+	
+	
+	final String resultGroupSegment = "RESULT_GP_";
+	final String resultFeatureSegment = "RESULT_FT_";
+	final String resultPropertyName = "_PROPNAME_";
+	final String resultDimentionSegment = "_DIM_";
 	
 	@Autowired
 	RelSimpleNodeFeatureDAO relSimpleNodeFeatureDAO;
@@ -87,8 +99,8 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		////ALL NODES WITH NAME AND ALL PROPERTY
 		
 		
-		createFeature("NAME",name,name);
-		createGroupRel("ALL",name);
+		createFeature(defaultFeatureName,name,name);
+		createGroupRel(defaultGroupAll,name);
 		
 		
 		return pn;
@@ -261,12 +273,35 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 		pe.setTask(task);
 		pe.setTaskDescriptionCommand(taskQuery);
-		pe.setFeatureNameOverride(featureNameOverride);
+		
+		
+		String cmdPart = pe.getTask().getName()+defaultSeparator+pe.getTaskDescriptionCommand()+defaultSeparator;
+
+		
+		//def name override
+		if(featureNameOverride.length()>0) {
+			pe.setFeatureNameOverride(cmdPart+featureNameOverride);
+		}else {
+			
+			String givenName = (""+Objects.hash( pe.getTitle(),pe.getDescription(),pe.getTask(),pe.getTaskDescriptionCommand()));
+			
+			pe.setFeatureNameOverride(cmdPart + givenName);
+						
+		}
+		
 		pe = simpleExperimentDAO.save(pe);
 		
-		pe.getPlainFeatures().addAll(plainFeatures);
+		//pe.getPlainFeatures().addAll(plainFeatures);
 		
-		pe.getPlainGroups().addAll(plainGroups);
+		//pe.getPlainGroups().addAll(plainGroups);
+		
+		
+		for(PlainFeature pfitem: plainFeatures)
+			pe.addPlainFeature(pfitem);
+		
+		for(PlainGroup pgitem: plainGroups)
+			pe.addPlainGroup(pgitem);
+		
 		
 		pe = simpleExperimentDAO.save(pe);
 
@@ -390,8 +425,8 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		//first row
 		
 		ArrayList<String> firstRow = new ArrayList<>();
-		firstRow.add("nombre");
-		firstRow.add("clase");
+		firstRow.add(defaultCSVName);
+		firstRow.add(defaultCSVGroup);
 		firstRow.addAll(featuresToUse.stream().map(PlainFeature::getName).collect(Collectors.toList()));
 		
 		//next data
@@ -419,23 +454,9 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		ExperimentRequestFileDataStructure result = new ExperimentRequestFileDataStructure();
 		
 		
-		String cmdPart = experiment.getTask().getName()+sep+experiment.getTaskDescriptionCommand()+sep;
 		
-		
-		
-		if(experiment.getFeatureNameOverride().length()>0) {
 			
-			result.setFileName(cmdPart + experiment.getFeatureNameOverride());
-			
-		}else {
-			
-			String givenName = (""+Objects.hash( experiment.getTitle(),experiment.getDescription(),experiment.getTask(),experiment.getTaskDescriptionCommand()));
-			
-			experiment = saveOverrideExperimentName(experiment,givenName);
-			
-			result.setFileName(cmdPart + givenName);
-			
-		}
+		result.setFileName(experiment.getFeatureNameOverride());
 		
 		
 		result.setFirstRow(firstRow);
@@ -447,6 +468,7 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	@Override
 	public void integrateExperimentResult(ExperimentResultsFileDataStructure expRes) {
 
+		
 		ArrayList<ArrayList<String>> nodes = expRes.getDataRows();
 		 
 		ArrayList<String> namesRow = expRes.getFirstRow(); 
@@ -455,10 +477,10 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 			
 			ArrayList<String> row = nodes.get(i);
 			
-			createGroupRel("RESULT_GP_"+ expRes.getFileName(),row.get(0)); // getting node name, first field
+			createGroupRel(resultGroupSegment + expRes.getFileName(),row.get(0)); // getting node name, first field
 			
 			for(int j = 1; j<row.size(); j++) {
-				createFeature("RESULT_FT_"+ expRes.getFileName() +"_PROPNAME_"+ namesRow.get(j) + "_DIM_"+j, row.get(j), row.get(0));
+				createFeature(resultFeatureSegment + expRes.getFileName() + resultPropertyName + namesRow.get(j) + resultDimentionSegment +j, row.get(j), row.get(0));
 			}
 			
 		}
