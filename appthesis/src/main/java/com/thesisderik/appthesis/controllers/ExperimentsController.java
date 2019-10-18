@@ -51,7 +51,7 @@ public class ExperimentsController {
 	
 	
 	
-	@RequestMapping(value = "saveModelTrained/")
+	@RequestMapping(value = "saveModelTrained/", produces = "text/plain")
 	public ResponseEntity<String> saveModel(
 			@RequestParam(value="uqname") String uqName,
 			@RequestParam(value="model") String model,
@@ -72,7 +72,7 @@ public class ExperimentsController {
 	
 	
 	
-	@RequestMapping(value = "getModelObjectTrained/")
+	@RequestMapping(value = "getModelObjectTrained/", produces = "text/plain")
 	public ResponseEntity<String> returnModelObject(
 			@RequestParam(value="uqname") String uqName) {
 		
@@ -85,7 +85,7 @@ public class ExperimentsController {
 	}
 	
 	
-	@RequestMapping(value = "getModelClassesTrained/")
+	@RequestMapping(value = "getModelClassesTrained/", produces = "text/plain")
 	public ResponseEntity<String> returnModelClasses(
 			@RequestParam(value="uqname") String uqName) {
 		
@@ -99,7 +99,7 @@ public class ExperimentsController {
 	}
 	
 	
-	@RequestMapping(value = "getModelFeaturesTrained/")
+	@RequestMapping(value = "getModelFeaturesTrained/", produces = "text/plain")
 	public ResponseEntity<String> returnModelFeatures(
 			@RequestParam(value="uqname") String uqName) {
 		
@@ -128,7 +128,7 @@ public class ExperimentsController {
 	
 	
 	
-	@RequestMapping(value = "integrateData/")
+	@RequestMapping(value = "integrateData/", produces = "text/plain")
 	public ResponseEntity<String> saveModel(
 			@RequestParam(value="uqname") String uqName,
 			@RequestParam(value="csvdata") String data) {
