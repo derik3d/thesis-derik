@@ -50,6 +50,16 @@ public class PlainExperiment implements Comparable<PlainExperiment>{
 	
 	@Column(name = "FEATURE_NAME_OVERRIDE",  nullable = false)
 	private String featureNameOverride;
+	
+
+	@Column(name = "MODEL_OBJECT_DATA",  nullable = true)
+	private String modelObjectData;
+	
+
+	@Column(name = "MODEL_TITLES_DATA",  nullable = true)
+	private String modelTitlesData;
+	
+	
 
 	
 	public void addPlainGroup(PlainGroup plainGroup){
@@ -155,6 +165,22 @@ public class PlainExperiment implements Comparable<PlainExperiment>{
 
 	public void setFeatureNameOverride(String featureNameOverride) {
 		this.featureNameOverride = featureNameOverride;
+	}
+	
+	public String getModelObjectData() {
+		return modelObjectData;
+	}
+
+	public void setModelObjectData(String modelObjectData) {
+		this.modelObjectData = modelObjectData;
+	}
+
+	public String getModelTitlesData() {
+		return modelTitlesData;
+	}
+
+	public void setModelTitlesData(String modelTitlesData) {
+		this.modelTitlesData = modelTitlesData;
 	}
 
 	@Override
