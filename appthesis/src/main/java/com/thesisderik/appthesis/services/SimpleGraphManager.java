@@ -513,6 +513,20 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		ExperimentRequestFileDataStructure data = getExperimentData(experiment.getTitle());
 		return data.buildCSVFile().get(1);
 	}
+
+	@Override
+	public void saveModelDataWithExperimentUQName(String uqName, String modelObjectData, String modelTitlesData) {
+
+
+		PlainExperiment experiment = simpleExperimentDAO.findByFeatureNameOverride(uqName);
+
+		experiment.setModelObjectData(modelObjectData);
+		experiment.setModelTitlesData(modelTitlesData);
+		
+		experiment = simpleExperimentDAO.save(experiment);
+
+		
+	}
 	
 	
 
