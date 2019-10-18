@@ -482,6 +482,18 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 		return resNodes;
 	}
+
+	@Override
+	public String getExperimentDataRawName(String experimentName) {
+		ExperimentRequestFileDataStructure data = getExperimentData(experimentName);
+		return data.buildCSVFile().get(0);
+	}
+
+	@Override
+	public String getExperimentDataRawContent(String experimentName) {
+		ExperimentRequestFileDataStructure data = getExperimentData(experimentName);
+		return data.buildCSVFile().get(1);
+	}
 	
 	
 

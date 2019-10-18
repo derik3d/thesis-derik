@@ -136,7 +136,7 @@ public class SimpleGraphRepoTests {
 		ExperimentRequestFileDataStructure data0 = iSimpleGraphManager.getExperimentData("smilesbasic");
 		ExperimentRequestFileDataStructure data1 = iSimpleGraphManager.getExperimentData("statisticsbasic");
 		ExperimentRequestFileDataStructure data2 = iSimpleGraphManager.getExperimentData("clusterbasic");
-
+		
 
 
 		System.out.println(data0);
@@ -145,10 +145,10 @@ public class SimpleGraphRepoTests {
 
 		System.out.println();
 		System.out.println();
-		System.out.println(data0.buildCSVFile());
+		System.out.println(iSimpleGraphManager.getExperimentDataRawName("smilesbasic"));
 		System.out.println();
 		System.out.println();
-		System.out.println(data1.buildCSVFile());
+		System.out.println(iSimpleGraphManager.getExperimentDataRawContent("smilesbasic"));
 		System.out.println();
 		System.out.println();
 		System.out.println(data2.buildCSVFile());

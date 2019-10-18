@@ -83,6 +83,12 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 	public void integrateExperimentResult(ExperimentResultsFileDataStructure expRes);
 
 	public ArrayList<NodeGroupRelation> createGroupBulk(GroupFileDataStructure newGroup);
+	
+	
+	
+	public String getExperimentDataRawName(String experimentName);
+	public String getExperimentDataRawContent(String experimentName);
+
 
 
 
