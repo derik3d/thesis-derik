@@ -11,7 +11,7 @@ public interface IAnalysisService {
 
 	public void processData(ExperimentRequestFileDataStructure data);
 	
-	public void integrateFeaturesFile(ArrayList<String> file);
+	public boolean integrateFeaturesFile(ArrayList<String> file);
 
 	public void setExperimentDataIntegrator(IExperimentDataIntegrator results);
 	

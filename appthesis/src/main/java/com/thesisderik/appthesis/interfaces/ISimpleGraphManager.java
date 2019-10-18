@@ -79,6 +79,8 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 	
 	
 	public ExperimentRequestFileDataStructure getExperimentData(String experimentName);
+	
+	public ExperimentRequestFileDataStructure getExperimentData(String experimentName, boolean includeAllGroup);
 
 	public void integrateExperimentResult(ExperimentResultsFileDataStructure expRes);
 
@@ -92,6 +94,8 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 	public String getExperimentModelObjectWithUQName(String uqName);
 
 	public String getExperimentModelLabelsWithUQName(String uqName);
+
+	public String getDataForEvaluateRawContentUQName(String uqName);
 
 
 

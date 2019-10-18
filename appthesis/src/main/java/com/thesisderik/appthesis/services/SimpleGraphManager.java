@@ -318,19 +318,28 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	}
 	
 	
-	public ArrayList<PlainNode> findNodesForExperiment(PlainExperiment experiment){
+	public ArrayList<PlainNode> findNodesForExperiment(PlainExperiment experiment, boolean includeAllGroup){
 		
 		
 		//Nodes at least in one of the groups
 		//Nodes That has all the features, ignoring the features that all nodes doesnt have
 
+		ArrayList<PlainNode> byGroupNodes;
 		
-		TreeSet<NodeGroupRelation> groupsUseByGroup = relSimpleNodeGroupDAO.
+		if(!includeAllGroup) {
+			
+			TreeSet<NodeGroupRelation> groupsUseByGroup = relSimpleNodeGroupDAO.
 				findAllByGroupIn(experiment.getPlainGroups());
 		
 		
-		ArrayList<PlainNode> byGroupNodes = new ArrayList<>( groupsUseByGroup.stream().
+			byGroupNodes = new ArrayList<>( groupsUseByGroup.stream().
 				map(NodeGroupRelation::getNode).collect(Collectors.toSet()) );
+		}else {
+			
+			byGroupNodes = (ArrayList<PlainNode>) simpleNodeDAO.findAll();
+			
+		}
+			
 		
 		for( PlainFeature pf : experiment.getPlainFeatures()) {
 			
@@ -409,14 +418,18 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		return experiment;
 	}
 	
-
 	@Override
 	public ExperimentRequestFileDataStructure getExperimentData(String experimentName) {
+		return getExperimentData(experimentName,false);
+	}
+	
+	@Override
+	public ExperimentRequestFileDataStructure getExperimentData(String experimentName, boolean includeAllGroup) {
 
 
 		PlainExperiment experiment = simpleExperimentDAO.findByTitle(experimentName);
 		
-		ArrayList<PlainNode> nodesToUse = findNodesForExperiment(experiment);
+		ArrayList<PlainNode> nodesToUse = findNodesForExperiment(experiment,includeAllGroup);
 		
 		ArrayList<PlainFeature> featuresToUse = new ArrayList<>(featuresOfNodesToUseInRange(nodesToUse, experiment.getPlainFeatures()));
 		
@@ -555,6 +568,17 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		return null;
 
 	}
+
+	@Override
+	public String getDataForEvaluateRawContentUQName(String uqName) {
+
+		PlainExperiment experiment = simpleExperimentDAO.findByFeatureNameOverride(uqName);
+
+		ExperimentRequestFileDataStructure data = getExperimentData(experiment.getTitle(),true);
+		
+		return data.buildCSVFile().get(1);
+	}
+	
 	
 	
 

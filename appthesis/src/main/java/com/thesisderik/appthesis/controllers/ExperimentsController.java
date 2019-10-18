@@ -1,5 +1,8 @@
 package com.thesisderik.appthesis.controllers;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +38,7 @@ public class ExperimentsController {
 
 	
 	@RequestMapping(value = "dataForTrain/", produces = "text/plain")
-	public ResponseEntity<String> getDataForExperiment(@RequestParam(value="uqname", defaultValue="") String uqName) {
+	public ResponseEntity<String> getDataForTrain(@RequestParam(value="uqname", defaultValue="") String uqName) {
 
 		String res = iSimpleGraphManager.getExperimentDataRawContentUQName(uqName);
 		
@@ -55,14 +58,14 @@ public class ExperimentsController {
 			@RequestParam(value="features") String features) {
 		
 		boolean res = iSimpleGraphManager.saveModelDataWithExperimentUQName(uqName, model, features);
-		
 
 		
 		if (!res) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	    }
 		
-		return new ResponseEntity<>("ok",HttpStatus.OK);	}
+		return new ResponseEntity<>("ok",HttpStatus.OK);
+	}
 	
 
 	
@@ -80,9 +83,6 @@ public class ExperimentsController {
 		return new ResponseEntity<>(res,HttpStatus.OK);
 	}
 	
-
-	
-	
 	
 	@RequestMapping(value = "getModelLabelsTrained/")
 	public ResponseEntity<String> returnModelLabels(
@@ -97,5 +97,39 @@ public class ExperimentsController {
 		return new ResponseEntity<>(res,HttpStatus.OK);
 	}
 
+
+	
+	@RequestMapping(value = "dataForEvaluate/", produces = "text/plain")
+	public ResponseEntity<String> getDataForEvaluate(@RequestParam(value="uqname", defaultValue="") String uqName) {
+
+		String res = iSimpleGraphManager.getDataForEvaluateRawContentUQName(uqName);
+		
+		if (res == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+		
+		return new ResponseEntity<>(res,HttpStatus.OK);
+	}
+	
+	
+	
+	@RequestMapping(value = "integrateData/")
+	public ResponseEntity<String> saveModel(
+			@RequestParam(value="uqname") String uqName,
+			@RequestParam(value="csvdata") String data) {
+		
+
+		boolean res = iAnalysisService.integrateFeaturesFile(new ArrayList<String>(Arrays.asList(uqName,data)));
+		
+		
+		if (!res) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+		
+		return new ResponseEntity<>("ok",HttpStatus.OK);
+	}
+	
+	
+	
 
 }

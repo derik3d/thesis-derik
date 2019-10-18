@@ -29,7 +29,7 @@ public class AnalysisService implements IAnalysisService {
 	
 
 	@Override
-	public void integrateFeaturesFile(ArrayList<String> file) {
+	public boolean integrateFeaturesFile(ArrayList<String> file) {
 
 		ExperimentResultsFileDataStructure erde = new ExperimentResultsFileDataStructure();
 		
@@ -65,6 +65,8 @@ public class AnalysisService implements IAnalysisService {
 
 		
 		iExperimentDataIntegrator.integrateExperimentResult( erde );
+		
+		return true;
 
 	}
 
