@@ -34,6 +34,7 @@ import com.thesisderik.appthesis.simplerepositories.SimpleGroupDAO;
 import com.thesisderik.appthesis.simplerepositories.SimpleNodeDAO;
 import com.thesisderik.appthesis.simplerepositories.SimpleRelationDAO;
 import com.thesisderik.appthesis.simplerepositories.SimpleTaskDAO;
+import com.thesisderik.appthesis.viz.VizGraphFormat;
 
 @Service
 public class SimpleGraphManager implements ISimpleGraphManager {
@@ -592,6 +593,12 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		ExperimentRequestFileDataStructure data = getExperimentData(experiment.getTitle(),true);
 		
 		return data.buildCSVFile().get(1);
+	}
+
+	@Override
+	public VizGraphFormat getGraphFormatedWithGroup(String group) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	
