@@ -11,8 +11,10 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ResourceUtils;
 
+import com.thesisderik.appthesis.idscrawler.entities.ResponseData;
 import com.thesisderik.appthesis.interfaces.IAnalysisService;
 import com.thesisderik.appthesis.interfaces.IGraphBuilder;
+import com.thesisderik.appthesis.interfaces.INamesCrawlerService;
 import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
 import com.thesisderik.appthesis.persistence.graph.entities.Graph;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentRequestFileDataStructure;
@@ -27,10 +29,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
 public class SimpleGraphRepoTests {
 
+	
+
+	@Autowired
+	private INamesCrawlerService iNamesCrawlerService;
 	
 	@Autowired
 	ISimpleGraphManager iSimpleGraphManager;
@@ -48,6 +54,9 @@ public class SimpleGraphRepoTests {
 		iSimpleGraphManager.doNode("B");
 		iSimpleGraphManager.doNode("C");
 		iSimpleGraphManager.doNode("D");
+		iSimpleGraphManager.doNode("3527");
+		iSimpleGraphManager.doNode("3530");
+		iSimpleGraphManager.doNode("3304");
 		
 		//features
 
@@ -69,9 +78,22 @@ public class SimpleGraphRepoTests {
 		iSimpleGraphManager.createRelation("Graph2","C","B");
 		iSimpleGraphManager.createRelation("Graph2","A","D");
 		iSimpleGraphManager.createRelation("Graph2","D","A");
+
+		
+		iSimpleGraphManager.createRelation("GraphChem","3527","3530");
+		iSimpleGraphManager.createRelation("GraphChem","3527","3304");
+		iSimpleGraphManager.createRelation("GraphChem","3304","3530");
 				
 		
 		//group creation
+
+		
+		
+		iSimpleGraphManager.createGroupRel("chemnodes","3527");
+		iSimpleGraphManager.createGroupRel("chemnodes","3530");
+		iSimpleGraphManager.createGroupRel("chemnodes","3304");
+		
+		
 		iSimpleGraphManager.createGroupRel("mygroup1","A");
 		iSimpleGraphManager.createGroupRel("mygroup1","B");
 		iSimpleGraphManager.createGroupRel("mygroup1","C");
@@ -99,10 +121,10 @@ public class SimpleGraphRepoTests {
 		iSimpleGraphManager.createExperiment(
 				"smilesbasic",
 				"analizar y obtener la representacion SMILES de los datos",
-				new ArrayList<String>(Arrays.asList("ALL")),
+				new ArrayList<String>(Arrays.asList("chemnodes")),
 				new ArrayList<String>(Arrays.asList("NAME")),
 				"SmilesCrawler",
-				"s",
+				"",
 				"SMILES_PROPERTY"
 				);
 		
@@ -155,7 +177,8 @@ public class SimpleGraphRepoTests {
 		System.out.println();
 		System.out.println();
 
-		
+		ResponseData res = iNamesCrawlerService.fromPubchemIdGetSmiles("3527");		
+
 		
 		System.out.println();
 		
