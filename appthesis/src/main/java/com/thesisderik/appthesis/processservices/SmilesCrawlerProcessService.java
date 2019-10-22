@@ -6,11 +6,21 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.thesisderik.appthesis.idscrawler.entities.ResponseData;
+import com.thesisderik.appthesis.interfaces.INamesCrawlerService;
+
+@Service
 public class SmilesCrawlerProcessService extends BaseProcessService{
+	
+	@Autowired
+	private INamesCrawlerService iNamesCrawlerService;
 	
 	public static final String serviceName = "SmilesCrawler";
 	
-	public static ArrayList<String> resultsTags = new ArrayList<>( Arrays.asList("SMILES") );
+	public static final ArrayList<String> resultsTags = new ArrayList<>( Arrays.asList("SMILES") );
 	
 	ArrayList<ArrayList<String>> result = new ArrayList<>();
 
@@ -44,7 +54,14 @@ public class SmilesCrawlerProcessService extends BaseProcessService{
 	
 	
 	String getSMILES(String name){
-		return "test_smiles_for"+name;
+		
+		
+		ResponseData res = iNamesCrawlerService.fromPubchemIdGetSmiles(name);		
+		
+		if(res==null)
+			return "BAD_NO_DATA";
+		
+		return res.getResult();
 	}
 	
 	
