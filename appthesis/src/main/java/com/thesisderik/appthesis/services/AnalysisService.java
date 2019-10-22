@@ -7,6 +7,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thesisderik.appthesis.interfaces.IAnalysisService;
@@ -25,7 +26,8 @@ public class AnalysisService implements IAnalysisService {
 	private IExperimentDataIntegrator iExperimentDataIntegrator;
 	private ArrayList<IProcessService> suscribedServices = new ArrayList<>();
 	
-	
+	@Autowired
+	SmilesCrawlerProcessService smilesCrawlerProcessService;
 	
 
 	@Override
@@ -75,7 +77,7 @@ public class AnalysisService implements IAnalysisService {
 		
 		suscribedServices.add(new StatisticsProcessService());
 		suscribedServices.add(new ClusteringProcessService());
-		suscribedServices.add(new SmilesCrawlerProcessService());
+		suscribedServices.add(smilesCrawlerProcessService);
 		
 		return new ArrayList<>(suscribedServices.stream().map(IProcessService::getServiceName).collect(Collectors.toList()));
 	}
