@@ -19,6 +19,7 @@ import com.thesisderik.appthesis.idscrawler.entities.ResponseKegg;
 import com.thesisderik.appthesis.interfaces.IAnalysisService;
 import com.thesisderik.appthesis.interfaces.INamesCrawlerService;
 import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
+import com.thesisderik.appthesis.viz.VizGraphFormat;
 
 @RestController
 @RequestMapping("experiments/")
@@ -142,6 +143,25 @@ public class ExperimentsController {
 	    }
 		
 		return new ResponseEntity<>("ok",HttpStatus.OK);
+	}
+	
+
+	
+	
+	
+	@RequestMapping(value = "getGraphByGroup/", produces = "application/json")
+	public ResponseEntity<VizGraphFormat> getGraphByGroup(
+			@RequestParam(value="group") String group) {
+		
+
+		VizGraphFormat res = iSimpleGraphManager.getGraphFormatedWithGroup(group);
+		
+		
+		if (res!=null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+		
+		return new ResponseEntity<>(res,HttpStatus.OK);
 	}
 	
 	
