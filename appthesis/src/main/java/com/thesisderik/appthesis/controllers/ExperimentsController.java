@@ -149,22 +149,4 @@ public class ExperimentsController {
 
 	
 
-	
-	@RequestMapping(value = "getGraphByGroup/", produces = "application/json")
-	public ResponseEntity<VizGraphFormat> getGraphByGroup(
-			@RequestParam(value="group") String group) {
-		
-
-		VizGraphFormat res = iSimpleGraphManager.getGraphFormatedWithGroup(group);
-		
-		
-		if (res!=null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-	    }
-		
-		return new ResponseEntity<>(res,HttpStatus.OK);
-	}
-	
-	
-
 }

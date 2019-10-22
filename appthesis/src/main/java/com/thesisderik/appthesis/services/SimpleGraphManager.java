@@ -1,9 +1,11 @@
 package com.thesisderik.appthesis.services;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Predicate;
@@ -34,6 +36,8 @@ import com.thesisderik.appthesis.simplerepositories.SimpleGroupDAO;
 import com.thesisderik.appthesis.simplerepositories.SimpleNodeDAO;
 import com.thesisderik.appthesis.simplerepositories.SimpleRelationDAO;
 import com.thesisderik.appthesis.simplerepositories.SimpleTaskDAO;
+import com.thesisderik.appthesis.viz.EdgeViz;
+import com.thesisderik.appthesis.viz.NodeViz;
 import com.thesisderik.appthesis.viz.VizGraphFormat;
 
 @Service
@@ -596,9 +600,59 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	}
 
 	@Override
-	public VizGraphFormat getGraphFormatedWithGroup(String group) {
-		// TODO Auto-generated method stub
-		return null;
+	public VizGraphFormat getGraphFormatedWithGroup(String groupName) {
+		
+		
+		PlainGroup group = simpleGroupDAO.findByName(groupName);
+		Set<PlainGroup> groupSet = new HashSet<>();
+		groupSet.add(group);
+		List<PlainNode> nodes = relSimpleNodeGroupDAO.findAllByGroupIn(groupSet).stream().map(NodeGroupRelation::getNode).collect(Collectors.toList());
+		List<NodeNodeRelation> allRelations = (List<NodeNodeRelation>) relSimpleNodeNodeDAO.findAll();
+		
+		allRelations.removeIf((item)-> {
+			PlainNode plainNodeA = item.getNodeA();
+			PlainNode plainNodeB = item.getNodeB();
+			if(nodes.contains(plainNodeA) && nodes.contains(plainNodeB))
+				return false;
+			else
+				return true;
+			});
+		
+		VizGraphFormat res = new VizGraphFormat();
+
+		Iterator<PlainNode> nodesIt = nodes.iterator();
+
+		
+		Random r = new Random();
+		
+		while(nodesIt.hasNext()) {
+			PlainNode plainNode = nodesIt.next();
+			NodeViz nv = new NodeViz();
+			nv.setId(plainNode.getName());
+			nv.setX(r.nextInt(10));
+			nv.setY(r.nextInt(10));
+			nv.setSize(3);
+			res.addNode(nv);
+		}
+		
+		Iterator<NodeNodeRelation> relIt = allRelations.iterator();	
+		
+		int num = 0;
+		while(relIt.hasNext()) {
+			num++;
+			NodeNodeRelation nnrl = relIt.next();
+			PlainRelation pr =  nnrl.getRelation();
+			EdgeViz ev = new EdgeViz();
+			ev.setSource(nnrl.getNodeA().getName());
+			ev.setTarget(nnrl.getNodeB().getName());
+			//ev.setId(pr.getName());
+			ev.setId("edge "+num);
+			res.addEdge(ev);
+		}
+		
+		
+		
+		return res;
 	}
 	
 	

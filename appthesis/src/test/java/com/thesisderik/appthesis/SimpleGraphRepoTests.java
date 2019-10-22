@@ -106,6 +106,11 @@ public class SimpleGraphRepoTests {
 		iSimpleGraphManager.createGroupRel("mygroup3","D");
 		iSimpleGraphManager.createGroupRel("mygroup3","A");
 		
+		
+		System.out.println(iSimpleGraphManager.getGraphFormatedWithGroup("ALL"));
+
+		
+		
 		GroupFileDataStructure newGroup = new GroupFileDataStructure();
 		newGroup.setFileName("testbulkgroup");
 		newGroup.setNodes(new ArrayList<String>(Arrays.asList("A","B")));
