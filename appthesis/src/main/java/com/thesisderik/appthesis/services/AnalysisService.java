@@ -15,7 +15,7 @@ import com.thesisderik.appthesis.interfaces.IExperimentDataIntegrator;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentRequestFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentResultsFileDataStructure;
 import com.thesisderik.appthesis.processservices.BaseProcessService;
-import com.thesisderik.appthesis.processservices.ClusteringProcessService;
+import com.thesisderik.appthesis.processservices.QSARProcessService;
 import com.thesisderik.appthesis.processservices.IProcessService;
 import com.thesisderik.appthesis.processservices.SmilesCrawlerProcessService;
 import com.thesisderik.appthesis.processservices.StatisticsProcessService;
@@ -76,7 +76,7 @@ public class AnalysisService implements IAnalysisService {
 	public ArrayList<String> getServices() {
 		
 		suscribedServices.add(new StatisticsProcessService());
-		suscribedServices.add(new ClusteringProcessService());
+		suscribedServices.add(new QSARProcessService());
 		suscribedServices.add(smilesCrawlerProcessService);
 		
 		return new ArrayList<>(suscribedServices.stream().map(IProcessService::getServiceName).collect(Collectors.toList()));

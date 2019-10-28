@@ -22,6 +22,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-artemis</artifactId>
+			
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -71,8 +72,17 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/main/resources/libraries/padelfull/padel-full-1.00.jar</systemPath>
+			<groupId>sciome-commons</groupId>
+			<artifactId>padel-full</artifactId>
+			<version>1.00</version>
+		</dependency>
+		
 	</dependencies>
 
+    
 	<build>
 		<plugins>
 			<plugin>
