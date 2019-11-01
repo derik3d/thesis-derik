@@ -28,7 +28,7 @@ public class StatisticsProcessService extends BaseProcessService{
 	
 	
 	
-	public void setData(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames) {
+	public void setData(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames, String dataFileName) {
 		
 		
 

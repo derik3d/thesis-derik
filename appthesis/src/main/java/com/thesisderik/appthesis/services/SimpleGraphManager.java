@@ -476,7 +476,7 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 			
 		result.setFileName(experiment.getFeatureNameOverride());
 		
-		
+		result.setUQName(experiment.getFeatureNameOverride());
 		result.setFirstRow(firstRow);
 		result.setDataRows(dataRows);
 
@@ -529,6 +529,7 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		PlainExperiment experiment = simpleExperimentDAO.findByFeatureNameOverride(uqName);
 
 		ExperimentRequestFileDataStructure data = getExperimentData(experiment.getTitle());
+		System.out.println(data);
 		return data.buildCSVFile().get(1);
 	}
 

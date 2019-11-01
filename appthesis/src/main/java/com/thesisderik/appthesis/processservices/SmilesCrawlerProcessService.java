@@ -38,7 +38,7 @@ public class SmilesCrawlerProcessService extends BaseProcessService{
 	
 	
 	
-	public void setData(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames) {
+	public void setData(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames, String dataFileName) {
 		
 		
 		for(int i =0; i<dataForEveryInstance.size();i++) {

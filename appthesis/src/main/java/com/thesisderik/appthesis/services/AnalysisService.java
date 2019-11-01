@@ -1,5 +1,9 @@
 package com.thesisderik.appthesis.services;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.BinaryOperator;
@@ -8,6 +12,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 
 import com.thesisderik.appthesis.interfaces.IAnalysisService;
@@ -17,6 +23,7 @@ import com.thesisderik.appthesis.persistence.simplegraph.datastructure.Experimen
 import com.thesisderik.appthesis.processservices.BaseProcessService;
 import com.thesisderik.appthesis.processservices.QSARProcessService;
 import com.thesisderik.appthesis.processservices.IProcessService;
+import com.thesisderik.appthesis.processservices.MachineLearningProcessService;
 import com.thesisderik.appthesis.processservices.SmilesCrawlerProcessService;
 import com.thesisderik.appthesis.processservices.StatisticsProcessService;
 
@@ -29,55 +36,61 @@ public class AnalysisService implements IAnalysisService {
 	@Autowired
 	SmilesCrawlerProcessService smilesCrawlerProcessService;
 	
+	@Autowired
+	MachineLearningProcessService machineLearningProcessService;
+	
 
+
+	
 	@Override
 	public boolean integrateFeaturesFile(ArrayList<String> file) {
-
-		ExperimentResultsFileDataStructure erde = new ExperimentResultsFileDataStructure();
 		
-		
-		erde.setFileName(file.get(0));
-		
-		boolean firstRow=true;
-		
-		ArrayList<ArrayList<String>> tempCont = new ArrayList<>();
-		
-		for(String row : file.get(1).split("\n")) {
-			
-			if(firstRow) {
-				if(row.length()>2) {
-					erde.setFirstRow(new ArrayList<>(Arrays.asList( row.split(",")) ));
-					firstRow=false;
-				}
-			}else{
-			
-	
-				if(row.length()>2) {
-					tempCont.add(new ArrayList<>(Arrays.asList( row.split(",")) ));
-				}
-			
-			}
-			
-		}
-		
-		erde.setDataRows(tempCont);
-
-		
-		System.out.println(erde);
-
-		
-		iExperimentDataIntegrator.integrateExperimentResult( erde );
+		iExperimentDataIntegrator.integrateExperimentResult( BaseProcessService.fileToStructure(file) );
 		
 		return true;
 
 	}
+	
+	
+	@Override
+	public boolean integrateFeaturesFile(String filename, String csvUrl) {
+
+
+		ArrayList<String> data = new ArrayList<>();
+				
+		if(filename.contains("."))
+			filename = filename.substring(0,filename.lastIndexOf("."));
+		
+		data.add(filename);
+		
+		File resource;
+		try {
+			
+			resource = new UrlResource(csvUrl).getFile();
+			
+			data.add(new String(Files.readAllBytes(resource.toPath())));
+
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+				
+		return integrateFeaturesFile(data);
+
+	}
+	
 
 	@Override
 	public ArrayList<String> getServices() {
 		
 		suscribedServices.add(new StatisticsProcessService());
-		suscribedServices.add(new QSARProcessService());
+		suscribedServices.add(new QSARProcessService());		
 		suscribedServices.add(smilesCrawlerProcessService);
+		suscribedServices.add(machineLearningProcessService);
 		
 		return new ArrayList<>(suscribedServices.stream().map(IProcessService::getServiceName).collect(Collectors.toList()));
 	}
@@ -104,8 +117,11 @@ public class AnalysisService implements IAnalysisService {
 		String name = fullName[2];
 		
 		IProcessService service = selectService(serviceName);
-		service.setData(serviceArgs, dataForInstances , featureNames);		
+		service.setData(serviceArgs, dataForInstances , featureNames, data.getUQName());		
 		
+		
+		if(service.getResult()==null)
+			return;
 		
 		ArrayList<String> resultsTags = service.getFeaturesNames();
 		ArrayList<ArrayList<String>> resultsToSave = service.getResult();

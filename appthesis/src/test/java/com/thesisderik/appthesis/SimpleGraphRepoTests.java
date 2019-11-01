@@ -24,6 +24,7 @@ import com.thesisderik.appthesis.rawgraphparser.RawGraphParser;
 import com.thesisderik.appthesis.services.GraphBuilder;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -117,11 +118,13 @@ public class SimpleGraphRepoTests {
 		
 		iSimpleGraphManager.createGroupBulk(newGroup);
 		
-		iAnalisysService.setExperimentDataIntegrator(iSimpleGraphManager);
+		//iAnalisysService.setExperimentDataIntegrator(iSimpleGraphManager);
 
 		
 		for(String serviceName : iAnalisysService.getServices())
 			iSimpleGraphManager.doTask(serviceName);
+		
+		
 		
 		iSimpleGraphManager.createExperiment(
 				"smilesbasic",
@@ -132,6 +135,40 @@ public class SimpleGraphRepoTests {
 				"",
 				"SMILES_PROPERTY"
 				);
+		
+		ExperimentRequestFileDataStructure data0 = iSimpleGraphManager.getExperimentData("smilesbasic");
+		//iAnalisysService.processData(data0);
+
+
+		
+		iSimpleGraphManager.createExperiment(
+				"qsarloaddescriptors",
+				"sirve para cargar los descriptores qsar de padel",
+				new ArrayList<String>(Arrays.asList("ALL")),
+				new ArrayList<String>(Arrays.asList("NAME","RESULT_FT_SMILES_PROPERTY_PROPNAME_SMILES_DIM_1")),
+				"QSAR",
+				"2d",
+				"QSAR_DESCR"
+				);
+		
+
+		
+		iSimpleGraphManager.createExperiment(
+				"qsarloadfingerprints",
+				"sirve para cargar los fingerprint qsar de padel",
+				new ArrayList<String>(Arrays.asList("ALL")),
+				new ArrayList<String>(Arrays.asList("NAME","RESULT_FT_SMILES_PROPERTY_PROPNAME_SMILES_DIM_1")),
+				"QSAR",
+				"fingerprints",
+				"QSAR_FINGPR"
+				);
+
+		ExperimentRequestFileDataStructure data1 = iSimpleGraphManager.getExperimentData("qsarloaddescriptors");
+		ExperimentRequestFileDataStructure data2 = iSimpleGraphManager.getExperimentData("qsarloadfingerprints");
+
+		//iAnalisysService.processData(data1);
+		//iAnalisysService.processData(data2);
+		
 		
 
 		
@@ -147,51 +184,33 @@ public class SimpleGraphRepoTests {
 
 		
 		iSimpleGraphManager.createExperiment(
-				"clusterbasic",
-				"intenta hacer un clustering con las c",
+				"mltest",
+				"intenta hacer ML",
 				new ArrayList<String>(Arrays.asList("mygroup2","mygroup3")),
 				new ArrayList<String>(Arrays.asList("Age","Height")),
-				"Clustering",
-				"2"
+				"ML",
+				"",
+				""
 				);
-
 		
 		
-
 		
 		
-		ExperimentRequestFileDataStructure data0 = iSimpleGraphManager.getExperimentData("smilesbasic");
-		ExperimentRequestFileDataStructure data1 = iSimpleGraphManager.getExperimentData("statisticsbasic");
-		ExperimentRequestFileDataStructure data2 = iSimpleGraphManager.getExperimentData("clusterbasic");
-		
-
-
-		System.out.println(data0);
-		System.out.println(data1);
-		System.out.println(data2);
-
-		System.out.println();
-		System.out.println();
-		//System.out.println(iSimpleGraphManager.getExperimentDataRawName("smilesbasic"));
-		System.out.println();
-		System.out.println();
-		//System.out.println(iSimpleGraphManager.getExperimentDataRawContent("smilesbasic"));
-		System.out.println();
-		System.out.println();
-		System.out.println(data2.buildCSVFile());
-		System.out.println();
-		System.out.println();
-
-		ResponseData res = iNamesCrawlerService.fromPubchemIdGetSmiles("3527");		
+		ExperimentRequestFileDataStructure data3 = iSimpleGraphManager.getExperimentData("statisticsbasic");
+		ExperimentRequestFileDataStructure data4 = iSimpleGraphManager.getExperimentData("mltest");
 
 		
-		System.out.println();
-		
-		iAnalisysService.processData(data0);
-		iAnalisysService.processData(data1);
-		iAnalisysService.processData(data2);
+		//iAnalisysService.processData(data3);
+		//iAnalisysService.processData(data4);
 
-		
+		int a=0;
+
+	}
+	
+	@Test
+	@Ignore
+	public void integrateDataFromFileTest() throws IOException {
+
 		ArrayList<String> arr = new ArrayList<>();
 		
 		arr.add("test_loader_file");
@@ -201,9 +220,6 @@ public class SimpleGraphRepoTests {
 		arr.add(new String(Files.readAllBytes(resource.toPath())));
 		
 		iAnalisysService.integrateFeaturesFile(arr);
-
-		System.out.println();
-
 	}
 
 	@Test
@@ -215,6 +231,7 @@ public class SimpleGraphRepoTests {
 
 		iSimpleGraphManager.createFeature("Height12","12","C");
 		iSimpleGraphManager.createFeature("Height12","12","C");
+		
 	}
 
 }

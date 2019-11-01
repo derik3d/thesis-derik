@@ -3,7 +3,7 @@ package com.thesisderik.appthesis.persistence.simplegraph.datastructure;
 import java.util.ArrayList;
 
 public class ExperimentRequestFileDataStructure extends ExperimentResultsFileDataStructure{
-	
+
 	
 	//fileName = service:commands:name
 	

@@ -11,6 +11,16 @@ public class ExperimentResultsFileDataStructure {
 				+ dataRows + "]";
 	}
 
+	//just for ML
+	String UQName;
+	public String getUQName() {
+		return UQName;
+	}
+
+	public void setUQName(String uQName) {
+		UQName = uQName;
+	}
+
 	//new feature name + number according to the dimension
 	//new group name for all the nodes involved
 	String fileName;
