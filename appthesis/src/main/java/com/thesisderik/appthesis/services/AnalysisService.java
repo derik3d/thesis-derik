@@ -79,8 +79,8 @@ public class AnalysisService implements IAnalysisService {
 
 		ArrayList<String> data = new ArrayList<>();
 				
-		//if(filename.contains("."))
-		//	filename = filename.substring(0,filename.lastIndexOf("."));
+		if(featureName.contains("."))
+			featureName = featureName.substring(0,featureName.lastIndexOf("."));
 		
 		data.add(featureName);
 		
