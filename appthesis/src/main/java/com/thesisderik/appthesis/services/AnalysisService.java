@@ -1,7 +1,10 @@
 package com.thesisderik.appthesis.services;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -11,13 +14,16 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 
 import com.thesisderik.appthesis.interfaces.IAnalysisService;
 import com.thesisderik.appthesis.interfaces.IExperimentDataIntegrator;
+import com.thesisderik.appthesis.interfaces.IStorageService;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentRequestFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentResultsFileDataStructure;
 import com.thesisderik.appthesis.processservices.BaseProcessService;
@@ -30,7 +36,9 @@ import com.thesisderik.appthesis.processservices.StatisticsProcessService;
 @Service
 public class AnalysisService implements IAnalysisService {
 	
+	@Autowired
 	private IExperimentDataIntegrator iExperimentDataIntegrator;
+	
 	private ArrayList<IProcessService> suscribedServices = new ArrayList<>();
 	
 	@Autowired
@@ -39,7 +47,9 @@ public class AnalysisService implements IAnalysisService {
 	@Autowired
 	MachineLearningProcessService machineLearningProcessService;
 	
-
+	@Autowired
+	IStorageService iStorageService;
+	
 
 	
 	@Override
@@ -52,31 +62,42 @@ public class AnalysisService implements IAnalysisService {
 	}
 	
 	
+	public static String readString(InputStream inputStream) throws IOException {
+
+	    ByteArrayOutputStream into = new ByteArrayOutputStream();
+	    byte[] buf = new byte[4096];
+	    for (int n; 0 < (n = inputStream.read(buf));) {
+	        into.write(buf, 0, n);
+	    }
+	    into.close();
+	    return new String(into.toByteArray(), "UTF-8"); // Or whatever encoding
+	}
+	
 	@Override
-	public boolean integrateFeaturesFile(String filename, String csvUrl) {
+	public boolean integrateFeaturesFile(String featureName, String fileName) {
 
 
 		ArrayList<String> data = new ArrayList<>();
 				
-		if(filename.contains("."))
-			filename = filename.substring(0,filename.lastIndexOf("."));
+		//if(filename.contains("."))
+		//	filename = filename.substring(0,filename.lastIndexOf("."));
 		
-		data.add(filename);
+		data.add(featureName);
 		
-		File resource;
+
+		Resource resource = iStorageService.loadAsResource(fileName);
+		
 		try {
 			
-			resource = new UrlResource(csvUrl).getFile();
+			String str = readString(resource.getInputStream());
 			
-			data.add(new String(Files.readAllBytes(resource.toPath())));
-
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			data.add(str);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		System.out.println(data.get(1));
 		
 				
 		return integrateFeaturesFile(data);

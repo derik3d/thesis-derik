@@ -208,7 +208,6 @@ public class SimpleGraphRepoTests {
 	}
 	
 	@Test
-	@Ignore
 	public void integrateDataFromFileTest() throws IOException {
 
 		ArrayList<String> arr = new ArrayList<>();

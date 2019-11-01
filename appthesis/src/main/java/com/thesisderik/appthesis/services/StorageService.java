@@ -1,16 +1,26 @@
 package com.thesisderik.appthesis.services;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -20,6 +30,10 @@ import com.thesisderik.appthesis.interfaces.IStorageService;
 @Service
 public class StorageService implements IStorageService{
 
+	
+	@Autowired
+	RestTemplate restTemplate;
+	
 	@Value("${ftp.credentials.url}")
     private String FTP_ADDRESS;
 	@Value("${ftp.credentials.user}")
@@ -28,6 +42,10 @@ public class StorageService implements IStorageService{
 	private String PSW;
 	@Value("${ftp.credentials.folder-data}")
 	private String FOLDER_DATA;
+	
+	private String getFilesUrl = "http://multispace.c1.biz/thesisdata/";
+	private String urlGetFile = "http://multispace.c1.biz/thesisdata/?file=";
+	
 	
 	/*
 	public String store(@RequestParam("file") MultipartFile file,
@@ -45,8 +63,7 @@ public class StorageService implements IStorageService{
 	    
 	    try {
 	        con = new FTPClient();
-	        con.connect(FTP_ADDRESS);
-	        
+	        con.connect(FTP_ADDRESS);	        
 
 		    System.out.print("stepaaaaa 35");
 
@@ -75,13 +92,23 @@ public class StorageService implements IStorageService{
 	        //redirectAttributes.addFlashAttribute("message",
 	       //         "Could not upload " + file.getOriginalFilename() + "!");
 	        
-	        //return "failed";
+	        return "failed";
 	    }
 	       
 	    
 
 	    return "false";
 	    //return "redirect:/";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> loadAll(){
+		
+		
+		return restTemplate.getForObject(getFilesUrl, List.class);
+		
+		
 	}
 
 	
@@ -148,14 +175,6 @@ public class StorageService implements IStorageService{
 
 
 	@Override
-	public List<String> loadAll() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
-	@Override
 	public Path load(String filename) {
 		// TODO Auto-generated method stub
 		return null;
@@ -165,7 +184,24 @@ public class StorageService implements IStorageService{
 
 	@Override
 	public Resource loadAsResource(String filename) {
-		// TODO Auto-generated method stub
+
+		try { 
+
+		Resource resource;
+			
+			resource = new UrlResource(urlGetFile + filename);
+			
+			return resource;
+
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		return null;
 	}
 	

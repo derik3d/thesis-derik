@@ -12,6 +12,7 @@ public abstract class BaseProcessService implements IProcessService{
 	public static ExperimentResultsFileDataStructure fileToStructure(ArrayList<String> file) {
 		
 
+		System.out.println(file);
 
 		ExperimentResultsFileDataStructure erde = new ExperimentResultsFileDataStructure();
 		

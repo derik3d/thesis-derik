@@ -36,7 +36,7 @@ public class FrontController {
 	
 	@GetMapping
     public String listUploadedFiles(Model model){
-        model.addAttribute("files", Arrays.asList(new String[] {"file1","file2"}));
+        model.addAttribute("files", iStorageService.loadAll());
         return "uploadForm";
     }
 	
@@ -59,7 +59,7 @@ public class FrontController {
 		
 		String result = iStorageService.store(file, file.getOriginalFilename());
 		
-		iAnalysisService.integrateFeaturesFile(userDefProp + file.getOriginalFilename(), result);
+		iAnalysisService.integrateFeaturesFile(userDefProp + file.getOriginalFilename(), file.getOriginalFilename());
 		
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + result + " data! the sistem will try to instegrate the data on the server");
