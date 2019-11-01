@@ -18,5 +18,9 @@ public interface IStorageService {
     Path load(String filename);
 
     Resource loadAsResource(String filename);
+
+	String getTextDataFromResource(Resource resource);
+
+	String getTextDataFromFileName(String filename);
 	
 }

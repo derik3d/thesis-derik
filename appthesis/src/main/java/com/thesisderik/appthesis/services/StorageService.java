@@ -1,7 +1,9 @@
 package com.thesisderik.appthesis.services;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -203,6 +205,41 @@ public class StorageService implements IStorageService{
 		
 		
 		return null;
+	}
+	
+
+	
+	
+	public static String readString(InputStream inputStream) throws IOException {
+
+	    ByteArrayOutputStream into = new ByteArrayOutputStream();
+	    byte[] buf = new byte[4096];
+	    for (int n; 0 < (n = inputStream.read(buf));) {
+	        into.write(buf, 0, n);
+	    }
+	    into.close();
+	    return new String(into.toByteArray(), "UTF-8"); // Or whatever encoding
+	}
+	
+	
+	@Override
+	public String getTextDataFromResource(Resource resource) {
+		
+		try {
+			return readString(resource.getInputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
+	@Override
+	public String getTextDataFromFileName(String filename) {
+
+		return getTextDataFromResource(loadAsResource(filename));
+		
 	}
 	
 	
