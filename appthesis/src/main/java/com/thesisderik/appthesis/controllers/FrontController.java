@@ -1,6 +1,7 @@
 package com.thesisderik.appthesis.controllers;
 
 import java.awt.List;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.thesisderik.appthesis.interfaces.IAnalysisService;
+import com.thesisderik.appthesis.interfaces.IGraphManagerService;
 import com.thesisderik.appthesis.interfaces.IStorageService;
 
 @Controller
@@ -33,6 +35,8 @@ public class FrontController {
 	@Autowired
 	IAnalysisService iAnalysisService;
 	
+	@Autowired
+	IGraphManagerService iGraphManagerService;
 	
 	@GetMapping
     public String listUploadedFiles(Model model){
@@ -46,6 +50,13 @@ public class FrontController {
             RedirectAttributes redirectAttributes) {
 		
 		String result = iStorageService.store(file, file.getOriginalFilename());
+		
+    	try {
+			iGraphManagerService.processSbml(iStorageService.loadAsResource(file.getOriginalFilename()).getInputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + result + " graph!, the sistem will try to instegrate the data on the server");

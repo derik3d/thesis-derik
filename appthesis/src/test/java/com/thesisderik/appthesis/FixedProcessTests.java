@@ -15,6 +15,8 @@ import com.thesisderik.appthesis.rawgraphparser.RawGraphParser;
 import com.thesisderik.appthesis.services.GraphBuilder;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -25,17 +27,21 @@ public class FixedProcessTests {
 	@Autowired
 	IGraphBuilder iGraphBuilder;
 	
-
+	
 	@Test
 	public void testGraphReadingSBML() throws Exception {
 
-		iGraphBuilder.loadSbml("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
+		File file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
+		final InputStream inputStream = new FileInputStream(file);		
+		iGraphBuilder.loadSbml(inputStream);
 	}
 
 	@Test
 	public void testGraphReadingKGML() throws Exception {
 
-		iGraphBuilder.loadKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00010.xml");
+		File file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00010.xml");
+		final InputStream inputStream = new FileInputStream(file);		
+		iGraphBuilder.loadKgml(inputStream);
 		
 	}
 

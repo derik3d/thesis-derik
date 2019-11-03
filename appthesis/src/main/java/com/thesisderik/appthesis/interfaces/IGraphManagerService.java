@@ -1,12 +1,14 @@
 package com.thesisderik.appthesis.interfaces;
 
+import java.io.InputStream;
+
 import org.springframework.stereotype.Service;
 
 @Service
 public interface IGraphManagerService {
 
-	void processSbml(String string);
+	void processSbml(InputStream inputStream);
 
-	void processKgml(String string);
+	void processKgml(InputStream inputStream);
 
 }

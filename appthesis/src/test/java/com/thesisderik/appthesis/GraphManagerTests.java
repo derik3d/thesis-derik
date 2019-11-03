@@ -44,7 +44,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -60,7 +62,14 @@ public class GraphManagerTests {
     @Test
     public void test_graph_processing() throws Exception{
 
-    	iGraphManagerService.processSbml("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
+
+
+		File file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
+		final InputStream inputStream = new FileInputStream(file);		
+    	
+    	
+    	iGraphManagerService.processSbml(inputStream);
+    	//iGraphManagerService.processSbml("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
     	//iGraphManagerService.processSbml("classpath:testdata/biologicalsourcefiles/sbmlfiles/e_coli_corefrombigg.xml");
     	//iGraphManagerService.processSbml("classpath:testdata/biologicalsourcefiles/sbmlfiles/recon2model.v02.xml");
   	/*

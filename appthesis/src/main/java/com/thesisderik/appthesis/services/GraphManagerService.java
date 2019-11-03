@@ -1,5 +1,7 @@
 package com.thesisderik.appthesis.services;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Optional;
 
@@ -10,6 +12,7 @@ import com.thesisderik.appthesis.interfaces.IGraphBuilder;
 import com.thesisderik.appthesis.interfaces.IGraphManagerService;
 import com.thesisderik.appthesis.interfaces.INamesIntegrator;
 import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
+import com.thesisderik.appthesis.interfaces.IStorageService;
 import com.thesisderik.appthesis.persistence.graph.entities.Graph;
 import com.thesisderik.appthesis.persistence.graph.entities.GraphNode;
 import com.thesisderik.appthesis.persistence.graph.entities.GraphNode.NType;
@@ -32,13 +35,19 @@ public class GraphManagerService implements IGraphManagerService{
 	
 
 	@Autowired
-	IAnalysisService iAnalisysService;
+	IAnalysisService iAnalisysService;	
+
+	
+	@Autowired
+	IStorageService iStorageService;
 	
 
 	@Override
-	public void processSbml(String path) {
+	public void processSbml(InputStream inputStream){
 		
-		Graph gp = iGraphBuilder.loadSbml(path);
+		
+		Graph gp;
+		gp = iGraphBuilder.loadSbml(inputStream);
 		loadTagsOnDBSbml(gp);
 		persistOnDBSbml(gp);
 		
@@ -116,9 +125,10 @@ public class GraphManagerService implements IGraphManagerService{
 	
 
 	@Override
-	public void processKgml(String path) {
+	public void processKgml(InputStream inputStream) {
 		
-		Graph gp = iGraphBuilder.loadKgml(path);
+		Graph gp;
+		gp = iGraphBuilder.loadKgml(inputStream);
 		loadTagsOnDBKgml(gp);
 		persistOnDBKgml(gp);
 		

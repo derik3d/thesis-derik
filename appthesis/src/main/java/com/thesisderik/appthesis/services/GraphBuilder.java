@@ -2,6 +2,7 @@ package com.thesisderik.appthesis.services;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -149,16 +150,13 @@ public class GraphBuilder implements IGraphBuilder{
 
 
 	@Override
-	public Graph loadKgml(String path) {
+	public Graph loadKgml(InputStream inputStream) {
 
-		File file = null;
 		Graph createGraph=null;
 		
 		try {
-			
-			file = ResourceUtils.getFile(path);
-			
-			createGraph = createGraph(RawGraphParser.readFileKGML(file));
+						
+			createGraph = createGraph(RawGraphParser.readFileKGML(inputStream));
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -174,17 +172,14 @@ public class GraphBuilder implements IGraphBuilder{
 
 
 	@Override
-	public Graph loadSbml(String path) {
+	public Graph loadSbml(InputStream inputStream) {
 
-
-		File file = null;
 		Graph createGraph=null;
 		
 		try {
 			
-			file = ResourceUtils.getFile(path);
 			
-			createGraph = createGraph(RawGraphParser.readFileSBML(file));
+			createGraph = createGraph(RawGraphParser.readFileSBML(inputStream));
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
