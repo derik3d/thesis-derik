@@ -5,6 +5,64 @@
 		<h2 th:text="${message}"/>
 	</div>
 
+
+	<div>
+		<form>
+			<table>
+				<tr><td></td></tr>
+				
+				<tr><td>groups</td></tr>
+				
+				<tr><td></td></tr>
+				
+				<tr th:each="group : ${groups}">
+					<td>
+						<label>
+							<input type="checkbox" value="group.id">
+							<span th:text="${group.name}">group name</span>
+						</label>					
+					</td>
+				</tr>
+				
+				<tr><td></td></tr>
+				
+				<tr><td>features</td></tr>
+				
+				<tr><td></td></tr>
+				
+				<tr th:each="feature : ${features}">
+					<td>
+						<input type="checkbox" value="feature.id">
+						<span th:text="${feature.name}">feature name</span>
+					</td>
+				</tr>
+				
+				<tr><td></td></tr>
+				
+				<tr><td>services</td></tr>
+				
+				<tr><td></td></tr>
+				
+				<tr><td>
+				
+				<select name="services">
+				    <option th:each="service : ${services}" th:value="${service}" th:text="${service}"></option>
+			    </select>
+				
+				</td></tr>
+				
+				
+				
+			</table>
+			<table>
+				<tr><td><input type="submit" value="create experiment" /></td></tr>
+			</table>
+			
+		</form>
+	
+	</div>
+
+
 	<div>
 		<h1>upload graph file, sbml or kgml format</h1>
 		<form method="POST" enctype="multipart/form-data" action="/front/graph/">

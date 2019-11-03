@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.thesisderik.appthesis.interfaces.IAnalysisService;
 import com.thesisderik.appthesis.interfaces.IGraphManagerService;
+import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
 import com.thesisderik.appthesis.interfaces.IStorageService;
 
 @Controller
@@ -38,8 +39,14 @@ public class FrontController {
 	@Autowired
 	IGraphManagerService iGraphManagerService;
 	
+	@Autowired
+	ISimpleGraphManager iSimpleGraphManager;
+	
 	@GetMapping
     public String listUploadedFiles(Model model){
+		model.addAttribute("groups", iSimpleGraphManager.getPlainGroups());
+		model.addAttribute("features", iSimpleGraphManager.getPlainFeatures());
+		model.addAttribute("services", iAnalysisService.getServices());
         model.addAttribute("files", iStorageService.loadAll());
         return "uploadForm";
     }

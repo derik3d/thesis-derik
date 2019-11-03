@@ -655,6 +655,18 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 		return res;
 	}
+
+	@Override
+	public List<PlainGroup> getPlainGroups() {
+
+		return (List<PlainGroup>) simpleGroupDAO.findAll();
+	}
+
+	@Override
+	public List<PlainFeature> getPlainFeatures() {
+
+		return (List<PlainFeature>) simpleFeatureDAO.findAll();
+	}
 	
 	
 	

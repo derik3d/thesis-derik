@@ -1,6 +1,7 @@
 package com.thesisderik.appthesis.interfaces;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentRequestFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentResultsFileDataStructure;
@@ -104,6 +105,8 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 
 
 
-
+	public List<PlainGroup> getPlainGroups();
+	
+	public List<PlainFeature> getPlainFeatures();
 
 }
