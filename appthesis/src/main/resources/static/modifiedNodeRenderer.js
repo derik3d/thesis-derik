@@ -22,13 +22,18 @@
    */
   sigma.webgl.nodes.fast = {
     POINTS: 1,
-    ATTRIBUTES: 4,
+    ATTRIBUTES: 5,
     addNode: function(node, data, i, prefix, settings) {
       data[i++] = node[prefix + 'x'];
       data[i++] = node[prefix + 'y'];
       data[i++] = node[prefix + 'size'];
+            
       data[i++] = sigma.utils.floatColor(
         node.color || settings('defaultNodeColor')
+      );
+
+      data[i++] = sigma.utils.floatColor(
+        node.newColor || settings('defaultNodeColor')
       );
     },
     render: function(gl, program, data, params) {
@@ -39,8 +44,12 @@
             gl.getAttribLocation(program, 'a_position'),
           sizeLocation =
             gl.getAttribLocation(program, 'a_size'),
-          colorLocation =
+        colorLocation =
             gl.getAttribLocation(program, 'a_color'),
+            
+        newColorLocation =
+            gl.getAttribLocation(program, 'a_newColor'),
+            
           resolutionLocation =
             gl.getUniformLocation(program, 'u_resolution'),
           matrixLocation =
@@ -65,6 +74,7 @@
       gl.enableVertexAttribArray(positionLocation);
       gl.enableVertexAttribArray(sizeLocation);
       gl.enableVertexAttribArray(colorLocation);
+      gl.enableVertexAttribArray(newColorLocation);
 
       gl.vertexAttribPointer(
         positionLocation,
@@ -91,6 +101,17 @@
         12
       );
 
+      
+
+      gl.vertexAttribPointer(
+        newColorLocation,
+        1,
+        gl.FLOAT,
+        false,
+        this.ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT,
+        16
+      );
+      
       gl.drawArrays(
         gl.POINTS,
         params.start || 0,
@@ -108,6 +129,7 @@
           'attribute vec2 a_position;',
           'attribute float a_size;',
           'attribute float a_color;',
+          'attribute float a_newColor;',
 
           'uniform vec2 u_resolution;',
           'uniform float u_ratio;',
@@ -115,6 +137,7 @@
           'uniform mat3 u_matrix;',
 
           'varying vec4 color;',
+          'varying vec4 newColor;',
 
           'void main() {',
             // Scale from [[-1 1] [-1 1]] to the container:
@@ -136,6 +159,18 @@
             'color.g = mod(c, 256.0); c = floor(c / 256.0);',
             'color.r = mod(c, 256.0); c = floor(c / 256.0); color /= 255.0;',
             'color.a = 1.0;',
+            
+            
+
+
+            // Extract the color:
+            'float cc = a_newColor;',
+            'newColor.b = mod(cc, 256.0); cc = floor(cc / 256.0);',
+            'newColor.g = mod(cc, 256.0); cc = floor(cc / 256.0);',
+            'newColor.r = mod(cc, 256.0); cc = floor(cc / 256.0); newColor /= 255.0;',
+            'newColor.a = 1.0;',
+            
+            
           '}'
         ].join('\n'),
         gl.VERTEX_SHADER
@@ -147,22 +182,22 @@
           'precision mediump float;',
 
           'varying vec4 color;',
+          'varying vec4 newColor;',
 
           'void main(void) {',
-            'float border = 0.01;',
+            'float border = 0.1;',
             'float radius = 0.5;',
 
-            'vec4 color0 = vec4(0.0, 0.0, 0.0, 0.0);',
             'vec2 m = gl_PointCoord - vec2(0.5, 0.5);',
             'float dist = radius - sqrt(m.x * m.x + m.y * m.y);',
 
             'float t = 0.0;',
             'if (dist > border)',
-              't = 1.0;',
+              't = 0.0;',
             'else if (dist > 0.0)',
-              't = dist / border;',
+              't = 1.0;',
 
-            'gl_FragColor = mix(color0, color, t);',
+            'gl_FragColor = mix(newColor, color, t);',
           '}'
         ].join('\n'),
         gl.FRAGMENT_SHADER

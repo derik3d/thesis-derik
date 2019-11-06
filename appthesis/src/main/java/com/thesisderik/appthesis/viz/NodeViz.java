@@ -12,7 +12,9 @@ public class NodeViz {
 	
 	private double size;
 	
-	private String color;
+	private String color = "#cccc00";
+	
+	private String newColor = "#cc0000";
 
 	public String getId() {
 		return id;
@@ -62,6 +64,14 @@ public class NodeViz {
 		this.color = color;
 	}
 
+	public String getNewColor() {
+		return newColor;
+	}
+
+	public void setNewColor(String newColor) {
+		this.newColor = newColor;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -69,6 +79,7 @@ public class NodeViz {
 		result = prime * result + ((color == null) ? 0 : color.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((label == null) ? 0 : label.hashCode());
+		result = prime * result + ((newColor == null) ? 0 : newColor.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(size);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -103,6 +114,11 @@ public class NodeViz {
 				return false;
 		} else if (!label.equals(other.label))
 			return false;
+		if (newColor == null) {
+			if (other.newColor != null)
+				return false;
+		} else if (!newColor.equals(other.newColor))
+			return false;
 		if (Double.doubleToLongBits(size) != Double.doubleToLongBits(other.size))
 			return false;
 		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
@@ -115,8 +131,9 @@ public class NodeViz {
 	@Override
 	public String toString() {
 		return "NodeViz [id=" + id + ", label=" + label + ", x=" + x + ", y=" + y + ", size=" + size + ", color="
-				+ color + "]";
+				+ color + ", newColor=" + newColor + "]";
 	}
+
 	
 
 }
