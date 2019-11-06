@@ -4,41 +4,32 @@
   sigma.utils.pkg('sigma.webgl.nodes');
 
   /**
-   * This node renderer will display nodes as discs, shaped in triangles with
-   * the gl.TRIANGLES display mode. So, to be more precise, to draw one node,
-   * it will store three times the center of node, with the color and the size,
-   * and an angle indicating which "corner" of the triangle to draw.
+   * This node renderer will display nodes in the fastest way: Nodes are basic
+   * squares, drawn through the gl.POINTS drawing method. The size of the nodes
+   * are represented with the "gl_PointSize" value in the vertex shader.
    *
-   * The fragment shader does not deal with anti-aliasing, so make sure that
-   * you deal with it somewhere else in the code (by default, the WebGL
-   * renderer will oversample the rendering through the webglOversamplingRatio
-   * value).
+   * It is the fastest node renderer here since the buffer just takes one line
+   * to draw each node (with attributes "x", "y", "size" and "color").
+   *
+   * Nevertheless, this method has some problems, especially due to some issues
+   * with the gl.POINTS:
+   *  - First, if the center of a node is outside the scene, the point will not
+   *    be drawn, even if it should be partly on screen.
+   *  - I tried applying a fragment shader similar to the one in the default
+   *    node renderer to display them as discs, but it did not work fine on
+   *    some computers settings, filling the discs with weird gradients not
+   *    depending on the actual color.
    */
-  sigma.webgl.nodes.def = {
-    POINTS: 3,
-    ATTRIBUTES: 5,
+  sigma.webgl.nodes.fast = {
+    POINTS: 1,
+    ATTRIBUTES: 4,
     addNode: function(node, data, i, prefix, settings) {
-      var color = sigma.utils.floatColor(
+      data[i++] = node[prefix + 'x'];
+      data[i++] = node[prefix + 'y'];
+      data[i++] = node[prefix + 'size'];
+      data[i++] = sigma.utils.floatColor(
         node.color || settings('defaultNodeColor')
       );
-
-      data[i++] = node[prefix + 'x'];
-      data[i++] = node[prefix + 'y'];
-      data[i++] = node[prefix + 'size'];
-      data[i++] = color;
-      data[i++] = 0;
-
-      data[i++] = node[prefix + 'x'];
-      data[i++] = node[prefix + 'y'];
-      data[i++] = node[prefix + 'size'];
-      data[i++] = color;
-      data[i++] = 2 * Math.PI / 3;
-
-      data[i++] = node[prefix + 'x'];
-      data[i++] = node[prefix + 'y'];
-      data[i++] = node[prefix + 'size'];
-      data[i++] = color;
-      data[i++] = 4 * Math.PI / 3;
     },
     render: function(gl, program, data, params) {
       var buffer;
@@ -50,8 +41,6 @@
             gl.getAttribLocation(program, 'a_size'),
           colorLocation =
             gl.getAttribLocation(program, 'a_color'),
-          angleLocation =
-            gl.getAttribLocation(program, 'a_angle'),
           resolutionLocation =
             gl.getUniformLocation(program, 'u_resolution'),
           matrixLocation =
@@ -76,7 +65,6 @@
       gl.enableVertexAttribArray(positionLocation);
       gl.enableVertexAttribArray(sizeLocation);
       gl.enableVertexAttribArray(colorLocation);
-      gl.enableVertexAttribArray(angleLocation);
 
       gl.vertexAttribPointer(
         positionLocation,
@@ -102,17 +90,9 @@
         this.ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT,
         12
       );
-      gl.vertexAttribPointer(
-        angleLocation,
-        1,
-        gl.FLOAT,
-        false,
-        this.ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT,
-        16
-      );
 
       gl.drawArrays(
-        gl.TRIANGLES,
+        gl.POINTS,
         params.start || 0,
         params.count || (data.length / this.ATTRIBUTES)
       );
@@ -128,7 +108,6 @@
           'attribute vec2 a_position;',
           'attribute float a_size;',
           'attribute float a_color;',
-          'attribute float a_angle;',
 
           'uniform vec2 u_resolution;',
           'uniform float u_ratio;',
@@ -136,26 +115,20 @@
           'uniform mat3 u_matrix;',
 
           'varying vec4 color;',
-          'varying vec2 center;',
-          'varying float radius;',
 
           'void main() {',
-            // Multiply the point size twice:
-            'radius = a_size * u_ratio;',
-
             // Scale from [[-1 1] [-1 1]] to the container:
-            'vec2 position = (u_matrix * vec3(a_position, 1)).xy;',
-            // 'center = (position / u_resolution * 2.0 - 1.0) * vec2(1, -1);',
-            'center = position * u_scale;',
-            'center = vec2(center.x, u_scale * u_resolution.y - center.y);',
+            'gl_Position = vec4(',
+              '((u_matrix * vec3(a_position, 1)).xy /',
+                'u_resolution * 2.0 - 1.0) * vec2(1, -1),',
+              '0,',
+              '1',
+            ');',
 
-            'position = position +',
-              '2.0 * radius * vec2(cos(a_angle), sin(a_angle));',
-            'position = (position / u_resolution * 2.0 - 1.0) * vec2(1, -1);',
-
-            'radius = radius * u_scale;',
-
-            'gl_Position = vec4(position, 0, 1);',
+            // Multiply the point size twice:
+            //  - x SCALING_RATIO to correct the canvas scaling
+            //  - x 2 to correct the formulae
+            'gl_PointSize = a_size * u_ratio * u_scale * 2.0;',
 
             // Extract the color:
             'float c = a_color;',
@@ -174,20 +147,22 @@
           'precision mediump float;',
 
           'varying vec4 color;',
-          'varying vec2 center;',
-          'varying float radius;',
 
           'void main(void) {',
+            'float border = 0.01;',
+            'float radius = 0.5;',
+
             'vec4 color0 = vec4(0.0, 0.0, 0.0, 0.0);',
+            'vec2 m = gl_PointCoord - vec2(0.5, 0.5);',
+            'float dist = radius - sqrt(m.x * m.x + m.y * m.y);',
 
-            'vec2 m = gl_FragCoord.xy - center;',
-            'float diff = radius - sqrt(m.x * m.x + m.y * m.y);',
+            'float t = 0.0;',
+            'if (dist > border)',
+              't = 1.0;',
+            'else if (dist > 0.0)',
+              't = dist / border;',
 
-            // Here is how we draw a disc instead of a square:
-            'if (diff > 0.0)',
-              'gl_FragColor = color;',
-            'else',
-              'gl_FragColor = color0;',
+            'gl_FragColor = mix(color0, color, t);',
           '}'
         ].join('\n'),
         gl.FRAGMENT_SHADER

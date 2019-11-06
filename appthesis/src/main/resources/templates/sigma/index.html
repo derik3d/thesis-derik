@@ -41,25 +41,32 @@
     
     
     <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.def.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.thickLine.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.thickLineCPU.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.thickLineGPU.js"></script>
     
     
     
     
     <!-- 
     
-                <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+     
+     
+     
+     
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
     
-     <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.thickLine.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.thickLineCPU.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.thickLineGPU.js"></script>
     
     
      -->
      
      <script type="text/javascript" src="/modifiedNodeRenderer.js"></script>
+     <script type="text/javascript" src="/modifiedEdgeRenderer.js"></script>
      
 
 
@@ -81,7 +88,9 @@
 		  {
 		    renderer: {
 		      container: document.getElementById('sigma-container'),
-		      type: 'webgl'
+		      type: 'webgl',
+	    	  defaultNodeType: 'fast',
+	    	  defaultEdgeType: 'fast'
 		    },
 		    settings: {
 		     minEdgeSize: 2,
