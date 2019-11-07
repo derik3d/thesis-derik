@@ -12,9 +12,21 @@ public class NodeViz {
 	
 	private double size;
 	
-	private String color = "#cccc00";
+	private String colora0 = "#00cc00";
 	
-	private String newColor = "#cc0000";
+	private String colorb0 = "#cc0000";
+	
+	private String colorc0 = "#cccc00";
+	
+	private String colord0 = "#0000cc";
+	
+	private String colora1 = "#009900";
+	
+	private String colorb1 = "#990000";
+	
+	private String colorc1 = "#999900";
+	
+	private String colord1 = "#000099";
 
 	public String getId() {
 		return id;
@@ -56,30 +68,84 @@ public class NodeViz {
 		this.size = size;
 	}
 
-	public String getColor() {
-		return color;
+	public String getColora0() {
+		return colora0;
 	}
 
-	public void setColor(String color) {
-		this.color = color;
+	public void setColora0(String colora0) {
+		this.colora0 = colora0;
 	}
 
-	public String getNewColor() {
-		return newColor;
+	public String getColorb0() {
+		return colorb0;
 	}
 
-	public void setNewColor(String newColor) {
-		this.newColor = newColor;
+	public void setColorb0(String colorb0) {
+		this.colorb0 = colorb0;
+	}
+
+	public String getColorc0() {
+		return colorc0;
+	}
+
+	public void setColorc0(String colorc0) {
+		this.colorc0 = colorc0;
+	}
+
+	public String getColord0() {
+		return colord0;
+	}
+
+	public void setColord0(String colord0) {
+		this.colord0 = colord0;
+	}
+
+	public String getColora1() {
+		return colora1;
+	}
+
+	public void setColora1(String colora1) {
+		this.colora1 = colora1;
+	}
+
+	public String getColorb1() {
+		return colorb1;
+	}
+
+	public void setColorb1(String colorb1) {
+		this.colorb1 = colorb1;
+	}
+
+	public String getColorc1() {
+		return colorc1;
+	}
+
+	public void setColorc1(String colorc1) {
+		this.colorc1 = colorc1;
+	}
+
+	public String getColord1() {
+		return colord1;
+	}
+
+	public void setColord1(String colord1) {
+		this.colord1 = colord1;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((color == null) ? 0 : color.hashCode());
+		result = prime * result + ((colora0 == null) ? 0 : colora0.hashCode());
+		result = prime * result + ((colora1 == null) ? 0 : colora1.hashCode());
+		result = prime * result + ((colorb0 == null) ? 0 : colorb0.hashCode());
+		result = prime * result + ((colorb1 == null) ? 0 : colorb1.hashCode());
+		result = prime * result + ((colorc0 == null) ? 0 : colorc0.hashCode());
+		result = prime * result + ((colorc1 == null) ? 0 : colorc1.hashCode());
+		result = prime * result + ((colord0 == null) ? 0 : colord0.hashCode());
+		result = prime * result + ((colord1 == null) ? 0 : colord1.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((label == null) ? 0 : label.hashCode());
-		result = prime * result + ((newColor == null) ? 0 : newColor.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(size);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -99,10 +165,45 @@ public class NodeViz {
 		if (getClass() != obj.getClass())
 			return false;
 		NodeViz other = (NodeViz) obj;
-		if (color == null) {
-			if (other.color != null)
+		if (colora0 == null) {
+			if (other.colora0 != null)
 				return false;
-		} else if (!color.equals(other.color))
+		} else if (!colora0.equals(other.colora0))
+			return false;
+		if (colora1 == null) {
+			if (other.colora1 != null)
+				return false;
+		} else if (!colora1.equals(other.colora1))
+			return false;
+		if (colorb0 == null) {
+			if (other.colorb0 != null)
+				return false;
+		} else if (!colorb0.equals(other.colorb0))
+			return false;
+		if (colorb1 == null) {
+			if (other.colorb1 != null)
+				return false;
+		} else if (!colorb1.equals(other.colorb1))
+			return false;
+		if (colorc0 == null) {
+			if (other.colorc0 != null)
+				return false;
+		} else if (!colorc0.equals(other.colorc0))
+			return false;
+		if (colorc1 == null) {
+			if (other.colorc1 != null)
+				return false;
+		} else if (!colorc1.equals(other.colorc1))
+			return false;
+		if (colord0 == null) {
+			if (other.colord0 != null)
+				return false;
+		} else if (!colord0.equals(other.colord0))
+			return false;
+		if (colord1 == null) {
+			if (other.colord1 != null)
+				return false;
+		} else if (!colord1.equals(other.colord1))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -113,11 +214,6 @@ public class NodeViz {
 			if (other.label != null)
 				return false;
 		} else if (!label.equals(other.label))
-			return false;
-		if (newColor == null) {
-			if (other.newColor != null)
-				return false;
-		} else if (!newColor.equals(other.newColor))
 			return false;
 		if (Double.doubleToLongBits(size) != Double.doubleToLongBits(other.size))
 			return false;
@@ -130,10 +226,11 @@ public class NodeViz {
 
 	@Override
 	public String toString() {
-		return "NodeViz [id=" + id + ", label=" + label + ", x=" + x + ", y=" + y + ", size=" + size + ", color="
-				+ color + ", newColor=" + newColor + "]";
+		return "NodeViz [id=" + id + ", label=" + label + ", x=" + x + ", y=" + y + ", size=" + size + ", colora0="
+				+ colora0 + ", colorb0=" + colorb0 + ", colorc0=" + colorc0 + ", colord0=" + colord0 + ", colora1="
+				+ colora1 + ", colorb1=" + colorb1 + ", colorc1=" + colorc1 + ", colord1=" + colord1 + "]";
 	}
-
+	
 	
 
 }

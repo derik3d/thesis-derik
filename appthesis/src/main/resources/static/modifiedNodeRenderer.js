@@ -22,19 +22,47 @@
    */
   sigma.webgl.nodes.fast = {
     POINTS: 1,
-    ATTRIBUTES: 5,
+    ATTRIBUTES: 15,
     addNode: function(node, data, i, prefix, settings) {
       data[i++] = node[prefix + 'x'];
       data[i++] = node[prefix + 'y'];
       data[i++] = node[prefix + 'size'];
             
       data[i++] = sigma.utils.floatColor(
-        node.color || settings('defaultNodeColor')
+        node.colora0 || settings('defaultNodeColor')
       );
-
+            
       data[i++] = sigma.utils.floatColor(
-        node.newColor || settings('defaultNodeColor')
+        node.colorb0 || settings('defaultNodeColor')
       );
+            
+      data[i++] = sigma.utils.floatColor(
+        node.colorc0 || settings('defaultNodeColor')
+      );
+            
+      data[i++] = sigma.utils.floatColor(
+        node.colord0 || settings('defaultNodeColor')
+      );
+      
+      
+      data[i++] = sigma.utils.floatColor(
+        node.colora1 || settings('defaultNodeColor')
+      );
+            
+      data[i++] = sigma.utils.floatColor(
+        node.colorb1 || settings('defaultNodeColor')
+      );
+            
+      data[i++] = sigma.utils.floatColor(
+        node.colorc1 || settings('defaultNodeColor')
+      );
+            
+      data[i++] = sigma.utils.floatColor(
+        node.colord1 || settings('defaultNodeColor')
+      );
+      
+
+      
     },
     render: function(gl, program, data, params) {
       var buffer;
@@ -44,11 +72,26 @@
             gl.getAttribLocation(program, 'a_position'),
           sizeLocation =
             gl.getAttribLocation(program, 'a_size'),
-        colorLocation =
-            gl.getAttribLocation(program, 'a_color'),
             
-        newColorLocation =
-            gl.getAttribLocation(program, 'a_newColor'),
+
+            colorLocationa0 =
+                gl.getAttribLocation(program, 'a_color_a_0'),
+            colorLocationb0 =
+                gl.getAttribLocation(program, 'a_color_b_0'),
+            colorLocationc0 =
+                gl.getAttribLocation(program, 'a_color_c_0'),
+            colorLocationd0 =
+                gl.getAttribLocation(program, 'a_color_d_0'),
+                
+            colorLocationa1 =
+                gl.getAttribLocation(program, 'a_color_a_1'),
+            colorLocationb1 =
+                gl.getAttribLocation(program, 'a_color_b_1'),
+            colorLocationc1 =
+                gl.getAttribLocation(program, 'a_color_c_1'),
+            colorLocationd1 =
+                gl.getAttribLocation(program, 'a_color_d_1'),
+                
             
           resolutionLocation =
             gl.getUniformLocation(program, 'u_resolution'),
@@ -73,8 +116,17 @@
 
       gl.enableVertexAttribArray(positionLocation);
       gl.enableVertexAttribArray(sizeLocation);
-      gl.enableVertexAttribArray(colorLocation);
-      gl.enableVertexAttribArray(newColorLocation);
+
+      gl.enableVertexAttribArray(colorLocationa0);
+      gl.enableVertexAttribArray(colorLocationb0);
+      gl.enableVertexAttribArray(colorLocationc0);
+      gl.enableVertexAttribArray(colorLocationd0);
+
+      gl.enableVertexAttribArray(colorLocationa1);
+      gl.enableVertexAttribArray(colorLocationb1);
+      gl.enableVertexAttribArray(colorLocationc1);
+      gl.enableVertexAttribArray(colorLocationd1);
+
 
       gl.vertexAttribPointer(
         positionLocation,
@@ -92,25 +144,81 @@
         this.ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT,
         8
       );
+      
+      
+
       gl.vertexAttribPointer(
-        colorLocation,
+        colorLocationa0,
         1,
         gl.FLOAT,
         false,
         this.ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT,
         12
       );
-
-      
-
       gl.vertexAttribPointer(
-        newColorLocation,
+        colorLocationb0,
         1,
         gl.FLOAT,
         false,
         this.ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT,
         16
       );
+      gl.vertexAttribPointer(
+        colorLocationc0,
+        1,
+        gl.FLOAT,
+        false,
+        this.ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT,
+        20
+      );
+      gl.vertexAttribPointer(
+        colorLocationd0,
+        1,
+        gl.FLOAT,
+        false,
+        this.ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT,
+        24
+      );
+      
+      
+
+      gl.vertexAttribPointer(
+        colorLocationa1,
+        1,
+        gl.FLOAT,
+        false,
+        this.ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT,
+        28
+      );
+      gl.vertexAttribPointer(
+        colorLocationb1,
+        1,
+        gl.FLOAT,
+        false,
+        this.ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT,
+        32
+      );
+      gl.vertexAttribPointer(
+        colorLocationc1,
+        1,
+        gl.FLOAT,
+        false,
+        this.ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT,
+        36
+      );
+      gl.vertexAttribPointer(
+        colorLocationd1,
+        1,
+        gl.FLOAT,
+        false,
+        this.ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT,
+        40
+      );
+      
+      
+
+      
+      
       
       gl.drawArrays(
         gl.POINTS,
@@ -128,16 +236,51 @@
         [
           'attribute vec2 a_position;',
           'attribute float a_size;',
-          'attribute float a_color;',
-          'attribute float a_newColor;',
+          
+          'attribute float a_color_a_0;',
+          'attribute float a_color_b_0;',
+          'attribute float a_color_c_0;',
+          'attribute float a_color_d_0;',
+          
+
+          'attribute float a_color_a_1;',
+          'attribute float a_color_b_1;',
+          'attribute float a_color_c_1;',
+          'attribute float a_color_d_1;',
+          
+
+          'attribute float a_color_a_2;',
+          'attribute float a_color_b_2;',
+          'attribute float a_color_c_2;',
+          'attribute float a_color_d_2;',
 
           'uniform vec2 u_resolution;',
           'uniform float u_ratio;',
           'uniform float u_scale;',
           'uniform mat3 u_matrix;',
+          
+          
+          
 
+          'varying vec4 colors[8];',
           'varying vec4 color;',
           'varying vec4 newColor;',
+
+          'void myFunc(float c, out vec4 res){',
+                    
+	          'vec4 testc;',
+	          'testc.b = mod(c, 256.0); c = floor(c / 256.0);',
+	          'testc.g = mod(c, 256.0); c = floor(c / 256.0);',
+	          'testc.r = mod(c, 256.0); c = floor(c / 256.0);',
+	          'testc /= 255.0;',
+	          'testc.a = 1.0;',
+	          
+				'res.r = testc.r;',
+				'res.g = testc.g;',
+				'res.b = testc.b;',
+				'res.a = testc.a;',
+				
+          ,'}',
 
           'void main() {',
             // Scale from [[-1 1] [-1 1]] to the container:
@@ -153,23 +296,14 @@
             //  - x 2 to correct the formulae
             'gl_PointSize = a_size * u_ratio * u_scale * 2.0;',
 
-            // Extract the color:
-            'float c = a_color;',
-            'color.b = mod(c, 256.0); c = floor(c / 256.0);',
-            'color.g = mod(c, 256.0); c = floor(c / 256.0);',
-            'color.r = mod(c, 256.0); c = floor(c / 256.0); color /= 255.0;',
-            'color.a = 1.0;',
-            
-            
-
-
-            // Extract the color:
-            'float cc = a_newColor;',
-            'newColor.b = mod(cc, 256.0); cc = floor(cc / 256.0);',
-            'newColor.g = mod(cc, 256.0); cc = floor(cc / 256.0);',
-            'newColor.r = mod(cc, 256.0); cc = floor(cc / 256.0); newColor /= 255.0;',
-            'newColor.a = 1.0;',
-            
+            'myFunc(a_color_a_0, colors[0]);',
+            'myFunc(a_color_b_0, colors[1]);',
+            'myFunc(a_color_c_0, colors[2]);',
+            'myFunc(a_color_d_0, colors[3]);',
+            'myFunc(a_color_a_1, colors[4]);',
+            'myFunc(a_color_b_1, colors[5]);',
+            'myFunc(a_color_c_1, colors[6]);',
+            'myFunc(a_color_d_1, colors[7]);',
             
           '}'
         ].join('\n'),
@@ -181,23 +315,78 @@
         [
           'precision mediump float;',
 
-          'varying vec4 color;',
-          'varying vec4 newColor;',
+          'varying vec4 colors[8];',
+          
+
+          'void copyColor(vec4 c, out vec4 res){',
+                    
+	          
+				'res.r = c.r;',
+				'res.g = c.g;',
+				'res.b = c.b;',
+				'res.a = c.a;',
+				
+          ,'}',
+          
+          	
+          'int loadQuadrant(vec2 point){',
+          
+          	//'res=0;',
+
+    		'if(point.x<0.5 && point.y <0.5)return 0;',
+      		'if(point.x<0.5 && point.y >0.5)return 1;',
+      		'if(point.x>0.5 && point.y <0.5)return 2;',
+      		'if(point.x>0.5 && point.y >0.5)return 3;',
+          
+		,'}',
+        
+
+        'void colorFunc0( int quadrant){',
+        
+			'if(quadrant == 0)',  
+			  	'copyColor(colors[0], gl_FragColor);',
+			'else if(quadrant == 1)',  
+			  	'copyColor(colors[1], gl_FragColor);',
+			'else if(quadrant == 2)',  
+			  	'copyColor(colors[2], gl_FragColor);',
+			'else',  
+			  	'copyColor(colors[3], gl_FragColor);',
+		  	
+	          ,'}',
+	          
+
+	          'void colorFunc1( int quadrant){',
+	          
+				'if(quadrant == 0)',  
+				  	'copyColor(colors[4], gl_FragColor);',
+				'else if(quadrant == 1)',  
+				  	'copyColor(colors[5], gl_FragColor);',
+				'else if(quadrant == 2)',  
+				  	'copyColor(colors[6], gl_FragColor);',
+				'else',  
+				  	'copyColor(colors[7], gl_FragColor);',
+		          ,'}',
+
 
           'void main(void) {',
-            'float border = 0.1;',
-            'float radius = 0.5;',
+	          'float innerBorder = 0.3;',
+	          'float outerBorder = 0.5;',
+	
 
             'vec2 m = gl_PointCoord - vec2(0.5, 0.5);',
-            'float dist = radius - sqrt(m.x * m.x + m.y * m.y);',
+            'float dist = sqrt(m.x * m.x + m.y * m.y);',
+            
+            'int quadrant = loadQuadrant(gl_PointCoord);',
+            
+            'if (dist < innerBorder)',
+            	'colorFunc0(quadrant);',
+            'else if (dist < outerBorder)',
+              	'colorFunc1(quadrant);',
+            'else',
+            	'copyColor(vec4(0.0,0.0,0.0,0.0), gl_FragColor);',
 
-            'float t = 0.0;',
-            'if (dist > border)',
-              't = 0.0;',
-            'else if (dist > 0.0)',
-              't = 1.0;',
 
-            'gl_FragColor = mix(newColor, color, t);',
+            //'gl_FragColor = mix(colors[1], colors[0], t);',
           '}'
         ].join('\n'),
         gl.FRAGMENT_SHADER
