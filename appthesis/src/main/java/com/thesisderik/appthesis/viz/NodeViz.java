@@ -12,21 +12,21 @@ public class NodeViz {
 	
 	private double size;
 	
-	private String colora0 = "#00cc00";
+	private String colora0;
 	
-	private String colorb0 = "#cc0000";
+	private String colorb0;
 	
-	private String colorc0 = "#cccc00";
+	private String colorc0;
 	
-	private String colord0 = "#0000cc";
+	private String colord0;
 	
-	private String colora1 = "#009900";
+	private String colora1;
 	
-	private String colorb1 = "#990000";
+	private String colorb1;
 	
-	private String colorc1 = "#999900";
+	private String colorc1;
 	
-	private String colord1 = "#000099";
+	private String colord1;
 
 	public String getId() {
 		return id;
