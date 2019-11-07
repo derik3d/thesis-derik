@@ -124,6 +124,7 @@ public class SimpleGraphRepoTests {
 		for(String serviceName : iAnalisysService.getServices())
 			iSimpleGraphManager.doTask(serviceName);
 		
+		iSimpleGraphManager.getPlainTasks();
 		
 		
 		iSimpleGraphManager.createExperiment(

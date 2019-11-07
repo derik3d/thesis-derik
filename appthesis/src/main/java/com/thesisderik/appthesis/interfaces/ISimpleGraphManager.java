@@ -109,4 +109,6 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 	
 	public List<PlainFeature> getPlainFeatures();
 
+	public List<PlainTask> getPlainTasks();
+
 }

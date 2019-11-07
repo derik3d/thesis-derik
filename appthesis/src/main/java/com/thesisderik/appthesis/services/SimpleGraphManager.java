@@ -667,6 +667,12 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 
 		return (List<PlainFeature>) simpleFeatureDAO.findAll();
 	}
+
+	@Override
+	public List<PlainTask> getPlainTasks() {
+
+		return (List<PlainTask>) simpleTaskDAO.findAll();
+	}
 	
 	
 	

@@ -10,19 +10,59 @@
 	
 	<form action="#" th:action="@{/front/experimentStart?save}" th:object="${plainExperiment}" method="post">
 
+		<label >title</label><br>
 		<input type="text" th:field="*{title}" />
+		
 		<br><br>
+		
+		<label >description</label><br>
 		<textarea rows="4" cols="50" th:field="*{description}" >
 		</textarea>
+		
 		<br><br>
-		<br><br>
+		
+		<label >groups</label><br>
 		<ul>
 		  <li th:each="group : ${allGroups}">
 		    <input type="checkbox" th:field="*{plainGroups}" th:value="${group.id}" />
 		    <label th:for="${#ids.prev('plainGroups')}" 
-		           th:text="${group.name}">placeholder</label>
+		           th:text="${group.name}">Wireframe</label>
 		  </li>
 		</ul>
+		
+		<br><br>
+		
+		<label >features</label><br>
+		<ul>
+		  <li th:each="feature : ${allFeatures}">
+		    <input type="checkbox" th:field="*{plainFeatures}" th:value="${feature.id}" />
+		    <label th:for="${#ids.prev('plainFeatures')}" 
+		           th:text="${feature.name}">Wireframe</label>
+		  </li>
+		</ul>
+		
+		<br><br>
+		
+		<label >tasks</label><br>
+		<select th:field="*{task}">
+		  <option th:each="task : ${allTasks}" 
+		          th:value="${task.id}" 
+		          th:text="${task.name}">Wireframe</option>
+		</select>
+		
+		<br><br>
+		
+		<label >command</label><br>
+		<input type="text" th:field="*{taskDescriptionCommand}" />
+		
+		<br><br>
+		
+		<label >uqname overriding</label><br>
+		<input type="text" th:field="*{featureNameOverride}" />	
+		
+		<br><br>
+		
+		
 		<input type="submit">
 	</form>
 	

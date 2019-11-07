@@ -29,6 +29,7 @@ import com.thesisderik.appthesis.interfaces.IStorageService;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainExperiment;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainFeature;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainGroup;
+import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainTask;
 
 @Controller
 @RequestMapping("front")
@@ -59,9 +60,9 @@ public class FrontController {
 	    return iSimpleGraphManager.getPlainFeatures();
 	}
 	
-	@ModelAttribute("allServices")
-	public List<String> populateServices() {
-	    return iAnalysisService.getServices();
+	@ModelAttribute("allTasks")
+	public List<PlainTask> populateTasks() {
+	    return iSimpleGraphManager.getPlainTasks();
 	}
 	
 	@ModelAttribute("allFiles")
@@ -72,7 +73,7 @@ public class FrontController {
 	
 	@RequestMapping({"/","/experimentStart"})
     public String listUploadedFiles(Model model){
-		model.addAttribute("plainExperiment", new PlainExperiment());		
+		model.addAttribute("plainExperiment", new PlainExperiment());
         return "uploadForm";
     }
 	
