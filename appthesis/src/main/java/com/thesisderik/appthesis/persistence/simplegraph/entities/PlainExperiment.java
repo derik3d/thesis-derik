@@ -25,6 +25,15 @@ public class PlainExperiment implements Comparable<PlainExperiment>{
 	
 	
 
+	@Override
+	public String toString() {
+		return "PlainExperiment [id=" + id + ", title=" + title + ", description=" + description + ", plainGroups="
+				+ plainGroups + ", plainFeatures=" + plainFeatures + ", task=" + task + ", taskDescriptionCommand="
+				+ taskDescriptionCommand + ", featureNameOverride=" + featureNameOverride + ", modelObjectData="
+				+ modelObjectData + ", modelClassesData=" + modelClassesData + ", modelFeaturesData="
+				+ modelFeaturesData + "]";
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

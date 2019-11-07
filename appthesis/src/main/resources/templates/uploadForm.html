@@ -2,63 +2,30 @@
 <body>
 
 	<div th:if="${message}">
-		<h2 th:text="${message}"/>
+		<h2 th:text="${message}"/></h2>
 	</div>
 
 
 	<div>
-		<form>
-			<table>
-				<tr><td></td></tr>
-				
-				<tr><td>groups</td></tr>
-				
-				<tr><td></td></tr>
-				
-				<tr th:each="group : ${groups}">
-					<td>
-						<label>
-							<input type="checkbox" value="group.id">
-							<span th:text="${group.name}">group name</span>
-						</label>					
-					</td>
-				</tr>
-				
-				<tr><td></td></tr>
-				
-				<tr><td>features</td></tr>
-				
-				<tr><td></td></tr>
-				
-				<tr th:each="feature : ${features}">
-					<td>
-						<input type="checkbox" value="feature.id">
-						<span th:text="${feature.name}">feature name</span>
-					</td>
-				</tr>
-				
-				<tr><td></td></tr>
-				
-				<tr><td>services</td></tr>
-				
-				<tr><td></td></tr>
-				
-				<tr><td>
-				
-				<select name="services">
-				    <option th:each="service : ${services}" th:value="${service}" th:text="${service}"></option>
-			    </select>
-				
-				</td></tr>
-				
-				
-				
-			</table>
-			<table>
-				<tr><td><input type="submit" value="create experiment" /></td></tr>
-			</table>
-			
-		</form>
+	
+	<form action="#" th:action="@{/front/experimentStart?save}" th:object="${plainExperiment}" method="post">
+
+		<input type="text" th:field="*{title}" />
+		<br><br>
+		<textarea rows="4" cols="50" th:field="*{description}" >
+		</textarea>
+		<br><br>
+		<br><br>
+		<ul>
+		  <li th:each="group : ${allGroups}">
+		    <input type="checkbox" th:field="*{plainGroups}" th:value="${group.id}" />
+		    <label th:for="${#ids.prev('plainGroups')}" 
+		           th:text="${group.name}">placeholder</label>
+		  </li>
+		</ul>
+		<input type="submit">
+	</form>
+	
 	
 	</div>
 
@@ -85,8 +52,8 @@
 
 	<div>
 		<ul>
-			<li th:each="file : ${files}">
-				<a th:href="${file}" th:text="${file}" />
+			<li th:each="file : ${allFiles}">
+				<a th:href="${file}" th:text="${file}"></a>
 			</li>
 		</ul>
 	</div>

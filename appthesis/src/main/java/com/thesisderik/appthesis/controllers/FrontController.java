@@ -1,6 +1,6 @@
 package com.thesisderik.appthesis.controllers;
 
-import java.awt.List;
+import java.util.List;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +26,9 @@ import com.thesisderik.appthesis.interfaces.IAnalysisService;
 import com.thesisderik.appthesis.interfaces.IGraphManagerService;
 import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
 import com.thesisderik.appthesis.interfaces.IStorageService;
+import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainExperiment;
+import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainFeature;
+import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainGroup;
 
 @Controller
 @RequestMapping("front")
@@ -41,15 +47,67 @@ public class FrontController {
 	
 	@Autowired
 	ISimpleGraphManager iSimpleGraphManager;
+
 	
-	@GetMapping
+	@ModelAttribute("allGroups")
+	public List<PlainGroup> populateGroups() {
+	    return iSimpleGraphManager.getPlainGroups();
+	}
+	
+	@ModelAttribute("allFeatures")
+	public List<PlainFeature> populateFeatures() {
+	    return iSimpleGraphManager.getPlainFeatures();
+	}
+	
+	@ModelAttribute("allServices")
+	public List<String> populateServices() {
+	    return iAnalysisService.getServices();
+	}
+	
+	@ModelAttribute("allFiles")
+	public List<String> populateFiles() {
+	    return iStorageService.loadAll();
+	}
+	
+	
+	@RequestMapping({"/","/experimentStart"})
     public String listUploadedFiles(Model model){
-		model.addAttribute("groups", iSimpleGraphManager.getPlainGroups());
-		model.addAttribute("features", iSimpleGraphManager.getPlainFeatures());
-		model.addAttribute("services", iAnalysisService.getServices());
-        model.addAttribute("files", iStorageService.loadAll());
+		model.addAttribute("plainExperiment", new PlainExperiment());		
         return "uploadForm";
     }
+	
+
+
+	@RequestMapping(value="/experimentStart", params={"save"})
+	public String saveSeedstarter(
+	        final PlainExperiment plainExperiment, final BindingResult bindingResult, final ModelMap model) {
+	    if (bindingResult.hasErrors()) {
+	    	 System.out.println("error prro");
+	    }
+	    
+	    
+	    System.out.println("hsvethis: " + plainExperiment.toString());
+	    return "redirect:/front/experimentStart";
+	}
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@PostMapping("graph")
 	public String uploaGraph(
@@ -84,6 +142,6 @@ public class FrontController {
         
 		return "redirect:/front/";
 	}
-
-
+	
+	
 }
