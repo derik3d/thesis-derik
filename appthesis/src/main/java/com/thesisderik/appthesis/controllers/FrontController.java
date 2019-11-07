@@ -86,7 +86,7 @@ public class FrontController {
 	    	 System.out.println("error prro");
 	    }
 	    
-	    
+	    iSimpleGraphManager.createExperiment(plainExperiment.getTitle(), plainExperiment.getDescription(), plainExperiment.getPlainGroups(), plainExperiment.getPlainFeatures(), plainExperiment.getTask(), plainExperiment.getTaskDescriptionCommand(), plainExperiment.getFeatureNameOverride());
 	    System.out.println("hsvethis: " + plainExperiment.toString());
 	    return "redirect:/front/experimentStart";
 	}

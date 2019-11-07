@@ -255,11 +255,12 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 
 
 	@Override
-	public PlainExperiment createExperiment(String title, String description, ArrayList<String> groups, ArrayList<String> features,
-			String targetTaskCommand, String taskQuery, String featureNameOverride) {
+	public PlainExperiment createExperiment(String title, String description,
+			ArrayList<String> groups, ArrayList<String> features,
+			String taskName, String taskQuery, String featureNameOverride) {
 		
 
-		PlainTask task = simpleTaskDAO.findByName(targetTaskCommand);
+		PlainTask task = simpleTaskDAO.findByName(taskName);
 		
 		if(task==null) {
 			throw new RuntimeException("invalid service");
@@ -268,7 +269,20 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		Set<PlainGroup> plainGroups = simpleGroupDAO.findAllByNameIn(groups);
 		Set<PlainFeature> plainFeatures = simpleFeatureDAO.findAllByNameIn(features);
 		
+		return  createExperiment(title, description, plainGroups, plainFeatures,
+			 task, taskQuery, featureNameOverride);
 		
+	}
+	
+	
+
+	@Override
+	public PlainExperiment createExperiment(String title,
+			String description, Set<PlainGroup> plainGroups, Set<PlainFeature> plainFeatures,
+			PlainTask task, String taskQuery, String featureNameOverride) {
+		
+		task = simpleTaskDAO.findById(task.getId()).get();
+
 		PlainExperiment pe = new PlainExperiment();
 		pe.setTitle(title);
 		pe.setDescription(description);
@@ -284,7 +298,7 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 
 		
 		//def name override
-		if(featureNameOverride.length()>0) {
+		if(featureNameOverride instanceof Object && featureNameOverride.length()>0) {
 			pe.setFeatureNameOverride(cmdPart+featureNameOverride);
 		}else {
 			

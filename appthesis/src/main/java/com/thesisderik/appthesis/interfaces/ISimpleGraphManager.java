@@ -2,6 +2,7 @@ package com.thesisderik.appthesis.interfaces;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentRequestFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentResultsFileDataStructure;
@@ -64,7 +65,7 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 			String description,
 			ArrayList<String> groups,
 			ArrayList<String> features,
-			String targetTaskCommand,
+			String taskName,
 			String taskQuery,
 			String featureNameOverride
 			);
@@ -74,7 +75,7 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 			String description,
 			ArrayList<String> groups,
 			ArrayList<String> features,
-			String targetTaskCommand,
+			String taskName,
 			String taskQuery
 			);
 	
@@ -110,5 +111,8 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 	public List<PlainFeature> getPlainFeatures();
 
 	public List<PlainTask> getPlainTasks();
+
+	PlainExperiment createExperiment(String title, String description, Set<PlainGroup> plainGroups,
+			Set<PlainFeature> plainFeatures, PlainTask task, String taskQuery, String featureNameOverride);
 
 }

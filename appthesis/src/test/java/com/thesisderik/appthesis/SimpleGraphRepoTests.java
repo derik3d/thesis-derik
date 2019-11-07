@@ -138,7 +138,7 @@ public class SimpleGraphRepoTests {
 				);
 		
 		ExperimentRequestFileDataStructure data0 = iSimpleGraphManager.getExperimentData("smilesbasic");
-		//iAnalisysService.processData(data0);
+		iAnalisysService.processData(data0);
 
 
 		
@@ -205,7 +205,7 @@ public class SimpleGraphRepoTests {
 		//iAnalisysService.processData(data4);
 
 		int a=0;
-
+		System.out.println(a++);
 	}
 	
 	@Test
