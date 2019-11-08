@@ -337,27 +337,57 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	}
 	
 	
-	public ArrayList<PlainNode> findNodesForExperiment(PlainExperiment experiment, boolean includeAllGroup){
+	public ArrayList<PlainNode> findNodesForExperiment(PlainExperiment experiment, boolean includeAllGroup, List<PlainGroup> ignoringGroups){
 		
+		
+		final ArrayList<Long> ignoringGroupsList;
+		
+		if(ignoringGroups instanceof Object)
+			ignoringGroupsList = (ArrayList<Long>) ignoringGroups.stream().map(PlainGroup::getId).collect(Collectors.toList());
+		else
+			ignoringGroupsList=null;
 		
 		//Nodes at least in one of the groups
 		//Nodes That has all the features, ignoring the features that all nodes doesnt have
 
 		ArrayList<PlainNode> byGroupNodes;
 		
+		
+		Set<PlainGroup> pgList;
 		if(!includeAllGroup) {
 			
+			pgList = experiment.getPlainGroups();
+		}else {
+			
+			pgList = new HashSet<PlainGroup>();
+			pgList.add(simpleGroupDAO.findByName("ALL"));
+			
+			
+		}
 			TreeSet<NodeGroupRelation> groupsUseByGroup = relSimpleNodeGroupDAO.
-				findAllByGroupIn(experiment.getPlainGroups());
+				findAllByGroupIn(pgList);
+			
+			
+			
+			//exclude from group
+			if(ignoringGroups!=null) {
+				
+				groupsUseByGroup = (TreeSet<NodeGroupRelation>)
+						groupsUseByGroup.stream().filter(  n -> { 
+							if(ignoringGroupsList==null)
+								return true;
+							Long currgpid = n.getId();
+							return !ignoringGroupsList.contains(currgpid);
+						
+						} ).collect(Collectors.toSet());
+				
+			}
+			
 		
 		
 			byGroupNodes = new ArrayList<>( groupsUseByGroup.stream().
 				map(NodeGroupRelation::getNode).collect(Collectors.toSet()) );
-		}else {
-			
-			byGroupNodes = (ArrayList<PlainNode>) simpleNodeDAO.findAll();
-			
-		}
+		
 			
 		
 		for( PlainFeature pf : experiment.getPlainFeatures()) {
@@ -439,16 +469,16 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	
 	@Override
 	public ExperimentRequestFileDataStructure getExperimentData(String experimentName) {
-		return getExperimentData(experimentName,false);
+		return getExperimentData(experimentName,false,null);
 	}
 	
 	@Override
-	public ExperimentRequestFileDataStructure getExperimentData(String experimentName, boolean includeAllGroup) {
+	public ExperimentRequestFileDataStructure getExperimentData(String experimentName, boolean includeAllGroup, List<PlainGroup> ignoreGroupList) {
 
 
 		PlainExperiment experiment = simpleExperimentDAO.findByTitle(experimentName);
 		
-		ArrayList<PlainNode> nodesToUse = findNodesForExperiment(experiment,includeAllGroup);
+		ArrayList<PlainNode> nodesToUse = findNodesForExperiment(experiment,includeAllGroup, ignoreGroupList);
 		
 		ArrayList<PlainFeature> featuresToUse = new ArrayList<>(featuresOfNodesToUseInRange(nodesToUse, experiment.getPlainFeatures()));
 		
@@ -609,7 +639,7 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 
 		PlainExperiment experiment = simpleExperimentDAO.findByFeatureNameOverride(uqName);
 
-		ExperimentRequestFileDataStructure data = getExperimentData(experiment.getTitle(),true);
+		ExperimentRequestFileDataStructure data = getExperimentData(experiment.getTitle(),true,null);
 		
 		return data.buildCSVFile().get(1);
 	}
@@ -686,6 +716,26 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	public List<PlainTask> getPlainTasks() {
 
 		return (List<PlainTask>) simpleTaskDAO.findAll();
+	}
+
+	@Override
+	public List<PlainExperiment> getExperiments() {
+
+		return (List<PlainExperiment>) simpleExperimentDAO.findAll();
+	}
+
+	@Override
+	public ExperimentRequestFileDataStructure getExperimentDataNotAnalized(String experimentName) {
+		
+		PlainExperiment foundExperiment = simpleExperimentDAO.findByTitle(experimentName);
+		String groupName = foundExperiment.getFeatureNameOverride();
+		String filteredName = groupName.substring(groupName.lastIndexOf(defaultSeparator)+defaultSeparator.length(),groupName.length());
+		String groupResultName = resultGroupSegment+filteredName;
+		
+		List<PlainGroup> groupIgnore = new ArrayList<PlainGroup>();
+		groupIgnore.add(simpleGroupDAO.findByName(groupResultName));
+		
+		return getExperimentData(experimentName,false,groupIgnore);
 	}
 	
 	

@@ -26,6 +26,7 @@ import com.thesisderik.appthesis.interfaces.IAnalysisService;
 import com.thesisderik.appthesis.interfaces.IGraphManagerService;
 import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
 import com.thesisderik.appthesis.interfaces.IStorageService;
+import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentRequestFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainExperiment;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainFeature;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainGroup;
@@ -70,6 +71,11 @@ public class FrontController {
 	    return iStorageService.loadAll();
 	}
 	
+	@ModelAttribute("allExperiments")
+	public List<PlainExperiment> populateExperiments() {
+	    return iSimpleGraphManager.getExperiments();
+	}
+	
 	
 	@RequestMapping({"/","/experimentStart"})
     public String listUploadedFiles(Model model){
@@ -100,6 +106,14 @@ public class FrontController {
 	
 	
 	
+
+	
+	
+	
+	
+	
+	
+
 	
 	
 	
@@ -108,6 +122,27 @@ public class FrontController {
 	
 	
 	
+	
+	@PostMapping("executeExperiment")
+	public String executeExperiment(
+			@RequestParam("experimentName") String experimentName,
+			@RequestParam(name="recalculateAll", defaultValue="false") boolean recalculateAll,
+            RedirectAttributes redirectAttributes) {
+		
+		System.out.printf("datos %s %s",experimentName,recalculateAll);
+		
+		
+		if(recalculateAll)
+			iAnalysisService.processData(iSimpleGraphManager.getExperimentData(experimentName));
+		else
+			iAnalysisService.processData(iSimpleGraphManager.getExperimentDataNotAnalized(experimentName));
+			
+			
+			
+        redirectAttributes.addFlashAttribute("message",
+                "Experiment scheduled for execution.");
+		return "redirect:/front/";
+	}
 	
 	
 	@PostMapping("graph")

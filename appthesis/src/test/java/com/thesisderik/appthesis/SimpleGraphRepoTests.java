@@ -118,6 +118,8 @@ public class SimpleGraphRepoTests {
 		
 		iSimpleGraphManager.createGroupBulk(newGroup);
 		
+		
+		//Automtates the experiment management
 		//iAnalisysService.setExperimentDataIntegrator(iSimpleGraphManager);
 
 		
@@ -138,8 +140,7 @@ public class SimpleGraphRepoTests {
 				);
 		
 		ExperimentRequestFileDataStructure data0 = iSimpleGraphManager.getExperimentData("smilesbasic");
-		iAnalisysService.processData(data0);
-
+		//iAnalisysService.processData(data0);
 
 		
 		iSimpleGraphManager.createExperiment(
@@ -201,7 +202,7 @@ public class SimpleGraphRepoTests {
 		ExperimentRequestFileDataStructure data4 = iSimpleGraphManager.getExperimentData("mltest");
 
 		
-		//iAnalisysService.processData(data3);
+		iAnalisysService.processData(data3);
 		//iAnalisysService.processData(data4);
 
 		int a=0;

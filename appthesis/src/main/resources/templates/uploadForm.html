@@ -2,76 +2,192 @@
 <body>
 
 	<div th:if="${message}">
-		<h2 th:text="${message}"/></h2>
+		<h2 th:text="${message}"/></h2><br><br><br><br>
 	</div>
 
 
 	<div>
+			<h1>Current experiments</h1>
 	
-	<form action="#" th:action="@{/front/experimentStart?save}" th:object="${plainExperiment}" method="post">
+		<table>
+		
+			<thead>
 
-		<label >title</label><br>
-		<input type="text" th:field="*{title}" />
-		
-		<br><br>
-		
-		<label >description</label><br>
-		<textarea rows="4" cols="50" th:field="*{description}" >
-		</textarea>
-		
-		<br><br>
-		
-		<label >groups</label><br>
-		<ul>
-		  <li th:each="group : ${allGroups}">
-		    <input type="checkbox" th:field="*{plainGroups}" th:value="${group.id}" />
-		    <label th:for="${#ids.prev('plainGroups')}" 
-		           th:text="${group.name}">Wireframe</label>
-		  </li>
-		</ul>
-		
-		<br><br>
-		
-		<label >features</label><br>
-		<ul>
-		  <li th:each="feature : ${allFeatures}">
-		    <input type="checkbox" th:field="*{plainFeatures}" th:value="${feature.id}" />
-		    <label th:for="${#ids.prev('plainFeatures')}" 
-		           th:text="${feature.name}">Wireframe</label>
-		  </li>
-		</ul>
-		
-		<br><br>
-		
-		<label >tasks</label><br>
-		<select th:field="*{task}">
-		  <option th:each="task : ${allTasks}" 
-		          th:value="${task.id}" 
-		          th:text="${task.name}">Wireframe</option>
-		</select>
-		
-		<br><br>
-		
-		<label >command</label><br>
-		<input type="text" th:field="*{taskDescriptionCommand}" />
-		
-		<br><br>
-		
-		<label >uqname overriding</label><br>
-		<input type="text" th:field="*{featureNameOverride}" />	
-		
-		<br><br>
-		
-		
-		<input type="submit">
-	</form>
-	
+<tr>
+							<th>
+									title
+							</th>
+							<th>
+									description
+							</th>
+							<th>
+									groups
+							</th>
+							<th>
+									features
+							</th>
+							<th>
+									tasks
+							</th>
+							<th>
+									command
+							</th>
+							<th>
+									uqname
+							</th>
+					
+					</tr>
+			
+			</thead>
+			<tbody>
+
+<tr th:each="exp : ${allExperiments}">
+					
+							<td th:text="${exp.title}">
+							</td>
+							
+							<td th:text="${exp.description}">	
+							</td>
+							
+							<td>
+								<table>
+									<tbody>
+										<tr th:each="pg : ${exp.plainGroups}">
+									
+											<td th:text="${pg.name}">
+											</td>
+											
+										</tr>
+									</tbody>
+								</table>
+							
+							</td>	
+							
+							<td>
+								<table>
+									<tbody>
+										<tr th:each="pf : ${exp.plainFeatures}">
+									
+											<td th:text="${pf.name}">
+											</td>
+											
+										</tr>
+									</tbody>
+								</table>
+							
+							</td>	
+							
+							<td th:text="${exp.task.name}">
+							</td>
+							
+							<td th:text="${exp.taskDescriptionCommand}">
+							</td>
+							
+							<td th:text="${exp.featureNameOverride}">	
+							</td>
+					
+					</tr>
+			
+			
+			</tbody>
+			
+		</table>
 	
 	</div>
 
 
+
 	<div>
-		<h1>upload graph file, sbml or kgml format</h1>
+		<h1>Create experiment</h1>
+		
+		<form action="#" th:action="@{/front/experimentStart?save}" th:object="${plainExperiment}" method="post">
+	
+			<label >title</label><br>
+			<input type="text" th:field="*{title}" />
+			
+			<br><br>
+			
+			<label >description</label><br>
+			<textarea rows="4" cols="50" th:field="*{description}" >
+			</textarea>
+			
+			<br><br>
+			
+			<label >groups</label><br>
+			<ul>
+			  <li th:each="group : ${allGroups}">
+			    <input type="checkbox" th:field="*{plainGroups}" th:value="${group.id}" />
+			    <label th:for="${#ids.prev('plainGroups')}" 
+			           th:text="${group.name}">Wireframe</label>
+			  </li>
+			</ul>
+			
+			<br><br>
+			
+			<label >features</label><br>
+			<ul>
+			  <li th:each="feature : ${allFeatures}">
+			    <input type="checkbox" th:field="*{plainFeatures}" th:value="${feature.id}" />
+			    <label th:for="${#ids.prev('plainFeatures')}" 
+			           th:text="${feature.name}">Wireframe</label>
+			  </li>
+			</ul>
+			
+			<br><br>
+			
+			<label >tasks</label><br>
+			<select th:field="*{task}">
+			  <option th:each="task : ${allTasks}" 
+			          th:value="${task.id}" 
+			          th:text="${task.name}">Wireframe</option>
+			</select>
+			
+			<br><br>
+			
+			<label >command</label><br>
+			<input type="text" th:field="*{taskDescriptionCommand}" />
+			
+			<br><br>
+			
+			<label >uqname overriding</label><br>
+			<input type="text" th:field="*{featureNameOverride}" />	
+			
+			<br><br>
+			
+			
+			<input type="submit">
+		</form>
+		
+	
+	</div>
+
+	<div>
+		<h1>Execute experiment</h1>
+		<form method="POST" action="/front/executeExperiment/">
+			
+			<select name="experimentName">
+			  <option th:each="exp : ${allExperiments}" 
+			          th:value="${exp.title}" 
+			          th:text="${exp.title}"
+			          	th:placeholder="${exp.description}">Wireframe</option>
+			</select>
+			<br>
+			<br>
+			<input id="cboxall" type="checkbox" name="recalculateAll" value="true">
+			 <label for="cboxall">recalculate for all nodes' features from the beginning :c</label>
+								<br>
+								<br>
+								<br>
+					
+					
+				<input type="submit">
+		</form>
+	</div>
+
+
+
+	<div>
+		<h1>Upload graph file, sbml or kgml format</h1>
 		<form method="POST" enctype="multipart/form-data" action="/front/graph/">
 			<table>
 				<tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
@@ -81,7 +197,7 @@
 	</div>
 
 	<div>
-		<h1>integrate group feature file</h1>
+		<h1>Integrate data, group-feature file</h1>
 		<form method="POST" enctype="multipart/form-data" action="/front/integrate/">
 			<table>
 				<tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>

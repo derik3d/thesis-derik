@@ -83,8 +83,9 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 	
 	public ExperimentRequestFileDataStructure getExperimentData(String experimentName);
 	
-	public ExperimentRequestFileDataStructure getExperimentData(String experimentName, boolean includeAllGroup);
-
+	ExperimentRequestFileDataStructure getExperimentData(String experimentName, boolean includeAllGroup,
+			List<PlainGroup> ignoreGroupList);
+	
 	public void integrateExperimentResult(ExperimentResultsFileDataStructure expRes);
 
 	public ArrayList<NodeGroupRelation> createGroupBulk(GroupFileDataStructure newGroup);
@@ -114,5 +115,11 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 
 	PlainExperiment createExperiment(String title, String description, Set<PlainGroup> plainGroups,
 			Set<PlainFeature> plainFeatures, PlainTask task, String taskQuery, String featureNameOverride);
+
+	public List<PlainExperiment> getExperiments();
+
+	public ExperimentRequestFileDataStructure getExperimentDataNotAnalized(String experimentName);
+
+
 
 }
