@@ -58,6 +58,8 @@ public class SmilesCrawlerProcessService extends BaseProcessService{
 		
 		ResponseData res = iNamesCrawlerService.fromPubchemIdGetSmiles(name);		
 		
+		System.out.println("smiles processed "+name);
+		
 		if(res==null)
 			return "BAD_NO_DATA";
 		

@@ -44,7 +44,7 @@ public class SimpleGraphRepoTests {
 	
 
 	@Autowired
-	IAnalysisService iAnalisysService;
+	IAnalysisService iAnalysisService;
 	
 
 	@Test
@@ -57,7 +57,7 @@ public class SimpleGraphRepoTests {
 		iSimpleGraphManager.doNode("D");
 		iSimpleGraphManager.doNode("3527");
 		iSimpleGraphManager.doNode("3530");
-		iSimpleGraphManager.doNode("3304");
+		//iSimpleGraphManager.doNode("3304");
 		
 		//features
 
@@ -83,7 +83,7 @@ public class SimpleGraphRepoTests {
 		
 		iSimpleGraphManager.createRelation("GraphChem","3527","3530");
 		iSimpleGraphManager.createRelation("GraphChem","3527","3304");
-		iSimpleGraphManager.createRelation("GraphChem","3304","3530");
+		//iSimpleGraphManager.createRelation("GraphChem","3304","3530");
 				
 		
 		//group creation
@@ -92,7 +92,7 @@ public class SimpleGraphRepoTests {
 		
 		iSimpleGraphManager.createGroupRel("chemnodes","3527");
 		iSimpleGraphManager.createGroupRel("chemnodes","3530");
-		iSimpleGraphManager.createGroupRel("chemnodes","3304");
+		//iSimpleGraphManager.createGroupRel("chemnodes","3304");
 		
 		
 		iSimpleGraphManager.createGroupRel("mygroup1","A");
@@ -120,10 +120,10 @@ public class SimpleGraphRepoTests {
 		
 		
 		//Automtates the experiment management
-		//iAnalisysService.setExperimentDataIntegrator(iSimpleGraphManager);
+		//iAnalysisService.setExperimentDataIntegrator(iSimpleGraphManager);
 
 		
-		for(String serviceName : iAnalisysService.getServices())
+		for(String serviceName : iAnalysisService.getServices())
 			iSimpleGraphManager.doTask(serviceName);
 		
 		iSimpleGraphManager.getPlainTasks();
@@ -140,7 +140,18 @@ public class SimpleGraphRepoTests {
 				);
 		
 		ExperimentRequestFileDataStructure data0 = iSimpleGraphManager.getExperimentData("smilesbasic");
-		//iAnalisysService.processData(data0);
+		iAnalysisService.processData(data0);
+		
+		
+		System.out.println("finished prev stage");
+		
+		iSimpleGraphManager.doNode("3304");
+
+		
+		
+		iAnalysisService.processData(iSimpleGraphManager.getExperimentDataNotAnalized("smilesbasic"));
+
+		
 
 		
 		iSimpleGraphManager.createExperiment(
@@ -168,8 +179,8 @@ public class SimpleGraphRepoTests {
 		ExperimentRequestFileDataStructure data1 = iSimpleGraphManager.getExperimentData("qsarloaddescriptors");
 		ExperimentRequestFileDataStructure data2 = iSimpleGraphManager.getExperimentData("qsarloadfingerprints");
 
-		//iAnalisysService.processData(data1);
-		//iAnalisysService.processData(data2);
+		//iAnalysisService.processData(data1);
+		//iAnalysisService.processData(data2);
 		
 		
 
@@ -202,8 +213,8 @@ public class SimpleGraphRepoTests {
 		ExperimentRequestFileDataStructure data4 = iSimpleGraphManager.getExperimentData("mltest");
 
 		
-		iAnalisysService.processData(data3);
-		//iAnalisysService.processData(data4);
+		iAnalysisService.processData(data3);
+		//iAnalysisService.processData(data4);
 
 		int a=0;
 		System.out.println(a++);
@@ -221,7 +232,7 @@ public class SimpleGraphRepoTests {
 		
 		arr.add(new String(Files.readAllBytes(resource.toPath())));
 		
-		iAnalisysService.integrateFeaturesFile(arr);
+		iAnalysisService.integrateFeaturesFile(arr);
 	}
 
 	@Test

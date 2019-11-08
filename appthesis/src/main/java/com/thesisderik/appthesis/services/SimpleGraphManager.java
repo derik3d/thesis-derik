@@ -340,6 +340,9 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	public ArrayList<PlainNode> findNodesForExperiment(PlainExperiment experiment, boolean includeAllGroup, List<PlainGroup> ignoringGroups){
 		
 		
+		final List<Long> nodesToIgnoreList;
+		
+		
 		final ArrayList<Long> ignoringGroupsList;
 		
 		if(ignoringGroups instanceof Object)
@@ -354,15 +357,17 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 		
 		Set<PlainGroup> pgList;
-		if(!includeAllGroup) {
-			
-			pgList = experiment.getPlainGroups();
-		}else {
+		
+		
+		if(includeAllGroup) {
 			
 			pgList = new HashSet<PlainGroup>();
-			pgList.add(simpleGroupDAO.findByName("ALL"));
+			pgList.add(simpleGroupDAO.findByName(defaultGroupAll));
 			
+		}else {
 			
+			pgList = experiment.getPlainGroups();
+		
 		}
 			TreeSet<NodeGroupRelation> groupsUseByGroup = relSimpleNodeGroupDAO.
 				findAllByGroupIn(pgList);
@@ -372,18 +377,33 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 			//exclude from group
 			if(ignoringGroups!=null) {
 				
-				groupsUseByGroup = (TreeSet<NodeGroupRelation>)
-						groupsUseByGroup.stream().filter(  n -> { 
-							if(ignoringGroupsList==null)
-								return true;
-							Long currgpid = n.getId();
-							return !ignoringGroupsList.contains(currgpid);
-						
-						} ).collect(Collectors.toSet());
+
+				List<NodeGroupRelation> allRels = (List<NodeGroupRelation>) relSimpleNodeGroupDAO.findAll();
 				
+				System.out.println(ignoringGroupsList);
+				
+				List<Long> nodesToIgnore = new ArrayList<>();
+				
+				nodesToIgnore.addAll(
+						
+						allRels.stream().filter(  n -> { 
+							if(ignoringGroupsList==null)
+								return false;
+							
+							Long currgpid = n.getGroup().getId();
+							System.out.println(currgpid);
+							return ignoringGroupsList.contains(currgpid);
+						
+						} ).map(NodeGroupRelation::getNode).map(PlainNode::getId).collect(Collectors.toList())
+						);
+				
+				nodesToIgnoreList = nodesToIgnore;
+				
+			}else {
+				nodesToIgnoreList = null;
 			}
 			
-		
+			System.out.println("ig list: " + nodesToIgnoreList);
 		
 			byGroupNodes = new ArrayList<>( groupsUseByGroup.stream().
 				map(NodeGroupRelation::getNode).collect(Collectors.toSet()) );
@@ -399,6 +419,16 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 					collect(Collectors.toSet()));
 		
 		}
+		
+		
+		if(nodesToIgnoreList instanceof Object) {
+			
+			byGroupNodes = new ArrayList<>(byGroupNodes.stream().filter( n -> {
+				return !nodesToIgnoreList.contains(n.getId());
+				}).collect(Collectors.toList()));
+			
+		}
+		
 		
 		return byGroupNodes;
 	}
@@ -493,6 +523,13 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 		//next data
 
+		
+		Set<PlainGroup> experimentGroupsList = experiment.getPlainGroups();
+		if(ignoreGroupList instanceof Object && includeAllGroup) {
+			experimentGroupsList.add(simpleGroupDAO.findByName(defaultGroupAll));
+		}
+		
+		
 		for(int i=0; i<nodesToUse.size(); i++) {
 			
 			ArrayList<String> row = new ArrayList<>();
@@ -502,7 +539,7 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 			row.add(currRowNode.getName());
 			
 			//add class
-			row.add(groupOfNodeInRange(currRowNode,experiment.getPlainGroups()).getName());
+			row.add(groupOfNodeInRange(currRowNode, experimentGroupsList).getName());
 			
 			for(int j = 0; j<featuresToUse.size(); j++ ) {
 				NodeFeatureRelation nfr = relSimpleNodeFeatureDAO.findByNodeAndFeature(currRowNode, featuresToUse.get(j));
@@ -735,7 +772,9 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		List<PlainGroup> groupIgnore = new ArrayList<PlainGroup>();
 		groupIgnore.add(simpleGroupDAO.findByName(groupResultName));
 		
-		return getExperimentData(experimentName,false,groupIgnore);
+		System.out.println(groupIgnore.get(0));
+		
+		return getExperimentData(experimentName,true,groupIgnore);
 	}
 	
 	
