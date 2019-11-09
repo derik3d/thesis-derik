@@ -82,7 +82,7 @@ public class SimpleGraphRepoTests {
 
 		
 		iSimpleGraphManager.createRelation("GraphChem","3527","3530");
-		iSimpleGraphManager.createRelation("GraphChem","3527","3304");
+		//iSimpleGraphManager.createRelation("GraphChem","3527","3304");
 		//iSimpleGraphManager.createRelation("GraphChem","3304","3530");
 				
 		
@@ -126,7 +126,13 @@ public class SimpleGraphRepoTests {
 		for(String serviceName : iAnalysisService.getServices())
 			iSimpleGraphManager.doTask(serviceName);
 		
-		iSimpleGraphManager.getPlainTasks();
+		
+		
+		
+		
+		
+		
+		System.out.println(iSimpleGraphManager.getPlainTasks());
 		
 		
 		iSimpleGraphManager.createExperiment(
@@ -147,7 +153,6 @@ public class SimpleGraphRepoTests {
 		
 		iSimpleGraphManager.doNode("3304");
 
-		
 		
 		iAnalysisService.processData(iSimpleGraphManager.getExperimentDataNotAnalized("smilesbasic"));
 

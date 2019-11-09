@@ -29,6 +29,7 @@ import com.thesisderik.appthesis.persistence.simplegraph.datastructure.Experimen
 import com.thesisderik.appthesis.processservices.BaseProcessService;
 import com.thesisderik.appthesis.processservices.QSARProcessService;
 import com.thesisderik.appthesis.processservices.IProcessService;
+import com.thesisderik.appthesis.processservices.IProcessService.ResultFormat;
 import com.thesisderik.appthesis.processservices.MachineLearningProcessService;
 import com.thesisderik.appthesis.processservices.SmilesCrawlerProcessService;
 import com.thesisderik.appthesis.processservices.StatisticsProcessService;
@@ -71,10 +72,7 @@ public class AnalysisService implements IAnalysisService {
 			featureName = featureName.substring(0,featureName.lastIndexOf("."));
 		
 		data.add(featureName);
-		
-
-		Resource resource = iStorageService.loadAsResource(fileName);
-		
+				
 			
 		String str = iStorageService.getTextDataFromFileName(fileName);
 		
@@ -122,14 +120,15 @@ public class AnalysisService implements IAnalysisService {
 		String name = fullName[2];
 		
 		IProcessService service = selectService(serviceName);
-		service.setData(serviceArgs, dataForInstances , featureNames, data.getUQName());		
+		
+		ResultFormat resultFormat = service.setData(serviceArgs, dataForInstances , featureNames, data.getUQName());		
 		
 		
-		if(service.getResult()==null)
+		if(resultFormat.getResultData() == null)
 			return;
 		
-		ArrayList<String> resultsTags = service.getFeaturesNames();
-		ArrayList<ArrayList<String>> resultsToSave = service.getResult();
+		ArrayList<String> resultsTags = resultFormat.getFeatureNames();
+		ArrayList<ArrayList<String>> resultsToSave = resultFormat.getResultData();
 		
 		
 		
@@ -144,6 +143,10 @@ public class AnalysisService implements IAnalysisService {
 		response.setDataRows(new ArrayList<>());
 		
 		for(int i = 0; i< data.getDataRows().size(); i++) {
+			
+			if(resultFormat.getIgnoreList() instanceof Object && resultFormat.getIgnoreList().size()>0) {
+				if(resultFormat.getIgnoreList().contains(i))continue;
+			}
 			
 			ArrayList<String> myResultRow = new ArrayList<>();
 			myResultRow.add(data.getDataOfRow(i).get(0));

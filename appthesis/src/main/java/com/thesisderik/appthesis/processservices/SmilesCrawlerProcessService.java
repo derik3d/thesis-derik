@@ -17,54 +17,49 @@ public class SmilesCrawlerProcessService extends BaseProcessService{
 	
 	@Autowired
 	private INamesCrawlerService iNamesCrawlerService;
-	
-	public static final String serviceName = "SmilesCrawler";
-	
-	public static final ArrayList<String> resultsTags = new ArrayList<>( Arrays.asList("SMILES") );
-	
-	ArrayList<ArrayList<String>> result = new ArrayList<>();
-
-	
 
 	public String getServiceName(){
-		return serviceName;
+		return  "SmilesCrawler";
 	}
-	public ArrayList<String> getFeaturesNames(){
-		return resultsTags;
-	}
-	public ArrayList<ArrayList<String>> getResult() {
-		return result;
-	}
+
 	
-	
-	
-	public void setData(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames, String dataFileName) {
-		
+	public ResultFormat setData(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames, String dataFileName) {
+
+		ArrayList<String> resultsTags = new ArrayList<>( Arrays.asList("SMILES") );
+		ArrayList<Integer> ignoreList  = new ArrayList<>();
+		ArrayList<ArrayList<String>> result  = new ArrayList<>();
+
 		
 		for(int i =0; i<dataForEveryInstance.size();i++) {
 			ArrayList<String> res = new ArrayList<>();
-			
-			res.add(getSMILES(dataForEveryInstance.get(i).get(0)));
+
+			res.add(getSMILES(ignoreList, i, dataForEveryInstance.get(i).get(0)));
 			
 			result.add(res);
 		}
 		
-		
+		return new ResultFormat(result, resultsTags, ignoreList);
+
 	}
 	
 	
-	String getSMILES(String name){
+	String getSMILES(ArrayList<Integer> ignoreList, int instanceIndex, String name){
 		
 		
 		ResponseData res = iNamesCrawlerService.fromPubchemIdGetSmiles(name);		
-		
-		System.out.println("smiles processed "+name);
-		
-		if(res==null)
+				
+		if(res==null) {
+			ignoreList.add(instanceIndex);
+			
+			
 			return "BAD_NO_DATA";
+		}
+		
+
 		
 		return res.getResult();
 	}
-	
+
+
 	
 }

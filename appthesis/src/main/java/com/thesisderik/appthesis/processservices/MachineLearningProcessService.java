@@ -17,24 +17,18 @@ public class MachineLearningProcessService extends BaseProcessService{
 	@Autowired
 	RestTemplate restTemplate;
 	
-	public static final String serviceName = "ML";
 	
-	public static ArrayList<String> resultsTags = new ArrayList<>( Arrays.asList("C_mayor_bool_first","C_menor_bool_first","V_media_first_mapped") );
-	
-	ArrayList<ArrayList<String>> result = new ArrayList<>();
 
 	public String getServiceName(){
-		return serviceName;
-	}
-	public ArrayList<String> getFeaturesNames(){
-		return resultsTags;
-	}
-	public ArrayList<ArrayList<String>> getResult() {
-		return result;
+		return  "ML";
 	}
 	
-	public void setData(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames, String dataFileName) {
+	public ResultFormat setData(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames, String dataFileName) {
 
+		ArrayList<String> resultsTags = new ArrayList<>( Arrays.asList("C_mayor_bool_first","C_menor_bool_first","V_media_first_mapped") );
+
+		
+		
 		Thread t1 = new Thread() {
 
 			public void start() {
@@ -68,8 +62,8 @@ public class MachineLearningProcessService extends BaseProcessService{
 	    
 	    t1.start();
 		
-		result = null;
-		
+	    return new ResultFormat(null, resultsTags, null);
+	    		
 	}
 	
 }

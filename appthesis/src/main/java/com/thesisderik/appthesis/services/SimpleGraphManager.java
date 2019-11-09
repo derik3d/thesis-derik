@@ -345,11 +345,20 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 		final ArrayList<Long> ignoringGroupsList;
 		
-		if(ignoringGroups instanceof Object)
-			ignoringGroupsList = (ArrayList<Long>) ignoringGroups.stream().map(PlainGroup::getId).collect(Collectors.toList());
-		else
-			ignoringGroupsList=null;
 		
+		
+		if(ignoringGroups != null) {
+			
+			System.out.println("alf1");
+			System.out.println(ignoringGroups);
+
+			ignoringGroupsList = (ArrayList<Long>) ignoringGroups.stream().map(PlainGroup::getId).collect(Collectors.toList());
+		}
+		else {
+			System.out.println("alf2");
+
+			ignoringGroupsList=null;
+		}
 		//Nodes at least in one of the groups
 		//Nodes That has all the features, ignoring the features that all nodes doesnt have
 
@@ -770,11 +779,22 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		String groupResultName = resultGroupSegment+filteredName;
 		
 		List<PlainGroup> groupIgnore = new ArrayList<PlainGroup>();
-		groupIgnore.add(simpleGroupDAO.findByName(groupResultName));
 		
-		System.out.println(groupIgnore.get(0));
 		
-		return getExperimentData(experimentName,true,groupIgnore);
+		PlainGroup groupFound = simpleGroupDAO.findByName(groupResultName);
+		
+		System.out.println(groupFound);
+
+		
+		if(groupFound!=null) {
+			System.out.println("adding");
+
+			groupIgnore.add(groupFound);
+		}
+		//System.out.println(groupIgnore.get(0));
+		if(groupIgnore.size()>0)
+			return getExperimentData(experimentName,true,groupIgnore);
+		return null;
 	}
 	
 	

@@ -8,32 +8,19 @@ import java.util.stream.Collectors;
 
 public class StatisticsProcessService extends BaseProcessService{
 	
-	public static final String serviceName = "Statistics";
-	
-	public static ArrayList<String> resultsTags = new ArrayList<>( Arrays.asList("C_mayor_bool_first","C_menor_bool_first","V_media_first_mapped") );
-	
-	ArrayList<ArrayList<String>> result = new ArrayList<>();
-
-	
 
 	public String getServiceName(){
-		return serviceName;
+		return  "Statistics";
 	}
-	public ArrayList<String> getFeaturesNames(){
-		return resultsTags;
-	}
-	public ArrayList<ArrayList<String>> getResult() {
-		return result;
-	}
+
 	
-	
-	
-	public void setData(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames, String dataFileName) {
-		
+	public ResultFormat setData(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames, String dataFileName) {
+
+		ArrayList<String> resultsTags = new ArrayList<>( Arrays.asList("C_mayor_bool_first","C_menor_bool_first","V_media_first_mapped") );
+
+		ArrayList<ArrayList<String>> result = new ArrayList<>();
 		
 
-		
-		
 		int instancesFeaturesLength = dataForEveryInstance.get(0).size();
 		
 		
@@ -110,6 +97,8 @@ public class StatisticsProcessService extends BaseProcessService{
 		
 		result = transposeMatrix(result);
 		
+		
+		return new ResultFormat(result, resultsTags, null);
 		
 	}
 	

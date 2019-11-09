@@ -19,30 +19,16 @@ import com.thesisderik.appthesis.persistence.simplegraph.datastructure.Experimen
 
 public class QSARProcessService extends BaseProcessService{
 	
-	public static final String serviceName = "QSAR";
 	
-	public static ArrayList<String> resultsTags = new ArrayList<>();
-	
-	ArrayList<ArrayList<String>> result = new ArrayList<>();
-
-	
-
 	public String getServiceName(){
-		return serviceName;
+		return  "QSAR";
 	}
-	public ArrayList<String> getFeaturesNames(){
-		return resultsTags;
-	}
-	public ArrayList<ArrayList<String>> getResult() {
-		return result;
-	}
-	
-	
-	
-	public void setData(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames, String dataFileName) {
-		
 
+	
+	public ResultFormat setData(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames, String dataFileName) {
 		
+		ArrayList<String> resultsTags = new ArrayList<>();
+		ArrayList<ArrayList<String>> result = new ArrayList<>();
 		
 		try {
 			File input = new ClassPathResource("datapadel/"+args+"input.smi").getFile();
@@ -109,7 +95,7 @@ public class QSARProcessService extends BaseProcessService{
 		}
 
 		
-
+		return new ResultFormat(result, resultsTags, null);
 		
 	}
 	

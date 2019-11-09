@@ -8,7 +8,7 @@ import com.thesisderik.appthesis.persistence.simplegraph.datastructure.Experimen
 public abstract class BaseProcessService implements IProcessService{
 
 
-
+	
 	public static ExperimentResultsFileDataStructure fileToStructure(ArrayList<String> file) {
 		
 
@@ -40,9 +40,7 @@ public abstract class BaseProcessService implements IProcessService{
 			}
 			
 		}
-		
-		erde.setDataRows(tempCont);
-		
+				
 		return erde;
 		
 	}
