@@ -174,7 +174,7 @@ public class MadeUpDataProcessService extends BaseProcessService{
 		
 		//find features shared for all, then remove the features not shared by all nodes
 		
-		Set<String> featuresShared; 
+		Set<String> featuresShared = null; 
 		
 		for(Map<String,String> dataForNode : unifiedDataForEveryNode) {
 			
