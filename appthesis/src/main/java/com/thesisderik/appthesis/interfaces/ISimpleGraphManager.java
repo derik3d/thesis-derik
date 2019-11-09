@@ -2,6 +2,7 @@ package com.thesisderik.appthesis.interfaces;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentRequestFileDataStructure;
@@ -119,6 +120,10 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 	public List<PlainExperiment> getExperiments();
 
 	public ExperimentRequestFileDataStructure getExperimentDataNotAnalized(String experimentName);
+
+	public Map<String, String> getMappedDataOfNodeByName(String nodeName);
+
+	public ArrayList<String> getRelatedNodesForNodeByNodeName(String nodeName);
 
 
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
@@ -794,6 +795,18 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		//System.out.println(groupIgnore.get(0));
 		if(groupIgnore.size()>0)
 			return getExperimentData(experimentName,true,groupIgnore);
+		return null;
+	}
+
+	@Override
+	public Map<String, String> getMappedDataOfNodeByName(String nodeName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<String> getRelatedNodesForNodeByNodeName(String nodeName) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 	
