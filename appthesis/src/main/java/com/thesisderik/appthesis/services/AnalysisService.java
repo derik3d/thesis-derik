@@ -31,6 +31,7 @@ import com.thesisderik.appthesis.processservices.QSARProcessService;
 import com.thesisderik.appthesis.processservices.IProcessService;
 import com.thesisderik.appthesis.processservices.IProcessService.ResultFormat;
 import com.thesisderik.appthesis.processservices.MachineLearningProcessService;
+import com.thesisderik.appthesis.processservices.MadeUpDataProcessService;
 import com.thesisderik.appthesis.processservices.SmilesCrawlerProcessService;
 import com.thesisderik.appthesis.processservices.StatisticsProcessService;
 
@@ -47,6 +48,9 @@ public class AnalysisService implements IAnalysisService {
 	
 	@Autowired
 	MachineLearningProcessService machineLearningProcessService;
+	
+	@Autowired
+	MadeUpDataProcessService madeUpDataProcessService;
 	
 	@Autowired
 	IStorageService iStorageService;
@@ -94,6 +98,7 @@ public class AnalysisService implements IAnalysisService {
 		suscribedServices.add(new QSARProcessService());		
 		suscribedServices.add(smilesCrawlerProcessService);
 		suscribedServices.add(machineLearningProcessService);
+		suscribedServices.add(madeUpDataProcessService);
 		
 		return new ArrayList<>(suscribedServices.stream().map(IProcessService::getServiceName).collect(Collectors.toList()));
 	}

@@ -71,6 +71,17 @@ public class SimpleGraphRepoTests {
 		iSimpleGraphManager.createFeature("Age","7","D");
 
 		
+		//madeUprelations to crawl letters data
+		iSimpleGraphManager.createRelation("testMadeUpRel","3530","A");
+		iSimpleGraphManager.createRelation("testMadeUpRel","3527","B");
+		iSimpleGraphManager.createRelation("testMadeUpRel","3530","B");
+		iSimpleGraphManager.createRelation("testMadeUpRel","3527","C");
+		
+
+		iSimpleGraphManager.createGroupRel("testMadeUp","3530");
+		iSimpleGraphManager.createGroupRel("testMadeUp","3527");
+		
+		
 		//relation created with nodes and relation names
 		//which automatically creates a group tag with relation name
 		iSimpleGraphManager.createRelation("Graph1","A","B");
@@ -81,7 +92,7 @@ public class SimpleGraphRepoTests {
 		iSimpleGraphManager.createRelation("Graph2","D","A");
 
 		
-		iSimpleGraphManager.createRelation("GraphChem","3527","3530");
+		//iSimpleGraphManager.createRelation("GraphChem","3527","3530");
 		//iSimpleGraphManager.createRelation("GraphChem","3527","3304");
 		//iSimpleGraphManager.createRelation("GraphChem","3304","3530");
 				
@@ -119,16 +130,10 @@ public class SimpleGraphRepoTests {
 		iSimpleGraphManager.createGroupBulk(newGroup);
 		
 		
-		//Automtates the experiment management
-		//iAnalysisService.setExperimentDataIntegrator(iSimpleGraphManager);
 
 		
 		for(String serviceName : iAnalysisService.getServices())
 			iSimpleGraphManager.doTask(serviceName);
-		
-		
-		
-		
 		
 		
 		
@@ -219,7 +224,27 @@ public class SimpleGraphRepoTests {
 
 		
 		iAnalysisService.processData(data3);
+
 		//iAnalysisService.processData(data4);
+		
+		
+
+		iSimpleGraphManager.createExperiment(
+				"testmd",
+				"test to build made up data",
+				new ArrayList<String>(Arrays.asList("testMadeUp")),
+				new ArrayList<String>(Arrays.asList("NAME")),
+				"MUData",
+				"",
+				""
+				);
+		
+		
+		ExperimentRequestFileDataStructure dataM = iSimpleGraphManager.getExperimentData("testmd");
+		iAnalysisService.processData(dataM);
+
+		
+		
 
 		int a=0;
 		System.out.println(a++);

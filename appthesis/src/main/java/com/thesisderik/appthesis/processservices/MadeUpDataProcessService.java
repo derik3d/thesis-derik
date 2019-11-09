@@ -22,7 +22,7 @@ public class MadeUpDataProcessService extends BaseProcessService{
 	ISimpleGraphManager iSimpleGraphManager;
 	
 	public String getServiceName(){
-		return  "MadeUpData";
+		return  "MUData";
 	}
 	
 	
@@ -30,6 +30,7 @@ public class MadeUpDataProcessService extends BaseProcessService{
 		
 
 		ArrayList<String> resultsTags = new ArrayList<>();
+		ArrayList<Integer> ignoreList = new ArrayList<>();
 		ArrayList<ArrayList<String>> result = new ArrayList<>();
 		
 		
@@ -195,17 +196,21 @@ public class MadeUpDataProcessService extends BaseProcessService{
 		//features to really use
 		resultsTags.addAll(featuresShared);
 		
-		for(Map<String,String> dataForNode : unifiedDataForEveryNode) {
+		//remove nodes not compilant
+		
+		for( int i = 0; i < unifiedDataForEveryNode.size(); i++) {
+			Map<String,String> dataForNode = unifiedDataForEveryNode.get(i);
 			
 			if(dataForNode instanceof Object) {
 				result.add(getDataOrderedByFeatures(resultsTags, dataForNode));
 			}else {
-				
+				result.add(null);
+				ignoreList.add(i);
 			}
 			
 		}
 		
-		return new ResultFormat(result, resultsTags, null);
+		return new ResultFormat(result, resultsTags, ignoreList);
 	}
 	
 	private void removeKeysFromMap(Map<String, String> aMap, Set<String> keysToRemove) {

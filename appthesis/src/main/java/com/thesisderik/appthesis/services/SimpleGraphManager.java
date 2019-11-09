@@ -822,8 +822,8 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 		PlainNode PlainNode = simpleNodeDAO.findByName(nodeName);
 
-		List<NodeNodeRelation> relatedNodesRelationsUseB = relSimpleNodeNodeDAO.AllByNodeAId(PlainNode.getId());
-		List<NodeNodeRelation> relatedNodesRelationsUseA = relSimpleNodeNodeDAO.AllByNodeBId(PlainNode.getId());
+		List<NodeNodeRelation> relatedNodesRelationsUseB = relSimpleNodeNodeDAO.findAllByNodeAId(PlainNode.getId());
+		List<NodeNodeRelation> relatedNodesRelationsUseA = relSimpleNodeNodeDAO.findAllByNodeBId(PlainNode.getId());
 		
 		Set<String> relatedNodesNames = new HashSet<>();
 		

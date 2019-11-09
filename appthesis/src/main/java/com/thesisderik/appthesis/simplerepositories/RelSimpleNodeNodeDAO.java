@@ -20,7 +20,7 @@ public interface RelSimpleNodeNodeDAO extends CrudRepository<NodeNodeRelation, L
 
 	NodeNodeRelation findByNodeAAndNodeBAndRelation(PlainNode nodeA, PlainNode nodeB, PlainRelation relation);
 
-	List<NodeNodeRelation> AllByNodeAId(Long nodeAId);
-	List<NodeNodeRelation> AllByNodeBId(Long nodeBId);
+	List<NodeNodeRelation> findAllByNodeAId(Long nodeAId);
+	List<NodeNodeRelation> findAllByNodeBId(Long nodeBId);
 
 }
