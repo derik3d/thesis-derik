@@ -123,7 +123,7 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 
 	public Map<String, String> getMappedDataOfNodeByName(String nodeName);
 
-	public ArrayList<String> getRelatedNodesForNodeByNodeName(String nodeName);
+	public Set<String> getRelatedNodesForNodeByNodeName(String nodeName);
 
 
 

@@ -34,7 +34,9 @@ public class MadeUpDataProcessService extends BaseProcessService{
 		
 		
 		
-		ArrayList<String> featuresToEnforce = new ArrayList<>();
+		Set<String> featuresToEnforce = new HashSet<>();
+		
+		Set<String> featuresToRemove = new HashSet<>();
 		
 		
 		Map<String,Function<ArrayList<String>,String>> operators = new HashMap<>();
@@ -72,7 +74,7 @@ public class MadeUpDataProcessService extends BaseProcessService{
 			//fur now just need names and must be the only property
 			String nodeName = dataOneInstance.get(0);
 			
-			ArrayList<String> relatedNodesNames = iSimpleGraphManager.getRelatedNodesForNodeByNodeName(nodeName);
+			Set<String> relatedNodesNames = iSimpleGraphManager.getRelatedNodesForNodeByNodeName(nodeName);
 			
 			ArrayList<Map<String,String>> dataRecolectedForANode = new ArrayList<>();
 			
@@ -81,6 +83,8 @@ public class MadeUpDataProcessService extends BaseProcessService{
 			for(String aNodeName : relatedNodesNames) {
 				//prop -> data
 				Map<String,String> propDataForInstance = iSimpleGraphManager.getMappedDataOfNodeByName(aNodeName);
+				
+				removeKeysFromMap(propDataForInstance, featuresToRemove);
 				
 				dataRecolectedForANode.add(propDataForInstance);
 				
@@ -204,6 +208,16 @@ public class MadeUpDataProcessService extends BaseProcessService{
 		return new ResultFormat(result, resultsTags, null);
 	}
 	
+	private void removeKeysFromMap(Map<String, String> aMap, Set<String> keysToRemove) {
+		
+		for(String rem : keysToRemove) {
+			if(aMap.containsKey(rem))
+				aMap.remove(rem);
+		}
+		
+	}
+
+
 	public ArrayList<String> getDataOrderedByFeatures(ArrayList<String> featuresShared, Map<String,String> dataForNode){
 		
 		ArrayList<String> res = new ArrayList<>();

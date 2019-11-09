@@ -1,5 +1,7 @@
 package com.thesisderik.appthesis.simplerepositories;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,5 +19,8 @@ import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainTask;
 public interface RelSimpleNodeNodeDAO extends CrudRepository<NodeNodeRelation, Long>{
 
 	NodeNodeRelation findByNodeAAndNodeBAndRelation(PlainNode nodeA, PlainNode nodeB, PlainRelation relation);
+
+	List<NodeNodeRelation> AllByNodeAId(Long nodeAId);
+	List<NodeNodeRelation> AllByNodeBId(Long nodeBId);
 
 }

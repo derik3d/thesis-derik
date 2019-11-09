@@ -1,6 +1,7 @@
 package com.thesisderik.appthesis.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -84,6 +85,7 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	
 	@Autowired
 	SimpleTaskDAO simpleTaskDAO;
+	private TreeSet<NodeFeatureRelation> findAllByNode;
 	
 	
 
@@ -800,14 +802,40 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 
 	@Override
 	public Map<String, String> getMappedDataOfNodeByName(String nodeName) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Map<String, String> featuresOfNode = new HashMap<>();
+
+		PlainNode PlainNode = simpleNodeDAO.findByName(nodeName);
+		
+		TreeSet<NodeFeatureRelation> featuresOfThisNode = relSimpleNodeFeatureDAO.findAllByNode(PlainNode);
+		
+		for(NodeFeatureRelation featRel : featuresOfThisNode) {
+			featuresOfNode.put(featRel.getFeature().getName(), featRel.getValue());
+		}
+
+		return featuresOfNode;
 	}
 
 	@Override
-	public ArrayList<String> getRelatedNodesForNodeByNodeName(String nodeName) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<String> getRelatedNodesForNodeByNodeName(String nodeName) {
+
+		
+		PlainNode PlainNode = simpleNodeDAO.findByName(nodeName);
+
+		List<NodeNodeRelation> relatedNodesRelationsUseB = relSimpleNodeNodeDAO.AllByNodeAId(PlainNode.getId());
+		List<NodeNodeRelation> relatedNodesRelationsUseA = relSimpleNodeNodeDAO.AllByNodeBId(PlainNode.getId());
+		
+		Set<String> relatedNodesNames = new HashSet<>();
+		
+		for(NodeNodeRelation nodeRel :relatedNodesRelationsUseA) {
+			relatedNodesNames.add(nodeRel.getNodeA().getName());
+		}
+		
+		for(NodeNodeRelation nodeRel :relatedNodesRelationsUseB) {
+			relatedNodesNames.add(nodeRel.getNodeB().getName());
+		}
+
+		return relatedNodesNames;
 	}
 	
 	
