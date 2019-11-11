@@ -38,6 +38,7 @@ public class MadeUpDataProcessService extends BaseProcessService{
 		Set<String> featuresToEnforce = new HashSet<>();
 		
 		Set<String> featuresToRemove = new HashSet<>();
+		featuresToRemove.add("NAME");
 		
 		
 		Map<String,Function<ArrayList<String>,String>> operators = new HashMap<>();
@@ -58,9 +59,10 @@ public class MadeUpDataProcessService extends BaseProcessService{
 			
 			double ans = 0;
 			
-			for(String val : arr)
-				ans+= Double.parseDouble(val);
-			
+			for(String val : arr) {
+				if(Double.parseDouble(val)>ans)
+					ans=Double.parseDouble(val);
+			}
 			return ""+ans;
 		};
 		
@@ -72,7 +74,7 @@ public class MadeUpDataProcessService extends BaseProcessService{
 		
 		for(ArrayList<String> dataOneInstance : dataForEveryInstance) {
 			
-			//fur now just need names and must be the only property
+			//fur now just need names and must be the only propertyy
 			String nodeName = dataOneInstance.get(0);
 			
 			Set<String> relatedNodesNames = iSimpleGraphManager.getRelatedNodesForNodeByNodeName(nodeName);
@@ -96,17 +98,25 @@ public class MadeUpDataProcessService extends BaseProcessService{
 					commonFeatures.addAll(propDataForInstance.keySet());
 				}
 				
+				
+				
 			}
 			
+			final ArrayList<String> commonFeaturesFinal = new ArrayList<>();
+			commonFeaturesFinal.addAll(commonFeatures);
+
+			
+			System.out.println(dataRecolectedForANode);
+			
 			//remove features not present on all nodes related to a node
-			for(Map<String,String> propDataForInstance :dataRecolectedForANode) {
+			for(Map<String,String> propDataForRelatedNode :dataRecolectedForANode) {
 				
-				ArrayList<String> removeList = new ArrayList<>();
-				removeList.addAll(propDataForInstance.keySet());
-				removeList.retainAll(commonFeatures);
+				propDataForRelatedNode.keySet().removeIf(n ->{ return !commonFeaturesFinal.contains(n);} );
 				
-				for(String removeKey : removeList)
-				propDataForInstance.remove(removeKey);
+				for(Map.Entry<String, String> prop : propDataForRelatedNode.entrySet()) {
+					if(!commonFeatures.contains(prop.getKey()))
+						propDataForRelatedNode.remove(prop.getKey());
+				}
 				
 			}
 			
@@ -115,6 +125,7 @@ public class MadeUpDataProcessService extends BaseProcessService{
 		}
 		
 		
+
 		//unify data with operators
 		
 		ArrayList<Map<String,String>> unifiedDataForEveryNode = new ArrayList<>();
@@ -161,7 +172,7 @@ public class MadeUpDataProcessService extends BaseProcessService{
 		//to build the result array all nodes must have the same properties or ignore nodes with missing properties
 		//ignore features or ignore nodes to enforce features
 		
-		//remove nodes that dont have the required properties
+		//remove nodes that dont have the required propertiess
 		
 		for( int i = 0; i < unifiedDataForEveryNode.size(); i++) {
 			Map<String,String> dataForNode = unifiedDataForEveryNode.get(i);
