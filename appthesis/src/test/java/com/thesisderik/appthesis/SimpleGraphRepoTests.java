@@ -69,13 +69,20 @@ public class SimpleGraphRepoTests {
 		iSimpleGraphManager.createFeature("Age","3","A");
 		iSimpleGraphManager.createFeature("Age","3","B");
 		iSimpleGraphManager.createFeature("Age","7","D");
+		
+		
+
+		iSimpleGraphManager.createFeature("OLDAGE","30","A");
+		iSimpleGraphManager.createFeature("OLDAGE","33","B");
 
 		
 		//madeUprelations to crawl letters data
 		iSimpleGraphManager.createRelation("testMadeUpRel","3530","A");
-		iSimpleGraphManager.createRelation("testMadeUpRel","3527","B");
 		iSimpleGraphManager.createRelation("testMadeUpRel","3530","B");
+		iSimpleGraphManager.createRelation("testMadeUpRel","3527","B");
 		iSimpleGraphManager.createRelation("testMadeUpRel","3527","C");
+		
+
 		
 
 		iSimpleGraphManager.createGroupRel("testMadeUp","3530");
@@ -236,7 +243,7 @@ public class SimpleGraphRepoTests {
 				new ArrayList<String>(Arrays.asList("NAME")),
 				"MUData",
 				"",
-				""
+				"MUD_PROP"
 				);
 		
 		

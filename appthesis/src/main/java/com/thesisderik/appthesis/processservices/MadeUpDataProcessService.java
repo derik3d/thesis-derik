@@ -32,10 +32,10 @@ public class MadeUpDataProcessService extends BaseProcessService{
 		ArrayList<String> resultsTags = new ArrayList<>();
 		ArrayList<Integer> ignoreList = new ArrayList<>();
 		ArrayList<ArrayList<String>> result = new ArrayList<>();
+
 		
-		
-		
-		Set<String> featuresToEnforce = new HashSet<>();
+		//pref none
+		Set<String> featuresToEnforceAllNodes = new HashSet<>();
 		
 		Set<String> featuresToRemove = new HashSet<>();
 		featuresToRemove.add("NAME");
@@ -74,7 +74,7 @@ public class MadeUpDataProcessService extends BaseProcessService{
 		
 		for(ArrayList<String> dataOneInstance : dataForEveryInstance) {
 			
-			//fur now just need names and must be the only propertyy
+			//fur now just need names and must be the only property
 			String nodeName = dataOneInstance.get(0);
 			
 			Set<String> relatedNodesNames = iSimpleGraphManager.getRelatedNodesForNodeByNodeName(nodeName);
@@ -105,8 +105,9 @@ public class MadeUpDataProcessService extends BaseProcessService{
 			final ArrayList<String> commonFeaturesFinal = new ArrayList<>();
 			commonFeaturesFinal.addAll(commonFeatures);
 
+		
 			
-			System.out.println(dataRecolectedForANode);
+			System.out.println(commonFeatures);
 			
 			//remove features not present on all nodes related to a node
 			for(Map<String,String> propDataForRelatedNode :dataRecolectedForANode) {
@@ -121,6 +122,9 @@ public class MadeUpDataProcessService extends BaseProcessService{
 			}
 			
 			recolectedDataFromAllNodes.add(dataRecolectedForANode);
+			
+			System.out.println(dataRecolectedForANode);
+
 			
 		}
 		
@@ -177,7 +181,7 @@ public class MadeUpDataProcessService extends BaseProcessService{
 		for( int i = 0; i < unifiedDataForEveryNode.size(); i++) {
 			Map<String,String> dataForNode = unifiedDataForEveryNode.get(i);
 			boolean removeThis = false;
-			for(String feature : featuresToEnforce) {
+			for(String feature : featuresToEnforceAllNodes) {
 				if(!dataForNode.keySet().contains(feature)) {
 					removeThis = true;
 					break;
@@ -194,16 +198,19 @@ public class MadeUpDataProcessService extends BaseProcessService{
 		
 		for(Map<String,String> dataForNode : unifiedDataForEveryNode) {
 			
-			Set<String> currNodeFeat = dataForNode.keySet();
-			
-			if(featuresShared instanceof Object) {
-				featuresShared.retainAll(currNodeFeat);
-			}else {
-				featuresShared = new HashSet<>();
-				featuresShared.addAll(currNodeFeat);
+			if(dataForNode != null) {
+				Set<String> currNodeFeat = dataForNode.keySet();
+				
+				if(featuresShared instanceof Object) {
+					featuresShared.retainAll(currNodeFeat);
+				}else {
+					featuresShared = new HashSet<>();
+					featuresShared.addAll(currNodeFeat);
+				}
 			}
 			
 		}
+		
 		//features to really use
 		resultsTags.addAll(featuresShared);
 		
