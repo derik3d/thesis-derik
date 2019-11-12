@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +38,26 @@ public class VizController {
 		return "sigma/index.html";
 	}
 	
+
+
+
+	@RequestMapping(value="/query")
+	@ResponseBody
+	public VizGraphFormat saveQuery(
+	        final QueryVizFormat data, final BindingResult bindingResult, final ModelMap model) {
+
+		
+		if (bindingResult.hasErrors()) {
+	    	 System.out.println("error prro");
+	    }
+	    
+		VizGraphFormat res = iSimpleGraphManager.getGraphDataFormatedForViz(data);
+		
+		System.out.println(data);
+		
+	     return res;
+	}
+
 
 	
 

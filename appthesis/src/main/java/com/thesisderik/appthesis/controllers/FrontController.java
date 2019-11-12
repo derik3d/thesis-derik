@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -31,6 +32,8 @@ import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainExperimen
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainFeature;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainGroup;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainTask;
+import com.thesisderik.appthesis.viz.ColorDataMapper;
+import com.thesisderik.appthesis.viz.QueryVizFormat;
 
 @Controller
 @RequestMapping("front")
@@ -79,7 +82,14 @@ public class FrontController {
 	
 	@RequestMapping({"/","/experimentStart"})
     public String listUploadedFiles(Model model){
+		model.addAttribute("queryVizFormat", new QueryVizFormat());
 		model.addAttribute("plainExperiment", new PlainExperiment());
+		
+		List<ColorDataMapper> dataMapperList = new ArrayList<>();
+		for(int i=0; i<8; i++)
+			dataMapperList.add(new ColorDataMapper());
+		
+		model.addAttribute("listDataMapper", dataMapperList);
         return "uploadForm";
     }
 	
@@ -96,8 +106,7 @@ public class FrontController {
 	    System.out.println("hsvethis: " + plainExperiment.toString());
 	    return "redirect:/front/experimentStart";
 	}
-
-
+	
 	
 	
 	

@@ -1,8 +1,310 @@
 <html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>SigmaJS example</title>
+    <!-- Sigma core -->
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/sigma.core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/conrad.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/utils/sigma.utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/utils/sigma.polyfills.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/sigma.settings.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/classes/sigma.classes.dispatcher.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/classes/sigma.classes.configurable.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/classes/sigma.classes.graph.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/classes/sigma.classes.camera.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/classes/sigma.classes.quad.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/classes/sigma.classes.edgequad.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/captors/sigma.captors.mouse.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/captors/sigma.captors.touch.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/sigma.renderers.canvas.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/sigma.renderers.webgl.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/sigma.renderers.svg.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/sigma.renderers.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/middlewares/sigma.middlewares.rescale.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/middlewares/sigma.middlewares.copy.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/misc/sigma.misc.animation.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/misc/sigma.misc.bindEvents.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/misc/sigma.misc.bindDOMEvents.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/misc/sigma.misc.drawHovers.js"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+    
+    
+    
+    
+    <!-- 
+    
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+     
+     
+     
+     
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.thickLine.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.thickLineCPU.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/webgl/sigma.webgl.edges.thickLineGPU.js"></script>
+    
+    
+     -->
+     
+     <script type="text/javascript" src="/modifiedNodeRenderer.js"></script>
+     <script type="text/javascript" src="/modifiedEdgeRenderer.js"></script>
+     
+
+
+    
+      <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    
+    <style>
+		#sigma-container { width:40%; height:40%; background-color:#E1E1E1}
+    </style>
+  </head>
 <body>
 
 	<div th:if="${message}">
 		<h2 th:text="${message}"/></h2><br><br><br><br>
+	</div>
+
+
+
+
+	<div>
+			<h1>Visualization</h1>
+			
+			
+    		<div id='sigma-container'>
+    		</div>
+    		
+    		
+  <script>
+  
+ // html { height:400px;}
+
+  var s = new sigma(
+		  {
+		    renderer: {
+		      container: document.getElementById('sigma-container'),
+		      type: 'webgl',
+	    	  defaultNodeType: 'fast',
+	    	  defaultEdgeType: 'fast'
+		    },
+		    settings: {
+		     minEdgeSize: 2,
+		     maxEdgeSize: 2,
+		     minNodeSize: 1,
+		     maxNodeSize: 8,
+		     defaultNodeColor: "#000000"
+		    }
+		  }
+		);
+		
+  		var daURL = "http://localhost:8080/visualization/getGraphData/";
+
+			  
+			  data = [{"id" : 6}];
+			  objall = JSON.stringify({"groups": data })
+			  objall2 = "{}"
+				  objall3 = '{"_groups":6}'
+			  
+			  $.ajax({
+				    contentType: 'application/json',
+				    data: objall,
+				    dataType: 'json',
+				    success: function(data){
+				        
+				        console.log(data);
+
+						// Load the graph in sigma
+						s.graph.read(data);
+						// Ask sigma to draw it
+						s.refresh();
+				        
+				    },
+				    error: function(){
+				        console.log(data);
+
+				    },
+				    processData: false,
+				    type: 'POST',
+				    url: daURL
+				});
+			  
+			  
+			  
+			  function updateViz(){
+				  
+				  var $form = $('#queryVizForm');
+
+
+				    $.ajax({
+				      url:  "http://localhost:8080/visualization/query/",
+				      type: 'post',
+				      data: $form.serialize(),
+				      success: function(response) {
+				        // if the response contains any errors, replace the form
+				        if ($(response).find('.has-error').length) {
+					          console.log(response);
+				          
+				        } else {
+
+
+					          console.log(response);
+
+
+							// Load the graph in sigma
+							
+							s.graph.clear();
+							s.graph.read(response);
+							// Ask sigma to draw it
+							s.refresh();
+
+				        }
+				      }
+				  });
+				  
+				  
+				}
+			  
+			  
+			  
+				    /*
+				   
+				    $.ajax({
+					    contentType: 'application/json',
+					    dataType: 'json',
+				      url: daURL,
+				      type: 'post',
+				      data: $form.serialize(),
+				      success: function(response) {
+				        // if the response contains any errors, replace the form
+				        if ($(response).find('.has-error').length) {
+					          console.log(1);
+					          console.log(response);
+				          
+				        } else {
+				          // in this case we can actually replace the form
+				          // with the response as well, unless we want to 
+				          // show the success message a different way
+					          console.log(2);
+					          console.log(response);
+
+				        }
+				      }
+				  });
+				    */
+				
+			  
+			  
+			  
+		
+  </script>
+
+
+
+	
+	</div>
+
+
+	<div>
+		<h1>Tweak viz</h1>
+		
+		<form id="queryVizForm" th:object="${queryVizFormat}" method="POST">
+		
+		
+			
+			<label >groups</label><br>
+			<ul>
+			  <li th:each="group : ${allGroups}">
+			    <input type="checkbox" th:field="*{groups}" th:value="${group.id}" />
+			    <label th:for="${#ids.prev('groups')}" 
+			           th:text="${group.name}">Wireframe</label>
+			  </li>
+			</ul>
+			
+			
+			<label >mappers</label><br>
+			<ul>			
+			<li th:each="mapper, mapperStat : ${listDataMapper}">
+			  
+				  	
+				  	
+				  	<input type=checkbox th:field="*{mappers[__${mapperStat.index}__].normalize}">
+
+    				<label  >Normalize</label>
+					<br>
+			  
+				  	
+				  	
+				  	<input type=checkbox th:field="*{mappers[__${mapperStat.index}__].useGroup}">
+
+    				<label  >Use group</label>
+					<br>
+					
+					
+					  Select color: <input type="color" th:field="*{mappers[__${mapperStat.index}__].bottom}">
+					  Select color: <input type="color" th:field="*{mappers[__${mapperStat.index}__].top}">
+					  
+					<br>
+
+					<select th:field="*{mappers[__${mapperStat.index}__].bindingPlainFeature}">
+			          <option th:each="feature : ${allFeatures}"
+			                  th:value="${feature.id}" 
+			                  th:text="${feature.name}">Holder</option>
+			        </select>
+			        
+			        <br>
+			        
+					<select th:field="*{mappers[__${mapperStat.index}__].bindingPlainGroup}">
+			          <option th:each="group : ${allGroups}" 
+			                  th:value="${group.id}" 
+			                  th:text="${group.name}">Holder</option>
+			        </select>
+			        
+			        
+			        <br><br>
+			        
+			  </li>
+			  
+			</ul>
+			
+			
+			  
+			  
+			  
+			  
+			  
+			  
+			  
+			  
+			</ul>
+			
+					
+			<input type="button" value="Update viz" onclick="updateViz();">
+			
+			
+			
+		
+		
+		</form>	
+			
 	</div>
 
 

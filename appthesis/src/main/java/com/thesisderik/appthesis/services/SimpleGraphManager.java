@@ -734,7 +734,18 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 			nv.setX(r.nextInt(10));
 			nv.setY(r.nextInt(10));
 			nv.setSize(3);
+
+			nv.setColora0(data.getMappers().get(0).processValue("holi"));
+			nv.setColorb0(data.getMappers().get(1).processValue("holi"));
+			nv.setColorc0(data.getMappers().get(2).processValue("holi"));
+			nv.setColord0(data.getMappers().get(3).processValue("holi"));
+			nv.setColora1(data.getMappers().get(4).processValue("holi"));
+			nv.setColorb1(data.getMappers().get(5).processValue("holi"));
+			nv.setColorc1(data.getMappers().get(6).processValue("holi"));
+			nv.setColord1(data.getMappers().get(7).processValue("holi"));
+			
 			res.addNode(nv);
+			
 			
 		}
 		
