@@ -102,28 +102,35 @@
 		  }
 		);
 		
-  	var daURL = "http://localhost:8080/visualization/getGraphByGroup/";
+  	var daURL = "http://localhost:8080/visualization/getGraphData/";
 
-		var jqxhr = $.getJSON( daURL, function() {
-			  console.log( "success" );
-			})
-			  .done(function() {
+			  
+			  data = [{"id" : 6}];
+			  objall = JSON.stringify({"groups": data })
+			  objall2 = "{}"
+			  
+			  $.ajax({
+				    contentType: 'application/json',
+				    data: objall,
+				    dataType: 'json',
+				    success: function(data){
+				        
+				        console.log(data);
 
-				console.log(jqxhr.responseJSON);
+						// Load the graph in sigma
+						s.graph.read(data);
+						// Ask sigma to draw it
+						s.refresh();
+				        
+				    },
+				    error: function(){
+				        console.log(data);
 
-				// Load the graph in sigma
-				s.graph.read(jqxhr.responseJSON);
-				// Ask sigma to draw it
-				s.refresh();
-			    
-			    
-			  })
-			  .fail(function() {
-			    console.log( "error" );
-			  })
-			  .always(function() {
-			    console.log( "complete" );
-			  });
+				    },
+				    processData: false,
+				    type: 'POST',
+				    url: daURL
+				});
 		
   </script>
   

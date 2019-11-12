@@ -126,7 +126,6 @@ public class SimpleGraphRepoTests {
 		iSimpleGraphManager.createGroupRel("mygroup3","A");
 		
 		
-		System.out.println(iSimpleGraphManager.getGraphFormatedWithGroup("ALL"));
 
 		
 		

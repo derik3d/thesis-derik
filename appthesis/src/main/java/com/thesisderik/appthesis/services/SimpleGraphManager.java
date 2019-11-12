@@ -40,6 +40,7 @@ import com.thesisderik.appthesis.simplerepositories.SimpleRelationDAO;
 import com.thesisderik.appthesis.simplerepositories.SimpleTaskDAO;
 import com.thesisderik.appthesis.viz.EdgeViz;
 import com.thesisderik.appthesis.viz.NodeViz;
+import com.thesisderik.appthesis.viz.QueryVizFormat;
 import com.thesisderik.appthesis.viz.VizGraphFormat;
 
 @Service
@@ -694,13 +695,17 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	}
 
 	@Override
-	public VizGraphFormat getGraphFormatedWithGroup(String groupName) {
+	public VizGraphFormat getGraphDataFormatedForViz(QueryVizFormat data) {
 		
+		Set<PlainNode> nodes;
+			
+		if(!(data.getGroups()==null) && data.getGroups().size()>0) {
+			nodes = new HashSet<PlainNode>( relSimpleNodeGroupDAO.findAllByGroupIn(data.getGroups()).stream().map(NodeGroupRelation::getNode).collect(Collectors.toList()));
+
+		}else {
+			nodes = new HashSet<PlainNode>( relSimpleNodeGroupDAO.findAll().stream().map(NodeGroupRelation::getNode).collect(Collectors.toList()));
+		}
 		
-		PlainGroup group = simpleGroupDAO.findByName(groupName);
-		Set<PlainGroup> groupSet = new HashSet<>();
-		groupSet.add(group);
-		List<PlainNode> nodes = relSimpleNodeGroupDAO.findAllByGroupIn(groupSet).stream().map(NodeGroupRelation::getNode).collect(Collectors.toList());
 		List<NodeNodeRelation> allRelations = (List<NodeNodeRelation>) relSimpleNodeNodeDAO.findAll();
 		
 		allRelations.removeIf((item)-> {
@@ -721,12 +726,16 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		
 		while(nodesIt.hasNext()) {
 			PlainNode plainNode = nodesIt.next();
+		
 			NodeViz nv = new NodeViz();
+			
 			nv.setId(plainNode.getName());
+			nv.setLabel(plainNode.getName());
 			nv.setX(r.nextInt(10));
 			nv.setY(r.nextInt(10));
 			nv.setSize(3);
 			res.addNode(nv);
+			
 		}
 		
 		Iterator<NodeNodeRelation> relIt = allRelations.iterator();	

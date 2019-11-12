@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,6 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
+import com.thesisderik.appthesis.viz.QueryVizFormat;
 import com.thesisderik.appthesis.viz.VizGraphFormat;
 
 @Controller
@@ -27,13 +30,7 @@ public class VizController {
 	
 	
 
-	@RequestMapping(value = "getGraphByGroupTest", 
-		      produces = MediaType.APPLICATION_JSON_VALUE)
-	public String getGraphByGroupTest() {
-		return "testvizgraph.json";
-	}
-
-	@RequestMapping(value = "getViz", 
+	@RequestMapping(
 		      produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getViz() {
 		return "sigma/index.html";
@@ -43,14 +40,11 @@ public class VizController {
 	
 
 	
-	@RequestMapping(value = "getGraphByGroup", produces = "application/json")
+	@PostMapping(value = "getGraphData", produces = "application/json")
 	@ResponseBody
-	public VizGraphFormat getGraphByGroup(
-			@RequestParam(value="group", defaultValue="ALL") String group) throws JsonProcessingException {//QUITAR DEF VALUE
+	public VizGraphFormat getGraphFiltered(@RequestBody QueryVizFormat data)  {
 		
-
-		VizGraphFormat res = iSimpleGraphManager.getGraphFormatedWithGroup(group);
-		
+		VizGraphFormat res = iSimpleGraphManager.getGraphDataFormatedForViz(data);
 		
 		return res;
 	}

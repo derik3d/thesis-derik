@@ -1,6 +1,7 @@
 package com.thesisderik.appthesis.simplerepositories;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -24,5 +25,7 @@ public interface RelSimpleNodeGroupDAO extends CrudRepository<NodeGroupRelation,
 	TreeSet<NodeGroupRelation> findAllByNode(PlainNode node);
 
 	NodeGroupRelation findByGroupAndNode(PlainGroup group, PlainNode node);
+	
+	List<NodeGroupRelation> findAll();
 
 }

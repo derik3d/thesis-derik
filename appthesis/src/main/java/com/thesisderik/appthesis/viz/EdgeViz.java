@@ -4,6 +4,8 @@ public class EdgeViz {
 
 	private String id;
 	
+	private String label;
+	
 	private String source;
 	
 	private String target;
@@ -20,6 +22,14 @@ public class EdgeViz {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
 	public String getSource() {
@@ -68,6 +78,7 @@ public class EdgeViz {
 		int result = 1;
 		result = prime * result + ((color == null) ? 0 : color.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((label == null) ? 0 : label.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(size);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -96,6 +107,11 @@ public class EdgeViz {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
+		if (label == null) {
+			if (other.label != null)
+				return false;
+		} else if (!label.equals(other.label))
+			return false;
 		if (Double.doubleToLongBits(size) != Double.doubleToLongBits(other.size))
 			return false;
 		if (source == null) {
@@ -118,9 +134,10 @@ public class EdgeViz {
 
 	@Override
 	public String toString() {
-		return "EdgeViz [id=" + id + ", source=" + source + ", target=" + target + ", color=" + color + ", type=" + type
-				+ ", size=" + size + "]";
+		return "EdgeViz [id=" + id + ", label=" + label + ", source=" + source + ", target=" + target + ", color="
+				+ color + ", type=" + type + ", size=" + size + "]";
 	}
+	
 	
 	
 }

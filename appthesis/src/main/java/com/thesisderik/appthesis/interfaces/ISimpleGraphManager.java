@@ -17,6 +17,7 @@ import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainGroup;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainNode;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainRelation;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainTask;
+import com.thesisderik.appthesis.viz.QueryVizFormat;
 import com.thesisderik.appthesis.viz.VizGraphFormat;
 
 public interface ISimpleGraphManager extends IExperimentDataIntegrator{
@@ -104,7 +105,7 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 	
 	public String getDataForEvaluateRawContentUQName(String uqName);
 
-	public VizGraphFormat getGraphFormatedWithGroup(String group);
+	public VizGraphFormat getGraphDataFormatedForViz(QueryVizFormat data);
 
 
 
