@@ -63,7 +63,7 @@ public class SimpleGraphRepoTests {
 
 		iSimpleGraphManager.createFeature("Height","5","A");
 		iSimpleGraphManager.createFeature("Height","10.5","B");
-		iSimpleGraphManager.createFeature("Height","12","C");
+		iSimpleGraphManager.createFeature("Height","7","C");
 		iSimpleGraphManager.createFeature("Height","12","D");
 		
 		iSimpleGraphManager.createFeature("Age","3","A");

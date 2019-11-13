@@ -86,8 +86,10 @@ public class GraphManagerTests {
     	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00640.xml");
     	
     	*/
-    	assertTrue(true);
-    
+
+
+		int a=0;
+		System.out.println(a++);
     	
         System.out.println("roorrrooo");
 

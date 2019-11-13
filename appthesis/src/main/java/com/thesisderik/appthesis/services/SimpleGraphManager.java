@@ -1,5 +1,6 @@
 package com.thesisderik.appthesis.services;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,8 +11,12 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +43,8 @@ import com.thesisderik.appthesis.simplerepositories.SimpleGroupDAO;
 import com.thesisderik.appthesis.simplerepositories.SimpleNodeDAO;
 import com.thesisderik.appthesis.simplerepositories.SimpleRelationDAO;
 import com.thesisderik.appthesis.simplerepositories.SimpleTaskDAO;
+import com.thesisderik.appthesis.viz.ColorDataMapper;
+import com.thesisderik.appthesis.viz.DataMapperUtils;
 import com.thesisderik.appthesis.viz.EdgeViz;
 import com.thesisderik.appthesis.viz.NodeViz;
 import com.thesisderik.appthesis.viz.QueryVizFormat;
@@ -717,15 +724,63 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 				return true;
 			});
 		
-		VizGraphFormat res = new VizGraphFormat();
-
-		Iterator<PlainNode> nodesIt = nodes.iterator();
-
+		final VizGraphFormat res = new VizGraphFormat();
+		final ArrayList<ColorDataMapper> mapper = new ArrayList<>();
+		
+		if(data.getMappers()!=null)
+			mapper.addAll(data.getMappers());
 		
 		Random r = new Random();
 		
-		while(nodesIt.hasNext()) {
-			PlainNode plainNode = nodesIt.next();
+		
+		ArrayList<Integer> numList = new ArrayList<>();
+		for(int i=0 ; i<8; i++)
+			numList.add(i);
+		
+		//find ranges
+		
+		
+		ArrayList<ArrayList<String>> boundsList = new ArrayList<>();
+		
+
+		for(int i=0 ; i<8; i++)
+			boundsList.add(null);
+		
+		if(mapper.size()>0) {
+			for(int i=0 ; i<8; i++) {
+				if(mapper.get(i) instanceof Object && mapper.get(i).isEnabled()==true && mapper.get(i).isUseGroup()==false) {
+					PlainFeature pfea = mapper.get(i).getBindingPlainFeature();
+					TreeSet<NodeFeatureRelation> findAllByFeature = relSimpleNodeFeatureDAO.findAllByFeature(pfea);
+					
+					ArrayList<Double> tempBounds = new ArrayList<>();
+					tempBounds.add(Double.MAX_VALUE);
+					tempBounds.add(Double.MIN_VALUE);
+					
+					
+					Consumer<NodeFeatureRelation> boundsFinder = rel -> {
+
+						double curr = Double.parseDouble(rel.getValue());
+						double storedBottom = tempBounds.get(0);
+						double storedTop = tempBounds.get(1);
+						
+						if(curr<storedBottom)
+							tempBounds.set(0,curr);
+						if(curr>storedTop)
+							tempBounds.set(1,curr);
+						
+					};
+					
+					findAllByFeature.stream().forEach(boundsFinder);
+					
+					ArrayList<String> bounds = new ArrayList<>();
+					bounds.add(""+tempBounds.get(0));
+					bounds.add(""+tempBounds.get(1));
+					boundsList.set(i,bounds);
+					
+				}
+			}
+		}
+		Consumer<PlainNode> nodeParser = plainNode -> {
 		
 			NodeViz nv = new NodeViz();
 			
@@ -734,20 +789,79 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 			nv.setX(r.nextInt(10));
 			nv.setY(r.nextInt(10));
 			nv.setSize(3);
+			
+			if(mapper.size()>0){
+			
+			ArrayList<String> colors = new ArrayList<>();
+			
+			for(int i=0 ; i<8; i++)
+				colors.add(null);
+			
 
-			nv.setColora0(data.getMappers().get(0).processValue("holi"));
-			nv.setColorb0(data.getMappers().get(1).processValue("holi"));
-			nv.setColorc0(data.getMappers().get(2).processValue("holi"));
-			nv.setColord0(data.getMappers().get(3).processValue("holi"));
-			nv.setColora1(data.getMappers().get(4).processValue("holi"));
-			nv.setColorb1(data.getMappers().get(5).processValue("holi"));
-			nv.setColorc1(data.getMappers().get(6).processValue("holi"));
-			nv.setColord1(data.getMappers().get(7).processValue("holi"));
+			Consumer<Integer> processNodes = ivalue -> {
+					
+				if(mapper.get(ivalue).isEnabled()) {
+
+					if(mapper.get(ivalue).isUseGroup() ) {
+						
+						PlainGroup pg = mapper.get(ivalue).getBindingPlainGroup();
+						
+						NodeGroupRelation findByGroupAndNode = relSimpleNodeGroupDAO.findByGroupAndNode(pg, plainNode);
+
+						System.out.println("node: "+ plainNode);
+						System.out.println("group: "+ pg);
+
+						if(findByGroupAndNode instanceof Object) {
+							
+							System.out.println("cr "+ mapper.get(ivalue).getBottom());
+							
+							String color = DataMapperUtils.colorString(mapper.get(ivalue).getBottom());
+							
+							colors.set(ivalue,color);
+							
+						}
+						
+					}else {
+					
+						PlainFeature pf = mapper.get(ivalue).getBindingPlainFeature();
+
+						NodeFeatureRelation findByFeatureAndNode = relSimpleNodeFeatureDAO.findByFeatureAndNode(pf, plainNode);
+						
+						if(findByFeatureAndNode instanceof Object) {
+							
+							String color =  DataMapperUtils.processValue(boundsList.get(ivalue).get(0), boundsList.get(ivalue).get(1), mapper.get(ivalue).getBottom() , mapper.get(ivalue).getTop() , findByFeatureAndNode.getValue() , mapper.get(ivalue).getMapper() ) ;
+							
+							colors.set(ivalue,color);
+							
+						}
+						
+					}
+				
+				}
+				
+			};
+			
+			
+			
+			numList.stream().forEach(processNodes);
+			
+			for(int i =1; i<8;i++) {
+				if(colors.get(i)==null)
+					colors.set(i,colors.get(i-1));
+			}
+			
+			nv.setAllColors(colors);
+			
+			}
 			
 			res.addNode(nv);
 			
-			
-		}
+		};
+		
+		
+		nodes.stream().forEach(nodeParser);
+		
+		
 		
 		Iterator<NodeNodeRelation> relIt = allRelations.iterator();	
 		

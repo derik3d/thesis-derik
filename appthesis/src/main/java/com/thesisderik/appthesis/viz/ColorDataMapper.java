@@ -4,13 +4,14 @@ import java.awt.Color;
 
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainFeature;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainGroup;
+import com.thesisderik.appthesis.viz.DataMapperUtils.Mappers;
 
 public class ColorDataMapper {
 
 	private Color bottom;
 	private Color top;
 
-	private boolean enable;
+	private boolean enabled;
 
 	private boolean normalize;
 	
@@ -19,36 +20,31 @@ public class ColorDataMapper {
 	private PlainFeature bindingPlainFeature;
 	
 	private PlainGroup bindingPlainGroup;
-	
-	public String processValue(Object value) {
-		String rgb = Integer.toHexString(bottom.getRGB());
-		rgb = rgb.substring(2, rgb.length());
-		return "#"+rgb;
-		
-	}
+
+	private DataMapperUtils.Mappers mapper = DataMapperUtils.Mappers.UNIFORM_FLOAT;
 
 	public Color getBottom() {
 		return bottom;
 	}
 
-	public void setBottom(String bottom) {
-		this.bottom = Color.decode(bottom);
+	public void setBottom(Color bottom) {
+		this.bottom = bottom;
 	}
 
 	public Color getTop() {
 		return top;
 	}
 
-	public void setTop(String top) {
-		this.top = Color.decode(top);
+	public void setTop(Color top) {
+		this.top = top;
 	}
 
-	public boolean isEnable() {
-		return enable;
+	public boolean isEnabled() {
+		return enabled;
 	}
 
-	public void setEnable(boolean enable) {
-		this.enable = enable;
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	public boolean isNormalize() {
@@ -83,6 +79,14 @@ public class ColorDataMapper {
 		this.bindingPlainGroup = bindingPlainGroup;
 	}
 
+	public DataMapperUtils.Mappers getMapper() {
+		return mapper;
+	}
+
+	public void setMapper(DataMapperUtils.Mappers mapper) {
+		this.mapper = mapper;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -90,7 +94,8 @@ public class ColorDataMapper {
 		result = prime * result + ((bindingPlainFeature == null) ? 0 : bindingPlainFeature.hashCode());
 		result = prime * result + ((bindingPlainGroup == null) ? 0 : bindingPlainGroup.hashCode());
 		result = prime * result + ((bottom == null) ? 0 : bottom.hashCode());
-		result = prime * result + (enable ? 1231 : 1237);
+		result = prime * result + (enabled ? 1231 : 1237);
+		result = prime * result + ((mapper == null) ? 0 : mapper.hashCode());
 		result = prime * result + (normalize ? 1231 : 1237);
 		result = prime * result + ((top == null) ? 0 : top.hashCode());
 		result = prime * result + (useGroup ? 1231 : 1237);
@@ -121,7 +126,9 @@ public class ColorDataMapper {
 				return false;
 		} else if (!bottom.equals(other.bottom))
 			return false;
-		if (enable != other.enable)
+		if (enabled != other.enabled)
+			return false;
+		if (mapper != other.mapper)
 			return false;
 		if (normalize != other.normalize)
 			return false;
@@ -137,11 +144,12 @@ public class ColorDataMapper {
 
 	@Override
 	public String toString() {
-		return "ColorDataMapper [bottom=" + bottom + ", top=" + top + ", enable=" + enable + ", normalize=" + normalize
-				+ ", useGroup=" + useGroup + ", bindingPlainFeature=" + bindingPlainFeature + ", bindingPlainGroup="
-				+ bindingPlainGroup + "]";
+		return "ColorDataMapper [bottom=" + bottom + ", top=" + top + ", enabled=" + enabled + ", normalize="
+				+ normalize + ", useGroup=" + useGroup + ", bindingPlainFeature=" + bindingPlainFeature
+				+ ", bindingPlainGroup=" + bindingPlainGroup + ", mapper=" + mapper + "]";
 	}
-
+	
+	
 	
 	
 

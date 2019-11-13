@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.thesisderik.appthesis.persistence.graph.entities.GraphNode;
 import com.thesisderik.appthesis.persistence.identifiers.entities.ErrorFound;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.NodeFeatureRelation;
+import com.thesisderik.appthesis.persistence.simplegraph.entities.NodeGroupRelation;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainExperiment;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainFeature;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainGroup;
@@ -24,4 +25,5 @@ public interface RelSimpleNodeFeatureDAO extends CrudRepository<NodeFeatureRelat
 
 	TreeSet<NodeFeatureRelation> findAllByNode(PlainNode node);
 
+	NodeFeatureRelation findByFeatureAndNode(PlainFeature feature, PlainNode node);
 }

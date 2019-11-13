@@ -1,5 +1,7 @@
 package com.thesisderik.appthesis.viz;
 
+import java.util.ArrayList;
+
 public class NodeViz {
 	
 	private String id;
@@ -27,6 +29,21 @@ public class NodeViz {
 	private String colorc1;
 	
 	private String colord1;
+	
+
+
+	public void setAllColors(ArrayList<String> color) {
+
+		colora0 = color.get(0);
+		colorb0 = color.get(1);
+		colorc0 = color.get(2);
+		colord0 = color.get(3);
+		colora1 = color.get(4);
+		colorb1 = color.get(5);
+		colorc1 = color.get(6);
+		colord1 = color.get(7);
+		
+	}
 
 	public String getId() {
 		return id;
