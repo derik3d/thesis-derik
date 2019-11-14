@@ -1,0 +1,47 @@
+
+<div id="addedTable">
+
+<table>
+	 <thead>
+	    <tr>
+	      <th>Property</th>
+	      <th>Value</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	  
+	    <tr>
+	      <td>NodeName</td>
+	      <td th:text="${nodeData.nodeName}"></td>
+	    </tr>
+	  
+	  </tbody>
+	  <tbody>
+	  
+	    <tr th:each="group : ${nodeData.groups}">
+	      <td>Group</td>
+	      <td th:text="${group}"></td>
+	    </tr>
+	  
+	  </tbody>
+	    
+	 <thead>
+	    <tr>
+	      <th>Feature</th>
+	      <th>Value</th>
+	    </tr>
+	  </thead>
+	  
+	  <tbody>
+	    <tr th:each="instance : ${nodeData.features}">
+		    <td th:text="${instance.key}">keyvalue</td>
+		    <td th:text="${instance.value}">num</td>
+			</tr>
+		</tbody>
+	    
+</table>
+
+
+
+
+</div>

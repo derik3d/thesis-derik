@@ -9,8 +9,8 @@ public class DataMapperUtils {
 	
 	public enum Mappers {
 		NUMERICAL_UNIFORM("maps data between the colors numerically"),
-		CATEGORICAL_UNIFORM("maps data between the colors numerically"),
-		CATEGORICAL_RANDOM("");
+		CATEGORICAL_UNIFORM("each value is a class, mampped in the color range"),
+		CATEGORICAL_RANDOM("each value is a class, mapped with a consistent random color");
 		private String description;
 
 		private Mappers(String description) {

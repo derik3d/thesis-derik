@@ -17,6 +17,7 @@ import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainGroup;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainNode;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainRelation;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainTask;
+import com.thesisderik.appthesis.viz.InfoNodeFormat;
 import com.thesisderik.appthesis.viz.QueryVizFormat;
 import com.thesisderik.appthesis.viz.VizGraphFormat;
 
@@ -125,6 +126,8 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 	public Map<String, String> getMappedDataOfNodeByName(String nodeName);
 
 	public Set<String> getRelatedNodesForNodeByNodeName(String nodeName);
+
+	public InfoNodeFormat getSimpleNodeDataFormat(String nodeName);
 
 
 

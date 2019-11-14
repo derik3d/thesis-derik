@@ -47,6 +47,7 @@ import com.thesisderik.appthesis.viz.ColorDataMapper;
 import com.thesisderik.appthesis.viz.DataMapperUtils;
 import com.thesisderik.appthesis.viz.EdgeViz;
 import com.thesisderik.appthesis.viz.GeneralMapper;
+import com.thesisderik.appthesis.viz.InfoNodeFormat;
 import com.thesisderik.appthesis.viz.NodeViz;
 import com.thesisderik.appthesis.viz.QueryVizFormat;
 import com.thesisderik.appthesis.viz.VizGraphFormat;
@@ -970,6 +971,35 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		}
 
 		return relatedNodesNames;
+	}
+
+	@Override
+	public InfoNodeFormat getSimpleNodeDataFormat(String nodeName) {
+		InfoNodeFormat res = new InfoNodeFormat();
+		
+		PlainNode node = simpleNodeDAO.findByName(nodeName);
+		
+		List<String> groups = new ArrayList<>();
+		Map<String,String> features = new HashMap<>();
+		res.setNodeName(nodeName);
+		res.setGroups(groups);
+		res.setFeatures(features);
+		
+		Consumer<NodeFeatureRelation> getFeatures = nf -> {
+			
+			features.put(nf.getFeature().getName(), nf.getValue());
+			
+		};
+		
+		if(node instanceof Object) {
+			
+			groups.addAll(relSimpleNodeGroupDAO.findAllByNode(node).parallelStream().map(NodeGroupRelation::getGroup).map(PlainGroup::getName).collect(Collectors.toList()));
+			
+			relSimpleNodeFeatureDAO.findAllByNode(node).parallelStream().forEach(getFeatures);
+			
+		}
+		
+		return res;
 	}
 	
 	

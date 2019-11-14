@@ -68,8 +68,6 @@
      <script type="text/javascript" src="/modifiedNodeRenderer.js"></script>
      <script type="text/javascript" src="/modifiedEdgeRenderer.js"></script>
      
-
-
     
       <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     
@@ -86,12 +84,12 @@
 
 
 
-	<div>
+		<div>
 			<h1>Visualization</h1>
 			
 			
     		<div id='sigma-container'>
-    		</div>
+   		</div>
     		
     		
   <script>
@@ -184,43 +182,72 @@
 				}
 			  
 			  
-			  
-				    /*
-				   
-				    $.ajax({
-					    contentType: 'application/json',
-					    dataType: 'json',
-				      url: daURL,
-				      type: 'post',
-				      data: $form.serialize(),
-				      success: function(response) {
-				        // if the response contains any errors, replace the form
-				        if ($(response).find('.has-error').length) {
-					          console.log(1);
-					          console.log(response);
-				          
-				        } else {
-				          // in this case we can actually replace the form
-				          // with the response as well, unless we want to 
-				          // show the success message a different way
-					          console.log(2);
-					          console.log(response);
+				    //s.bind('overNode outNode clickNode doubleClickNode rightClickNode', function(e) {
+				    	
+			    	var currVizNode;
+				    	
+				    s.bind('overNode', function(e) {
+				        
+				        if(currVizNode != e.data.node.label)
+				        	processDataForNodeName(e.data.node.label);
+				        else
+				        	$('#nodeDataDiv').show();
 
-				        }
-				      }
-				  });
-				    */
-				
-			  
+				    });
+				    	
+				    s.bind('outNode', function(e) {
+				    	$('#nodeDataDiv').hide();
+				    });
+				    
+				    var currentlyBusy = false;
+				    
+				    function processDataForNodeName( nodeName ){
+
+						if(!currentlyBusy){
+							currentlyBusy = true;
+						    $.ajax({
+						      url:  "http://localhost:8080/front/nodeDescription/"+nodeName,
+						      type: 'get',
+						      success: function(response) {
+						        if ($(response).find('.has-error').length) {
+							          currentlyBusy = false;
+						        } else {
+						        	
+
+							          $("#addedTable").remove();
+							          $("#nodeDataDiv").append(response);
+							        	$('#nodeDataDiv').show();
+								          currentlyBusy = false;
+
+						        }
+						      }
+						  });
+						    
+						}
+						
+					    
+				    }
+				    
+				    
 			  
 			  
 		
   </script>
 
-
-
+	</div>
+	
+	
+	<div>
+	
+			<h1>Actual Node</h1>
+			
+			<div id="nodeDataDiv">
+			
+			</div>
+	
 	
 	</div>
+	
 
 
 	<div>
