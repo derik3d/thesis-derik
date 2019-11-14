@@ -837,9 +837,17 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 			
 			numList.stream().forEach(processNodes);
 			
+			boolean enableCopy = true;
+			
 			for(int i =1; i<8;i++) {
-				if(colors.get(i)==null)
+				if(mapper.get(i).isEnabled() && generalMappers.get(i) instanceof Object) {
+					enableCopy = false;
+				}else {
+					enableCopy = true;
+				}
+				if(colors.get(i)==null && enableCopy) {
 					colors.set(i,colors.get(i-1));
+				}
 			}
 			
 			nv.setAllColors(colors);
