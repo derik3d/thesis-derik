@@ -21,7 +21,7 @@ public class ColorDataMapper {
 	
 	private PlainGroup bindingPlainGroup;
 
-	private DataMapperUtils.Mappers mapper = DataMapperUtils.Mappers.UNIFORM_FLOAT;
+	private DataMapperUtils.Mappers mapper;
 
 	public Color getBottom() {
 		return bottom;
@@ -148,9 +148,7 @@ public class ColorDataMapper {
 				+ normalize + ", useGroup=" + useGroup + ", bindingPlainFeature=" + bindingPlainFeature
 				+ ", bindingPlainGroup=" + bindingPlainGroup + ", mapper=" + mapper + "]";
 	}
-	
-	
-	
+
 	
 
 }

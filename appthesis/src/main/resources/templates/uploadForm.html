@@ -126,7 +126,7 @@
 			  
 			  $.ajax({
 				    contentType: 'application/json',
-				    data: objall,
+				    data: objall2,
 				    dataType: 'json',
 				    success: function(data){
 				        
@@ -282,6 +282,14 @@
 			          <option th:each="group : ${allGroups}" 
 			                  th:value="${group.id}" 
 			                  th:text="${group.name}">Holder</option>
+			        </select>
+			        
+			        <br>
+			        
+					<select th:field="*{mappers[__${mapperStat.index}__].mapper}">
+			          <option th:each="myMapper : ${T(com.thesisderik.appthesis.viz.DataMapperUtils.Mappers).values()}" 
+			                  th:value="${myMapper}" 
+			                  th:text="${myMapper}">Holder</option>
 			        </select>
 			        
 			        

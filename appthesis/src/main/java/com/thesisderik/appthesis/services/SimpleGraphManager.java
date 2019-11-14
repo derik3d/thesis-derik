@@ -46,6 +46,7 @@ import com.thesisderik.appthesis.simplerepositories.SimpleTaskDAO;
 import com.thesisderik.appthesis.viz.ColorDataMapper;
 import com.thesisderik.appthesis.viz.DataMapperUtils;
 import com.thesisderik.appthesis.viz.EdgeViz;
+import com.thesisderik.appthesis.viz.GeneralMapper;
 import com.thesisderik.appthesis.viz.NodeViz;
 import com.thesisderik.appthesis.viz.QueryVizFormat;
 import com.thesisderik.appthesis.viz.VizGraphFormat;
@@ -740,46 +741,36 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 		//find ranges
 		
 		
-		ArrayList<ArrayList<String>> boundsList = new ArrayList<>();
+		ArrayList<GeneralMapper> generalMappers = new ArrayList<>();
 		
 
 		for(int i=0 ; i<8; i++)
-			boundsList.add(null);
+			generalMappers.add(null);
 		
 		if(mapper.size()>0) {
 			for(int i=0 ; i<8; i++) {
-				if(mapper.get(i) instanceof Object && mapper.get(i).isEnabled()==true && mapper.get(i).isUseGroup()==false) {
+				
+				//para cada mapper
+				
+				if(mapper.get(i) instanceof Object && mapper.get(i).isEnabled()==true 
+						&& mapper.get(i).isUseGroup()==false && mapper.get(i).getMapper() instanceof Object) {
+					
+					
+
 					PlainFeature pfea = mapper.get(i).getBindingPlainFeature();
 					TreeSet<NodeFeatureRelation> findAllByFeature = relSimpleNodeFeatureDAO.findAllByFeature(pfea);
 					
-					ArrayList<Double> tempBounds = new ArrayList<>();
-					tempBounds.add(Double.MAX_VALUE);
-					tempBounds.add(Double.MIN_VALUE);
+					GeneralMapper genMapper = DataMapperUtils.getMapper(findAllByFeature.stream().map(NodeFeatureRelation::getValue) ,mapper.get(i).getBottom(), mapper.get(i).getTop(), mapper.get(i).getMapper());
 					
-					
-					Consumer<NodeFeatureRelation> boundsFinder = rel -> {
-
-						double curr = Double.parseDouble(rel.getValue());
-						double storedBottom = tempBounds.get(0);
-						double storedTop = tempBounds.get(1);
-						
-						if(curr<storedBottom)
-							tempBounds.set(0,curr);
-						if(curr>storedTop)
-							tempBounds.set(1,curr);
-						
-					};
-					
-					findAllByFeature.stream().forEach(boundsFinder);
-					
-					ArrayList<String> bounds = new ArrayList<>();
-					bounds.add(""+tempBounds.get(0));
-					bounds.add(""+tempBounds.get(1));
-					boundsList.set(i,bounds);
+					generalMappers.set(i,genMapper);
 					
 				}
+				
+				
 			}
 		}
+		
+		
 		Consumer<PlainNode> nodeParser = plainNode -> {
 		
 			NodeViz nv = new NodeViz();
@@ -815,7 +806,7 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 							
 							System.out.println("cr "+ mapper.get(ivalue).getBottom());
 							
-							String color = DataMapperUtils.colorString(mapper.get(ivalue).getBottom());
+							String color = GeneralMapper.colorString(mapper.get(ivalue).getBottom());
 							
 							colors.set(ivalue,color);
 							
@@ -829,7 +820,8 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 						
 						if(findByFeatureAndNode instanceof Object) {
 							
-							String color =  DataMapperUtils.processValue(boundsList.get(ivalue).get(0), boundsList.get(ivalue).get(1), mapper.get(ivalue).getBottom() , mapper.get(ivalue).getTop() , findByFeatureAndNode.getValue() , mapper.get(ivalue).getMapper() ) ;
+							String color = generalMappers.get(ivalue).processValue(findByFeatureAndNode.getValue());
+							//String color =  DataMapperUtils.processValue(boundsList.get(ivalue).get(0), boundsList.get(ivalue).get(1), mapper.get(ivalue).getBottom() , mapper.get(ivalue).getTop() , findByFeatureAndNode.getValue() , mapper.get(ivalue).getMapper() ) ;
 							
 							colors.set(ivalue,color);
 							
