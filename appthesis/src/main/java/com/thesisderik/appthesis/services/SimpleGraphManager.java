@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
+import com.thesisderik.appthesis.layout.LayoutManager;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentRequestFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentResultsFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.GroupFileDataStructure;
@@ -879,7 +880,7 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 			res.addEdge(ev);
 		}
 		
-		
+		LayoutManager.layoutGraph(res);
 		
 		return res;
 	}
