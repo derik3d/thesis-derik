@@ -36,8 +36,6 @@ public class SimpleGraphRepoTests {
 
 	
 
-	@Autowired
-	private INamesCrawlerService iNamesCrawlerService;
 	
 	@Autowired
 	ISimpleGraphManager iSimpleGraphManager;
