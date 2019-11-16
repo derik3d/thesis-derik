@@ -7,17 +7,15 @@ import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainGroup;
 public class LayoutItem {
 	
 	boolean enabled;
-	Integer priorityLayer;
-	Integer priorityParent;
-	
-	Layouts lay;
 	
 	PlainGroup group;
+	
+	Integer layer;
+	
 	boolean filter;
 	PlainFeature feature;
 	String value0;
 	String value1;
-	
 	
 	public boolean isEnabled() {
 		return enabled;
@@ -25,29 +23,17 @@ public class LayoutItem {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
-	public Integer getPriorityLayer() {
-		return priorityLayer;
-	}
-	public void setPriorityLayer(Integer priorityLayer) {
-		this.priorityLayer = priorityLayer;
-	}
-	public Integer getPriorityParent() {
-		return priorityParent;
-	}
-	public void setPriorityParent(Integer priorityParent) {
-		this.priorityParent = priorityParent;
-	}
-	public Layouts getLay() {
-		return lay;
-	}
-	public void setLay(Layouts lay) {
-		this.lay = lay;
-	}
 	public PlainGroup getGroup() {
 		return group;
 	}
 	public void setGroup(PlainGroup group) {
 		this.group = group;
+	}
+	public Integer getLayer() {
+		return layer;
+	}
+	public void setLayer(Integer layer) {
+		this.layer = layer;
 	}
 	public boolean isFilter() {
 		return filter;
@@ -81,9 +67,7 @@ public class LayoutItem {
 		result = prime * result + ((feature == null) ? 0 : feature.hashCode());
 		result = prime * result + (filter ? 1231 : 1237);
 		result = prime * result + ((group == null) ? 0 : group.hashCode());
-		result = prime * result + ((lay == null) ? 0 : lay.hashCode());
-		result = prime * result + ((priorityLayer == null) ? 0 : priorityLayer.hashCode());
-		result = prime * result + ((priorityParent == null) ? 0 : priorityParent.hashCode());
+		result = prime * result + ((layer == null) ? 0 : layer.hashCode());
 		result = prime * result + ((value0 == null) ? 0 : value0.hashCode());
 		result = prime * result + ((value1 == null) ? 0 : value1.hashCode());
 		return result;
@@ -111,17 +95,10 @@ public class LayoutItem {
 				return false;
 		} else if (!group.equals(other.group))
 			return false;
-		if (lay != other.lay)
-			return false;
-		if (priorityLayer == null) {
-			if (other.priorityLayer != null)
+		if (layer == null) {
+			if (other.layer != null)
 				return false;
-		} else if (!priorityLayer.equals(other.priorityLayer))
-			return false;
-		if (priorityParent == null) {
-			if (other.priorityParent != null)
-				return false;
-		} else if (!priorityParent.equals(other.priorityParent))
+		} else if (!layer.equals(other.layer))
 			return false;
 		if (value0 == null) {
 			if (other.value0 != null)
@@ -137,9 +114,8 @@ public class LayoutItem {
 	}
 	@Override
 	public String toString() {
-		return "LayoutItem [enabled=" + enabled + ", priorityLayer=" + priorityLayer + ", priorityParent="
-				+ priorityParent + ", lay=" + lay + ", group=" + group + ", filter=" + filter + ", feature=" + feature
-				+ ", value0=" + value0 + ", value1=" + value1 + "]";
+		return "LayoutItem [enabled=" + enabled + ", group=" + group + ", layer=" + layer + ", filter=" + filter
+				+ ", feature=" + feature + ", value0=" + value0 + ", value1=" + value1 + "]";
 	}
 	
 	

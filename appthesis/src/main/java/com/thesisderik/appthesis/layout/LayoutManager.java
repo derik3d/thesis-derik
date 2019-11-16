@@ -5,6 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 import com.thesisderik.appthesis.viz.EdgeViz;
 import com.thesisderik.appthesis.viz.NodeViz;
@@ -41,9 +44,35 @@ public class LayoutManager {
 	}
 	
 	
-	public static void layoutGraph(VizGraphFormat graphSent) {
+	public static void layoutGraph(VizGraphFormat graphSent, Map<Integer,Integer> hierarchy ,
+			Map<Integer,Layouts> layerLayouts ,
+			Map<Integer, Set<String>> nodeLayers) {
 		
 
+		System.out.println();
+		System.out.println(hierarchy);
+		System.out.println();
+		System.out.println(nodeLayers);
+		System.out.println();
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		Graph<String, String> g = new SparseMultigraph<String, String>();
 		Graph<String, String> g2 = new SparseMultigraph<String, String>();
 		Graph<String, String> gg = new SparseMultigraph<String, String>();

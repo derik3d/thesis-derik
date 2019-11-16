@@ -327,10 +327,60 @@
 			</ul>
 			
 			
+			<label >layout hierarchy relations</label><br>
+			<ul>			
+			<li th:each="hieItem, hieItemStat : ${listHierarchyLay}">
 			  
 			  
+				  	<input type=checkbox th:field="*{relations[__${hieItemStat.index}__].enabled}">
+
+    				<label  >enable</label>
+					<br>
+				  	
+				  	
+			  
+				  	
+				  	
+				  	<input type=number step="1" th:field="*{relations[__${hieItemStat.index}__].son}">
+
+    				<label  >layer</label>
+					<br>
+					
+					
+					
+				  	
+				  	<input type=number step="1" th:field="*{relations[__${hieItemStat.index}__].father}">
+
+    				<label  >parent layer</label>
+					<br>
+				  	
+				  	
+			        
+					<select th:field="*{relations[__${hieItemStat.index}__].lay}">
+			          <option th:each="myLayout : ${T(com.thesisderik.appthesis.layout.LayoutManager.Layouts).values()}" 
+			                  th:value="${myLayout}" 
+			                  th:text="${myLayout}">Holder</option>
+			        </select>
+				  	
+			        <br>
+				  	
+			     
+					<br>
+				  	
+				  	
+			        <br>
+			        
+			  </li>
+			  
+			</ul>   
 			
-			<label >layout</label><br>
+			     
+					<br>
+				  	
+				  	
+			        <br>	  	
+			
+			<label >layout layers groups</label><br>
 			<ul>			
 			<li th:each="layItem, layItemStat : ${listFilterLay}">
 			  
@@ -341,34 +391,15 @@
 				  	
 				  	
 			  
+				  
 				  	
-				  	
-				  	
-				  	<input type=text th:field="*{layoutItems[__${layItemStat.index}__].priorityLayer}">
+				  	<input type=number step="1" th:field="*{layoutItems[__${layItemStat.index}__].layer}">
 
     				<label  >layer</label>
 					<br>
-					
-					
-					
-				  	
-				  	<input type=text th:field="*{layoutItems[__${layItemStat.index}__].priorityParent}">
-
-    				<label  >parent layer</label>
-					<br>
-				  	
-				  	
 				  	
 			        
 				  	
-			        
-					<select th:field="*{layoutItems[__${layItemStat.index}__].lay}">
-			          <option th:each="myLayout : ${T(com.thesisderik.appthesis.layout.LayoutManager.Layouts).values()}" 
-			                  th:value="${myLayout}" 
-			                  th:text="${myLayout}">Holder</option>
-			        </select>
-				  	
-			        <br>
 				  	
 				  	
 			        

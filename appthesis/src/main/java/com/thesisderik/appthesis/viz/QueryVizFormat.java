@@ -3,6 +3,7 @@ package com.thesisderik.appthesis.viz;
 import java.util.List;
 import java.util.Set;
 
+import com.thesisderik.appthesis.layout.HierarchyRelation;
 import com.thesisderik.appthesis.layout.LayoutItem;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainGroup;
 
@@ -12,6 +13,8 @@ public class QueryVizFormat {
 	Set<PlainGroup> groups;
 	
 	List<ColorDataMapper> mappers;
+	
+	List<HierarchyRelation> relations; 
 	
 	List<LayoutItem> layoutItems;
 
@@ -31,6 +34,14 @@ public class QueryVizFormat {
 		this.mappers = mappers;
 	}
 
+	public List<HierarchyRelation> getRelations() {
+		return relations;
+	}
+
+	public void setRelations(List<HierarchyRelation> relations) {
+		this.relations = relations;
+	}
+
 	public List<LayoutItem> getLayoutItems() {
 		return layoutItems;
 	}
@@ -46,6 +57,7 @@ public class QueryVizFormat {
 		result = prime * result + ((groups == null) ? 0 : groups.hashCode());
 		result = prime * result + ((layoutItems == null) ? 0 : layoutItems.hashCode());
 		result = prime * result + ((mappers == null) ? 0 : mappers.hashCode());
+		result = prime * result + ((relations == null) ? 0 : relations.hashCode());
 		return result;
 	}
 
@@ -73,15 +85,21 @@ public class QueryVizFormat {
 				return false;
 		} else if (!mappers.equals(other.mappers))
 			return false;
+		if (relations == null) {
+			if (other.relations != null)
+				return false;
+		} else if (!relations.equals(other.relations))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "QueryVizFormat [groups=" + groups + ", mappers=" + mappers + ", layoutItems=" + layoutItems + "]";
+		return "QueryVizFormat [groups=" + groups + ", mappers=" + mappers + ", relations=" + relations
+				+ ", layoutItems=" + layoutItems + "]";
 	}
+	
+	
 
-	
-	
 
 }

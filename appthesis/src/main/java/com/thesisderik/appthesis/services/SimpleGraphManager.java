@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -22,7 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
+import com.thesisderik.appthesis.layout.HierarchyRelation;
+import com.thesisderik.appthesis.layout.LayoutItem;
 import com.thesisderik.appthesis.layout.LayoutManager;
+import com.thesisderik.appthesis.layout.LayoutManager.Layouts;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentRequestFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentResultsFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.GroupFileDataStructure;
@@ -779,8 +783,10 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 			
 			nv.setId(plainNode.getName());
 			nv.setLabel(plainNode.getName());
-			nv.setX(r.nextInt(10));
-			nv.setY(r.nextInt(10));
+			//nv.setX(r.nextInt(10));
+			//nv.setY(r.nextInt(10));
+			nv.setX(0);
+			nv.setY(0);
 			nv.setSize(3);
 			
 			if(mapper.size()>0){
@@ -880,9 +886,140 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 			res.addEdge(ev);
 		}
 		
-		LayoutManager.layoutGraph(res);
+		
+		//son -> parent
+		Map<Integer,Integer> layerHierarchy = parseHierarchy(data.getRelations());
+		
+		Map<Integer,Layouts> layersLayouts = layersLayouts(data.getRelations());
+		
+		Map<Integer, Set<String>> nodesGroups = unfoldDataForLayout(res.getNodes().stream().map(NodeViz::getId).collect(Collectors.toSet()), data.getLayoutItems() , layerHierarchy);
+		
+		LayoutManager.layoutGraph(res, layerHierarchy, layersLayouts,nodesGroups);
+		
+		
 		
 		return res;
+	}
+	
+	public Map<Integer,Integer> parseHierarchy(List<HierarchyRelation> relations){
+		
+		Map<Integer,Integer> mapRes = new HashMap<>();
+		
+		if(relations instanceof Object) {
+			for(HierarchyRelation rel : relations) {
+				if(rel.isEnabled()) {
+					if(rel.getSon()<rel.getFather())
+						mapRes.put(rel.getSon(), rel.getFather());
+				}
+			}
+		}else {
+			return null;
+		}
+		
+		return mapRes;
+		
+	}
+
+	
+	public Map<Integer,Layouts> layersLayouts(List<HierarchyRelation> relations){
+		
+		Map<Integer,Layouts> mapRes = new HashMap<>();
+		
+		if(relations instanceof Object) {
+			for(HierarchyRelation rel : relations) {
+				if(rel.isEnabled()) {
+					if(rel.getSon()<rel.getFather())
+						mapRes.put(rel.getSon(), rel.getLay());
+				}
+			}
+		}else {
+			return null;
+		}
+		
+		return mapRes;
+		
+	}
+	
+	public Map<Integer, Set<String>> unfoldDataForLayout(Set<String> nodes, List<LayoutItem> layItems, Map<Integer,Integer> relations){
+		
+		Map<Integer, Set<String>> nodeGroupsForLayout = null;
+		
+		if(layItems instanceof Object) {
+			
+			for(LayoutItem it: layItems) {
+				if(it.isEnabled()) {
+					nodeGroupsForLayout = new HashMap<>();
+					break;
+				}
+			}
+			
+			
+			for(LayoutItem it: layItems) {
+				if(it.isEnabled()) {
+					
+					nodeGroupsForLayout.put(it.getLayer(), getFilteredNodes(nodes, it));
+					
+					if(nodes.size()==0) {
+						break;
+					}
+					
+				}
+			}
+		
+		}
+		return nodeGroupsForLayout;
+	}
+	
+	public Set<String> getFilteredNodes(Set<String> availableNodes, LayoutItem layItem){
+				
+		TreeSet<NodeGroupRelation> relationsNodeWithGroup = relSimpleNodeGroupDAO.findAllByGroup(layItem.getGroup());
+		Predicate<NodeGroupRelation> insideListAvailable = relGr -> {
+			return availableNodes.contains(relGr.getNode().getName());
+		};
+		
+		final Set<String> filteredResult = relationsNodeWithGroup.parallelStream().filter(insideListAvailable).map(NodeGroupRelation::getNode).map(PlainNode::getName).collect(Collectors.toSet());
+		
+		Set<String> newfilteredResult = null;
+		
+		if(layItem.isFilter()) {
+			
+			Predicate<NodeFeatureRelation> keepCondition;
+			
+			if(layItem.getValue1() instanceof Object && layItem.getValue1().length() > 0) {
+				//range
+				keepCondition = rel -> {
+					double r0 = Double.parseDouble(layItem.getValue0());
+					double r1 = Double.parseDouble(layItem.getValue1());
+					double val = Double.parseDouble(rel.getValue());
+					
+					
+					return r0<= val && r1>= val;
+				};
+			}else {
+				//equals
+				keepCondition = rel -> {
+					return  rel.getValue().equals(layItem.getValue0());
+				};
+			}
+			
+
+			Predicate<NodeFeatureRelation> insideListAvailableFeat = relft -> {
+				return filteredResult.contains(relft.getNode().getName());
+			};
+			
+			newfilteredResult = relSimpleNodeFeatureDAO.findAllByFeature(layItem.getFeature()).parallelStream().
+			filter(insideListAvailableFeat).filter(keepCondition).map(NodeFeatureRelation::getNode)
+			.map(PlainNode::getName).collect(Collectors.toSet());
+						
+		}
+		
+		if(newfilteredResult instanceof Object) {
+			availableNodes.removeAll(newfilteredResult);
+			return newfilteredResult;
+		}else {
+			availableNodes.removeAll(filteredResult);
+			return filteredResult;
+		}
 	}
 
 	@Override

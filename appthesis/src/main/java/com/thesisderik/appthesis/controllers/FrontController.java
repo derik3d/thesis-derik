@@ -28,6 +28,7 @@ import com.thesisderik.appthesis.interfaces.IAnalysisService;
 import com.thesisderik.appthesis.interfaces.IGraphManagerService;
 import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
 import com.thesisderik.appthesis.interfaces.IStorageService;
+import com.thesisderik.appthesis.layout.HierarchyRelation;
 import com.thesisderik.appthesis.layout.LayoutItem;
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentRequestFileDataStructure;
 import com.thesisderik.appthesis.persistence.simplegraph.entities.PlainExperiment;
@@ -88,15 +89,20 @@ public class FrontController {
 		model.addAttribute("plainExperiment", new PlainExperiment());
 
 		List<ColorDataMapper> listDataMapper = new ArrayList<>();
+		List<HierarchyRelation> listHierarchyLay = new ArrayList<>();
 		List<LayoutItem> listFilterLay = new ArrayList<>();
 		
 		for(int i=0; i<8; i++)
 			listDataMapper.add(new ColorDataMapper());
 		for(int i=0; i<8; i++)
+			listHierarchyLay.add(new HierarchyRelation());
+		for(int i=0; i<8; i++)
 			listFilterLay.add(new LayoutItem());
 
 		model.addAttribute("listDataMapper", listDataMapper);
+		model.addAttribute("listHierarchyLay", listHierarchyLay);
 		model.addAttribute("listFilterLay", listFilterLay);
+		
         return "uploadForm";
     }
 	
