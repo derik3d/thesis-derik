@@ -7,9 +7,13 @@ import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import com.thesisderik.appthesis.viz.EdgeViz;
 import com.thesisderik.appthesis.viz.NodeViz;
@@ -104,7 +108,14 @@ public class LayoutManager {
 		
 		
 		//add more aggregate accord to the hierarchy
-		//or add all the subgraphs to the aggregate general as a easyfix
+		//or add all the subgraphs to the aggregate general as a easyf
+		
+		
+		
+		
+		hierarchyOperation(hierarchy , aggregateGeneral, layouts, layerLayouts);
+		
+		
 		
 		
 
@@ -118,79 +129,108 @@ public class LayoutManager {
 		
 		
 		
-		
-		
-		
-		
-		/*
-		Graph<String, String> g = new SparseMultigraph<String, String>();
-		Graph<String, String> g2 = new SparseMultigraph<String, String>();
-		Graph<String, String> gg = new SparseMultigraph<String, String>();
 
-		int i=0;
-		for(NodeViz nodeViz : graphSent.getNodes()) {
-			
-			if(i>3)
-				g.addVertex(nodeViz.getId());
-			else
-				g2.addVertex(nodeViz.getId());
-			
-			gg.addVertex(nodeViz.getId());
-
-
-		}
-		
-		for(EdgeViz edgeViz : graphSent.getEdges()) {
-			 g.addEdge(edgeViz.getId(), edgeViz.getSource(), edgeViz.getTarget());
-		}
-		
-		for(EdgeViz edgeViz : graphSent.getEdges()) {
-			 g2.addEdge(edgeViz.getId(), edgeViz.getSource(), edgeViz.getTarget());
-		}
-
-		SpringLayout<String, String> layout = new SpringLayout<String,String>(g);
-		layout.setSize(new Dimension(20,20)); 
-		
-		SpringLayout<String, String> layout2 = new SpringLayout<String,String>(g2);
-		layout2.setSize(new Dimension(20,20)); 
-		
-		CircleLayout<String, String> laygen = new CircleLayout<String,String>(gg);
-		laygen.setSize(new Dimension(40,40)); 
-		
-		AggregateLayout<String,String> layoutg =  new AggregateLayout<String,String>(laygen);
-		layoutg.setSize(new Dimension(100,100));
-		
-		
-		Point2D p2g = new Point2D.Double();
-		p2g.setLocation(0, 0);
-		
-		
-		Point2D pg = new Point2D.Double();
-		p2g.setLocation(50, 50);
-		
-		layoutg.put(layout, p2g);
-		layoutg.put(layout2, p2g);
-		
-
+	}
 	
-		for(NodeViz nodeViz : graphSent.getNodes()) {
-			nodeViz.setX(layoutg.getX(nodeViz.getId()));
-			nodeViz.setY(layoutg.getY(nodeViz.getId()));
-		}
-*
+	
+	
+	private static void hierarchyOperation(Map<Integer, Integer> hierarchy,
+			AggregateLayout<String, String> topMerger, Map<Integer,Layout<String,String>> availableLayouts,
+			Map<Integer,Layouts> layerLayouts) {
+		
+		
 
-		for(NodeViz nodeViz : graphSent.getNodes()) {
-			Point2D extracted = layoutg.apply(nodeViz.getId());
-			nodeViz.setX(extracted.getX());
-			nodeViz.setY(extracted.getY());
+
+		System.out.println();
+		System.out.println(hierarchy);
+		System.out.println();
+		System.out.println(topMerger);
+		System.out.println();
+		System.out.println(availableLayouts);
+		System.out.println();
+		System.out.println(layerLayouts);
+		System.out.println();
+		
+		
+		
+		if(hierarchy.size()<1)return;
+		
+		
+		int max = hierarchy.keySet().stream().max(Integer::compare).get();
+		
+		Predicate<Integer> passTheIndexes = num -> {
+			
+			return num>max;
+			
+		}; 
+		
+		Set<Integer> passed = hierarchy.values().stream().filter(passTheIndexes).collect(Collectors.toSet());
+		
+		
+		Set<Integer> keysToRemove = new HashSet<>();
+		
+		for( Map.Entry<Integer, Integer> entry : hierarchy.entrySet()){
+			
+			if(passed.contains(entry.getValue())) {
+				keysToRemove.add(entry.getKey());
+			}
+			
 		}
 		
-		*/
+		
+		Map<Integer, Integer> remaining = new HashMap<>();
+		
+		remaining.putAll(hierarchy);
+		
+		for(Integer val : keysToRemove) {
+			remaining.remove(val);
+		}
+		
+		
+		
+		for(int passedValue: passed) {
+			
+			if(availableLayouts.keySet().contains(passedValue)) {
+				
 
+				Point2D center = new Point2D.Double();
+				center.setLocation(50, 50);
+				
+				topMerger.put(availableLayouts.get(passedValue), center);
+				availableLayouts.remove(passedValue);
+				
+			}else {
+
+				Layout<String,String> layout;
+				if(layerLayouts.containsKey(passedValue)){
+					layout = buildLayout(layerLayouts.get(passedValue), null);
+				}else{
+					layout = buildLayout( Layouts.SPRING , null);
+				}
+
+				AggregateLayout<String,String> layoutAggregate =  new AggregateLayout<String,String>(layout);
+				layoutAggregate.setSize(new Dimension(100,100));
+				
+				Point2D center = new Point2D.Double();
+				center.setLocation(50, 50);
+				
+				topMerger.put(layoutAggregate, center);
+				if(remaining.size()>0)
+				hierarchyOperation(remaining,layoutAggregate,availableLayouts, layerLayouts);
+				
+			}
+			
+		}
+		
+		
 	}
 
 
 	private static Layout<String, String> buildLayout(Layouts layouts, Graph<String,String> g) {
+		
+		if(g == null) {
+			g = new SparseMultigraph<>();
+		}
 		
 		switch(layouts) {
 		case SPRING:
@@ -204,3 +244,73 @@ public class LayoutManager {
 	
 
 }
+
+
+
+
+
+
+/*
+Graph<String, String> g = new SparseMultigraph<String, String>();
+Graph<String, String> g2 = new SparseMultigraph<String, String>();
+Graph<String, String> gg = new SparseMultigraph<String, String>();
+
+int i=0;
+for(NodeViz nodeViz : graphSent.getNodes()) {
+	
+	if(i>3)
+		g.addVertex(nodeViz.getId());
+	else
+		g2.addVertex(nodeViz.getId());
+	
+	gg.addVertex(nodeViz.getId());
+
+
+}
+
+for(EdgeViz edgeViz : graphSent.getEdges()) {
+	 g.addEdge(edgeViz.getId(), edgeViz.getSource(), edgeViz.getTarget());
+}
+
+for(EdgeViz edgeViz : graphSent.getEdges()) {
+	 g2.addEdge(edgeViz.getId(), edgeViz.getSource(), edgeViz.getTarget());
+}
+
+SpringLayout<String, String> layout = new SpringLayout<String,String>(g);
+layout.setSize(new Dimension(20,20)); 
+
+SpringLayout<String, String> layout2 = new SpringLayout<String,String>(g2);
+layout2.setSize(new Dimension(20,20)); 
+
+CircleLayout<String, String> laygen = new CircleLayout<String,String>(gg);
+laygen.setSize(new Dimension(40,40)); 
+
+AggregateLayout<String,String> layoutg =  new AggregateLayout<String,String>(laygen);
+layoutg.setSize(new Dimension(100,100));
+
+
+Point2D p2g = new Point2D.Double();
+p2g.setLocation(0, 0);
+
+
+Point2D pg = new Point2D.Double();
+p2g.setLocation(50, 50);
+
+layoutg.put(layout, p2g);
+layoutg.put(layout2, p2g);
+
+
+
+for(NodeViz nodeViz : graphSent.getNodes()) {
+	nodeViz.setX(layoutg.getX(nodeViz.getId()));
+	nodeViz.setY(layoutg.getY(nodeViz.getId()));
+}
+*
+
+for(NodeViz nodeViz : graphSent.getNodes()) {
+	Point2D extracted = layoutg.apply(nodeViz.getId());
+	nodeViz.setX(extracted.getX());
+	nodeViz.setY(extracted.getY());
+}
+
+*/

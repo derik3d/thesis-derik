@@ -1,6 +1,15 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>SigmaJS example</title>
+    <title>Thesis derik</title>
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    
+    
     <!-- Sigma core -->
     <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/sigma.core.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/conrad.js"></script>
@@ -72,28 +81,31 @@
       <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     
     <style>
-		#sigma-container { width:40%; height:40%; background-color:#E1E1E1}
+    
+    	#sigma-container { height: 500px;background-color:#E1E1E1}
+    
+    
     </style>
   </head>
 <body>
 
-	<div th:if="${message}">
+<div class="container">
+
+	<div th:if="${message}"  class="row">
 		<h2 th:text="${message}"/></h2><br><br><br><br>
 	</div>
 
 
-
-
+		
 		<div>
 			<h1>Visualization</h1>
 			
 			
-    		<div id='sigma-container'>
-   		</div>
-    		
+    		<div id='sigma-container' ></div>
+    	</div>	
     		
   <script>
-  
+
  // html { height:400px;}
 
   var s = new sigma(
@@ -196,7 +208,7 @@
 				    });
 				    	
 				    s.bind('outNode', function(e) {
-				    	$('#nodeDataDiv').hide();
+				    	//$('#nodeDataDiv').hide();
 				    });
 				    
 				    var currentlyBusy = false;
@@ -234,7 +246,6 @@
 		
   </script>
 
-	</div>
 	
 	
 	<div>
@@ -248,7 +259,6 @@
 	
 	</div>
 	
-
 
 	<div>
 		<h1>Tweak viz and lay</h1>
@@ -456,7 +466,7 @@
 			  
 			  
 					
-			<input type="button" value="Update viz" onclick="updateViz();">
+			<input class="btn btn-primary" type="button" value="Update viz" onclick="updateViz();">
 			
 			
 			
@@ -674,6 +684,8 @@
 			</li>
 		</ul>
 	</div>
+
+</div>
 
 </body>
 </html>
