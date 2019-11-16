@@ -912,8 +912,6 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 						mapRes.put(rel.getSon(), rel.getFather());
 				}
 			}
-		}else {
-			return null;
 		}
 		
 		return mapRes;
@@ -932,8 +930,6 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 						mapRes.put(rel.getSon(), rel.getLay());
 				}
 			}
-		}else {
-			return null;
 		}
 		
 		return mapRes;
@@ -942,7 +938,7 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 	
 	public Map<Integer, Set<String>> unfoldDataForLayout(Set<String> nodes, List<LayoutItem> layItems, Map<Integer,Integer> relations){
 		
-		Map<Integer, Set<String>> nodeGroupsForLayout = null;
+		Map<Integer, Set<String>> nodeGroupsForLayout = new HashMap<>();
 		
 		if(layItems instanceof Object) {
 			
@@ -967,6 +963,7 @@ public class SimpleGraphManager implements ISimpleGraphManager {
 			}
 		
 		}
+		
 		return nodeGroupsForLayout;
 	}
 	
