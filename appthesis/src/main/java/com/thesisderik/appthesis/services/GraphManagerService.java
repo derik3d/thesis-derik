@@ -199,6 +199,10 @@ public class GraphManagerService implements IGraphManagerService{
 			
 			iSimpleGraphManager.createGroupRel(gp.getName(),reactionNode);
 			iSimpleGraphManager.createGroupRel(gp.getName(),compoundNode);
+			
+
+			iSimpleGraphManager.createGroupRel("GP_REACTION_NODE",reactionNode);
+			iSimpleGraphManager.createGroupRel("GP_COMPOUND_NODE",compoundNode);
 
 			
 		}
