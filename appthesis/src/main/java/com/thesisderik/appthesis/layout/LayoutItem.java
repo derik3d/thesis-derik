@@ -17,6 +17,8 @@ public class LayoutItem {
 	PlainFeature feature;
 	String value0;
 	String value1;
+	
+	
 	public boolean isEnabled() {
 		return enabled;
 	}
