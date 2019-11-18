@@ -50,6 +50,7 @@ public class LayoutManager {
 		
 	}
 	
+
 	
 	public static void layoutGraph(
 			VizGraphFormat graphSent, Map<Integer,
@@ -64,9 +65,85 @@ public class LayoutManager {
 		System.out.println(nodeLayers);
 		System.out.println();
 		
+
+		
+		Graph<String,String> generalGraph = new SparseMultigraph<>();
+		
+
+
+		CircleLayout<String,String> generalLayout = new CircleLayout<>(generalGraph);
+		
+		generalLayout.setRadius(200);
+		generalLayout.setSize(new Dimension(500,500)); 
 		
 		
+		AggregateLayout<String,String> aggregateGeneral =  new AggregateLayout<String,String>(generalLayout);
 		
+
+		//make graphs with the graph vertices by group
+		Map<Integer,Graph<String,String>> graphsBuilt = buildGraphs(nodeLayers);
+		
+		//get layouts for the different layers on the hierarchy
+		Map<Integer,Layout<String,String>> layouts = getLayoutsForLayers(hierarchy, graphsBuilt, layerLayouts);
+		
+		
+
+		//fill the edges on the subgraphs
+		for(EdgeViz edgeViz : graphSent.getEdges()) {
+			 
+			generalGraph.addEdge(edgeViz.getId(), edgeViz.getSource(), edgeViz.getTarget());
+			 
+			//if a graphs contains both vertices of a edge, add the edge
+			 for(Graph<String,String> aGraph : graphsBuilt.values()) {
+				 if(aGraph.containsVertex(edgeViz.getSource()) && aGraph.containsVertex(edgeViz.getTarget()))
+					 aGraph.addEdge(edgeViz.getId(), edgeViz.getSource(), edgeViz.getTarget());
+			 }
+		}
+		
+		
+
+		for(NodeViz nodeViz : graphSent.getNodes()) {
+			if(!layouts.get(2).getGraph().getVertices().contains(nodeViz.getId()))
+				generalGraph.addVertex(nodeViz.getId());
+		}
+		
+		
+		int i=0;
+		
+		for(Layout<String,String> layout :layouts.values()) {
+
+			Point2D center = new Point2D.Double();
+			center.setLocation(i, i);
+			layout.setSize(new Dimension(20,20));
+			aggregateGeneral.put(layout, center);
+			i=i+100;
+			
+		}
+		
+
+
+	
+		applyCoordinates(graphSent.getNodes(), aggregateGeneral);
+
+		
+		
+	
+	}
+	
+	/*
+	
+	public static void layoutGraphUnused(
+			VizGraphFormat graphSent, Map<Integer,
+			Integer> hierarchy ,
+			Map<Integer,Layouts> layerLayouts ,
+			Map<Integer, Set<String>> nodeLayers) {
+		
+
+		System.out.println();
+		System.out.println(hierarchy);
+		System.out.println();
+		System.out.println(nodeLayers);
+		System.out.println();
 		
 		
 		Graph<String,String> generalGraph = new SparseMultigraph<>();
@@ -83,11 +160,13 @@ public class LayoutManager {
 		//	generalGraph.addVertex(nodeViz.getId());
 		//}
 		
-		
-		
-
 		//make graphs with the graph vertices by group
 		Map<Integer,Graph<String,String>> graphsBuilt = buildGraphs(nodeLayers);
+		
+		//get layouts for the different layers on the hierarchy
+		Map<Integer,Layout<String,String>> layouts = getLayoutsForLayers(hierarchy, graphsBuilt, layerLayouts);
+
+		
 		
 		//fill the edges on the subgraphs
 		for(EdgeViz edgeViz : graphSent.getEdges()) {
@@ -102,6 +181,23 @@ public class LayoutManager {
 		}
 		
 		
+		
+		hierarchyOperation(hierarchy , aggregateGeneral, layouts, layerLayouts, graphsBuilt);
+		
+		
+		applyCoordinates(graphSent.getNodes(), aggregateGeneral);
+		
+
+	}
+	
+	*/
+
+	
+	private static Map<Integer,Layout<String,String>> getLayoutsForLayers(
+			Map<Integer, Integer> hierarchy,
+			Map<Integer, Graph<String, String>> graphsBuilt,
+			Map<Integer,Layouts> layerLayouts
+			) {
 
 		
 		//where to store the layouts for the different hierarchy indexes
@@ -119,34 +215,26 @@ public class LayoutManager {
 			layouts.put(currLayer, buildLayout(layerLayouts.get( currLayer), graphsBuilt.get(currLayer)));
 		}
 		
+		return layouts;
 		
-		
-		//add more aggregate accord to the hierarchy
-		//or add all the subgraphs to the aggregate general as a easyf
-		
-		
-		
-		
-		hierarchyOperation(hierarchy , aggregateGeneral, layouts, layerLayouts, graphsBuilt);
-		
-		
-		
+	}
+
+
+	private static void applyCoordinates(ArrayList<NodeViz> nodes, AggregateLayout<String, String> aggregateGeneral) {
+
 		
 		//fill the node positions with the general agregate layout data
-		for(NodeViz nodeViz : graphSent.getNodes()) {
+		for(NodeViz nodeViz : nodes) {
 			Point2D extracted = aggregateGeneral.apply(nodeViz.getId());
 			nodeViz.setX(extracted.getX());
 			nodeViz.setY(extracted.getY());
 		}
 		
 		
-		
-		
-		
-
 	}
-	
-	
+
+
+
 	public static Map<Integer,Graph<String,String>> buildGraphs(Map<Integer, Set<String>> nodeLayers) {
 
 
@@ -220,7 +308,7 @@ public class LayoutManager {
 			if(passed.contains(entry.getValue())) {
 				keysToRemove.add(entry.getKey());
 			}
-			
+			 
 		}
 		
 		//create a new list with to later remove the surpassed parents children
@@ -288,9 +376,13 @@ public class LayoutManager {
 		
 		switch(layout) {
 		case SPRING:
-			return new SpringLayout<String,String>(g);
+			 SpringLayout<String, String> springLayout = new SpringLayout<String,String>(g);
+			 springLayout.setRepulsionRange(2000);
+			 return springLayout;
 		case CIRCLE:
-			return new CircleLayout<String,String>(g);
+			 CircleLayout<String, String> circleLayout = new CircleLayout<String,String>(g);
+			 circleLayout.setRadius(20);
+			 return circleLayout;
 		default: return null;
 		}
 		
