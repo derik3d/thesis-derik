@@ -51,7 +51,9 @@ public class LayoutManager {
 	}
 	
 	
-	public static void layoutGraph(VizGraphFormat graphSent, Map<Integer,Integer> hierarchy ,
+	public static void layoutGraph(
+			VizGraphFormat graphSent, Map<Integer,
+			Integer> hierarchy ,
 			Map<Integer,Layouts> layerLayouts ,
 			Map<Integer, Set<String>> nodeLayers) {
 		
@@ -62,36 +64,37 @@ public class LayoutManager {
 		System.out.println(nodeLayers);
 		System.out.println();
 		
-
 		
-		Map<Integer,Graph<String,String>> graphsBuilt = new HashMap<>();
 		
-		TreeMap<Integer,Set<String>> orderedNodesGroups = new TreeMap<>();
-		orderedNodesGroups.putAll(nodeLayers);
 		
-		for(Map.Entry<Integer, Set<String>> currGroup :orderedNodesGroups.entrySet()) {
-			Graph<String,String> builtGraph = new SparseMultigraph<>();
-			for(String vertexName: currGroup.getValue()) {
-				builtGraph.addVertex(vertexName);
-			}
-			graphsBuilt.put(currGroup.getKey(), builtGraph);
-		}
+		
 		
 		Graph<String,String> generalGraph = new SparseMultigraph<>();
 		Layout<String,String> generalLayout = new SpringLayout<>(generalGraph);
-		generalLayout.setSize(new Dimension(20,20)); 
+		
+		
+		generalLayout.setSize(new Dimension(50,50)); 
+		
+		
 		AggregateLayout<String,String> aggregateGeneral =  new AggregateLayout<String,String>(generalLayout);
 
 		
-		for(NodeViz nodeViz : graphSent.getNodes()) {
-			generalGraph.addVertex(nodeViz.getId());
-		}
+		//for(NodeViz nodeViz : graphSent.getNodes()) {
+		//	generalGraph.addVertex(nodeViz.getId());
+		//}
 		
 		
+		
+
+		//make graphs with the graph vertices by group
+		Map<Integer,Graph<String,String>> graphsBuilt = buildGraphs(nodeLayers);
+		
+		//fill the edges on the subgraphs
 		for(EdgeViz edgeViz : graphSent.getEdges()) {
 			 
 			generalGraph.addEdge(edgeViz.getId(), edgeViz.getSource(), edgeViz.getTarget());
 			 
+			//if a graphs contains both vertices of a edge, add the edge
 			 for(Graph<String,String> aGraph : graphsBuilt.values()) {
 				 if(aGraph.containsVertex(edgeViz.getSource()) && aGraph.containsVertex(edgeViz.getTarget()))
 					 aGraph.addEdge(edgeViz.getId(), edgeViz.getSource(), edgeViz.getTarget());
@@ -99,10 +102,21 @@ public class LayoutManager {
 		}
 		
 		
+
+		
+		//where to store the layouts for the different hierarchy indexes
 		Map<Integer,Layout<String,String>> layouts = new HashMap<>();
 		
-		for(Map.Entry<Integer, Set<String>> currGroup :nodeLayers.entrySet()) {
-			layouts.put(currGroup.getKey(), buildLayout(layerLayouts.get( currGroup.getKey()), graphsBuilt.get(currGroup.getKey())));
+		//get all the different values from the hierarchy
+		Set<Integer> existingLayers = new HashSet<>();
+		//add the keys and the values of the hierarchy
+		existingLayers.addAll(hierarchy.keySet());
+		existingLayers.addAll(hierarchy.values());
+		
+		//build the layouts for the hierarchy indexes
+		for(Integer currLayer : existingLayers) {
+			//build a layout for a key with a graph, the graph or the layout could not exist
+			layouts.put(currLayer, buildLayout(layerLayouts.get( currLayer), graphsBuilt.get(currLayer)));
 		}
 		
 		
@@ -113,12 +127,12 @@ public class LayoutManager {
 		
 		
 		
-		hierarchyOperation(hierarchy , aggregateGeneral, layouts, layerLayouts);
+		hierarchyOperation(hierarchy , aggregateGeneral, layouts, layerLayouts, graphsBuilt);
 		
 		
 		
 		
-
+		//fill the node positions with the general agregate layout data
 		for(NodeViz nodeViz : graphSent.getNodes()) {
 			Point2D extracted = aggregateGeneral.apply(nodeViz.getId());
 			nodeViz.setX(extracted.getX());
@@ -133,10 +147,41 @@ public class LayoutManager {
 	}
 	
 	
+	public static Map<Integer,Graph<String,String>> buildGraphs(Map<Integer, Set<String>> nodeLayers) {
+
+
+		//where to store the mini graphs built
+		Map<Integer,Graph<String,String>> graphsBuilt = new HashMap<>();
+		
+		//natural ordered sub groups of nodes
+		TreeMap<Integer,Set<String>> orderedNodesGroups = new TreeMap<>();
+		orderedNodesGroups.putAll(nodeLayers);
+		
+		//for every group of nodes, starting by the lower number key
+		for(Map.Entry<Integer, Set<String>> currGroup :orderedNodesGroups.entrySet()) {
+			//create a graph
+			Graph<String,String> builtGraph = new SparseMultigraph<>();
+			//and add the corresponding vertices for the given group
+			for(String vertexName: currGroup.getValue()) {
+				builtGraph.addVertex(vertexName);
+			}
+			//store the graph with the key of the group
+			graphsBuilt.put(currGroup.getKey(), builtGraph);
+		}
+		
+		return graphsBuilt;
+		
+	}
 	
-	private static void hierarchyOperation(Map<Integer, Integer> hierarchy,
-			AggregateLayout<String, String> topMerger, Map<Integer,Layout<String,String>> availableLayouts,
-			Map<Integer,Layouts> layerLayouts) {
+	
+	
+	private static void hierarchyOperation(
+			Map<Integer, Integer> hierarchy,
+			AggregateLayout<String, String> topMerger,
+			Map<Integer,Layout<String,String>> availableLayouts,
+			Map<Integer,Layouts> layerLayouts,
+			Map<Integer,Graph<String,String>> graphsExisting
+			) {
 		
 		
 
@@ -152,34 +197,34 @@ public class LayoutManager {
 		System.out.println();
 		
 		
-		
+		//if hierarchy doesnt have values finish
 		if(hierarchy.size()<1)return;
 		
-		
+		//obtain the current highest value of the childs in the hierarchy
 		int max = hierarchy.keySet().stream().max(Integer::compare).get();
 		
 		Predicate<Integer> passTheIndexes = num -> {
-			
 			return num>max;
-			
 		}; 
 		
+		//get a set with the parents that surpass the current high value of the children
 		Set<Integer> passed = hierarchy.values().stream().filter(passTheIndexes).collect(Collectors.toSet());
 		
-		
+		//list of children of the "passed" parrents
 		Set<Integer> keysToRemove = new HashSet<>();
 		
+		//traverse the hierachy and find the children related to the parents "passed"
 		for( Map.Entry<Integer, Integer> entry : hierarchy.entrySet()){
 			
+			//add the children keys to the list
 			if(passed.contains(entry.getValue())) {
 				keysToRemove.add(entry.getKey());
 			}
 			
 		}
 		
-		
+		//create a new list with to later remove the surpassed parents children
 		Map<Integer, Integer> remaining = new HashMap<>();
-		
 		remaining.putAll(hierarchy);
 		
 		for(Integer val : keysToRemove) {
@@ -187,20 +232,23 @@ public class LayoutManager {
 		}
 		
 		
-		
+		//process every parent that passed the top children values
 		for(int passedValue: passed) {
 			
-			if(availableLayouts.keySet().contains(passedValue)) {
+			//if there is a graph for that value, add it to the top layout merger
+			if(graphsExisting.keySet().contains(passedValue)) {
 				
-
 				Point2D center = new Point2D.Double();
 				center.setLocation(50, 50);
 				
+				//add to the upper layout, the layer corresponding to that graph
 				topMerger.put(availableLayouts.get(passedValue), center);
-				availableLayouts.remove(passedValue);
 				
+				
+			//if not, it could be a layout layer, so go deeper
 			}else {
 
+				//get a layout for the layer, in the case there were a predef layout method
 				Layout<String,String> layout;
 				if(layerLayouts.containsKey(passedValue)){
 					layout = buildLayout(layerLayouts.get(passedValue), null);
@@ -208,15 +256,18 @@ public class LayoutManager {
 					layout = buildLayout( Layouts.SPRING , null);
 				}
 
+				//craate an agregate layout merger and add the layer
 				AggregateLayout<String,String> layoutAggregate =  new AggregateLayout<String,String>(layout);
 				layoutAggregate.setSize(new Dimension(100,100));
 				
 				Point2D center = new Point2D.Double();
 				center.setLocation(50, 50);
 				
+				//put the new agg layout on the top merger layout
 				topMerger.put(layoutAggregate, center);
-				if(remaining.size()>0)
-				hierarchyOperation(remaining,layoutAggregate,availableLayouts, layerLayouts);
+
+				//call again the funciton with the unused children and with this new merger layer as top
+				hierarchyOperation(remaining,layoutAggregate,availableLayouts, layerLayouts, graphsExisting);
 				
 			}
 			
@@ -226,13 +277,16 @@ public class LayoutManager {
 	}
 
 
-	private static Layout<String, String> buildLayout(Layouts layouts, Graph<String,String> g) {
+	private static Layout<String, String> buildLayout(Layouts layout, Graph<String,String> g) {
 		
 		if(g == null) {
 			g = new SparseMultigraph<>();
 		}
 		
-		switch(layouts) {
+		if(layout == null)
+			layout = Layouts.SPRING;
+		
+		switch(layout) {
 		case SPRING:
 			return new SpringLayout<String,String>(g);
 		case CIRCLE:
