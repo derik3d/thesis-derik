@@ -20,7 +20,11 @@ import com.thesisderik.appthesis.viz.NodeViz;
 import com.thesisderik.appthesis.viz.VizGraphFormat;
 
 import edu.uci.ics.jung.algorithms.layout.AggregateLayout;
+import edu.uci.ics.jung.algorithms.layout.BalloonLayout;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout2;
+import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.SpringLayout;
 import edu.uci.ics.jung.graph.Graph;
@@ -66,71 +70,86 @@ public class LayoutManager {
 		System.out.println();
 		
 
-		
-		Graph<String,String> generalGraph = new SparseMultigraph<>();
-		
 
-
-		CircleLayout<String,String> generalLayout = new CircleLayout<>(generalGraph);
 		
-		generalLayout.setRadius(200);
-		generalLayout.setSize(new Dimension(500,500)); 
+		//get a general map with all vertices and edges
+		Graph<String,String> generalGraph = buildGeneralGraph(graphSent);
 		
-		
-		AggregateLayout<String,String> aggregateGeneral =  new AggregateLayout<String,String>(generalLayout);
-		
-
 		//make graphs with the graph vertices by group
-		Map<Integer,Graph<String,String>> graphsBuilt = buildGraphs(nodeLayers);
+		Map<Integer,Graph<String,String>> graphsBuilt = buildGraphs(nodeLayers,graphSent.getEdges());
 		
-		//get layouts for the different layers on the hierarchy
-		Map<Integer,Layout<String,String>> layouts = getLayoutsForLayers(hierarchy, graphsBuilt, layerLayouts);
+		//build an layout integrator
+		DynamicLayoutIntegrator<String,String> dli = new DynamicLayoutIntegrator<>();
 		
+		//order the groups
+		TreeMap<Integer,Graph<String,String>> graphsBuiltOrdered = new TreeMap<>(graphsBuilt);
 		
-
-		//fill the edges on the subgraphs
-		for(EdgeViz edgeViz : graphSent.getEdges()) {
-			 
-			generalGraph.addEdge(edgeViz.getId(), edgeViz.getSource(), edgeViz.getTarget());
-			 
-			//if a graphs contains both vertices of a edge, add the edge
-			 for(Graph<String,String> aGraph : graphsBuilt.values()) {
-				 if(aGraph.containsVertex(edgeViz.getSource()) && aGraph.containsVertex(edgeViz.getTarget()))
-					 aGraph.addEdge(edgeViz.getId(), edgeViz.getSource(), edgeViz.getTarget());
-			 }
+		//add layout for subgraphs
+		for(Graph<String,String> currGraph: graphsBuiltOrdered.values()) {
+			dli.addDynamicLayoutToStack(new DynamicLayout<>(currGraph),2);
 		}
 		
+		//add layout for all nodes, at the end
+		DynamicLayout<String,String> dlgen = new DynamicLayout<>(generalGraph);
+		dli.addDynamicLayoutToStack(dlgen);
 		
+		dli.execute();
 
-		for(NodeViz nodeViz : graphSent.getNodes()) {
-			if(!layouts.get(2).getGraph().getVertices().contains(nodeViz.getId()))
-				generalGraph.addVertex(nodeViz.getId());
-		}
+		//integrate result
+		applyCoordinatesDynamic(graphSent.getNodes(), dli);
 		
-		
-		int i=0;
-		
-		for(Layout<String,String> layout :layouts.values()) {
-
-			Point2D center = new Point2D.Double();
-			center.setLocation(i, i);
-			layout.setSize(new Dimension(20,20));
-			aggregateGeneral.put(layout, center);
-			i=i+100;
-			
-		}
-		
-
-
-	
-		applyCoordinates(graphSent.getNodes(), aggregateGeneral);
-
 		
 		
 	
 	}
 	
 	/*
+
+	
+	public static void layoutGraphold(
+			VizGraphFormat graphSent, Map<Integer,
+			Integer> hierarchy ,
+			Map<Integer,Layouts> layerLayouts ,
+			Map<Integer, Set<String>> nodeLayers) {
+		
+
+		System.out.println();
+		System.out.println(hierarchy);
+		System.out.println();
+		System.out.println(nodeLayers);
+		System.out.println();
+		
+
+		
+
+		
+		//get a general map with all vertices and edges
+		Graph<String,String> generalGraph = buildGeneralGraph(graphSent);
+		
+		SpringLayout<String,String> generalLayout = new SpringLayout<>(generalGraph);
+		generalLayout.setSize(new Dimension(500,500)); 
+		AggregateLayout<String,String> aggregateGeneral =  new AggregateLayout<String,String>(generalLayout);
+
+
+		
+		//make graphs with the graph vertices by group
+		Map<Integer,Graph<String,String>> graphsBuilt = buildGraphs(nodeLayers,graphSent.getEdges());
+		
+		//get layouts for the different layers on the hierarchy
+		Map<Integer,Layout<String,String>> layouts = getLayoutsForLayers(hierarchy, graphsBuilt, layerLayouts);
+		
+
+
+
+
+	
+		applyCoordinates(graphSent.getNodes(), aggregateGeneral);
+		
+		
+		
+	
+	}
+	
 	
 	public static void layoutGraphUnused(
 			VizGraphFormat graphSent, Map<Integer,
@@ -193,6 +212,21 @@ public class LayoutManager {
 	*/
 
 	
+	private static Graph<String, String> buildGeneralGraph(VizGraphFormat graphSent) {
+		Graph<String,String> generalGraph = new SparseMultigraph<>();
+
+		for(EdgeViz edgeViz : graphSent.getEdges()) {
+			generalGraph.addEdge(edgeViz.getId(), edgeViz.getSource(), edgeViz.getTarget()); 
+		}
+
+		for(NodeViz nodeViz : graphSent.getNodes()) {
+				generalGraph.addVertex(nodeViz.getId());
+		}
+		
+		return generalGraph;
+	}
+
+	
 	private static Map<Integer,Layout<String,String>> getLayoutsForLayers(
 			Map<Integer, Integer> hierarchy,
 			Map<Integer, Graph<String, String>> graphsBuilt,
@@ -234,8 +268,25 @@ public class LayoutManager {
 	}
 
 
+	private static void applyCoordinatesDynamic(ArrayList<NodeViz> nodes, DynamicLayoutIntegrator<String, String> dli) {
 
-	public static Map<Integer,Graph<String,String>> buildGraphs(Map<Integer, Set<String>> nodeLayers) {
+		
+		//fill the node positions with the general agregate layout data
+		for(NodeViz nodeViz : nodes) {
+			Point2D extracted = dli.dataForNode(nodeViz.getId());
+			nodeViz.setX(extracted.getX());
+			nodeViz.setY(extracted.getY());
+		}
+		
+		
+	}
+
+
+
+	public static Map<Integer,Graph<String,String>> buildGraphs(
+			Map<Integer, Set<String>> nodeLayers,
+			ArrayList<EdgeViz> edges
+			) {
 
 
 		//where to store the mini graphs built
@@ -256,6 +307,17 @@ public class LayoutManager {
 			//store the graph with the key of the group
 			graphsBuilt.put(currGroup.getKey(), builtGraph);
 		}
+		
+
+		//fill the edges on the subgraphs
+		for(EdgeViz edgeViz : edges) {			 
+			//if a graphs contains both vertices of a edge, add the edge
+			 for(Graph<String,String> aGraph : graphsBuilt.values()) {
+				 if(aGraph.containsVertex(edgeViz.getSource()) && aGraph.containsVertex(edgeViz.getTarget()))
+					 aGraph.addEdge(edgeViz.getId(), edgeViz.getSource(), edgeViz.getTarget());
+			 }
+		}
+		
 		
 		return graphsBuilt;
 		
@@ -381,7 +443,8 @@ public class LayoutManager {
 			 return springLayout;
 		case CIRCLE:
 			 CircleLayout<String, String> circleLayout = new CircleLayout<String,String>(g);
-			 circleLayout.setRadius(20);
+			 //circleLayout.setRadius(10);
+			 circleLayout.setSize(new Dimension(30,30));
 			 return circleLayout;
 		default: return null;
 		}
