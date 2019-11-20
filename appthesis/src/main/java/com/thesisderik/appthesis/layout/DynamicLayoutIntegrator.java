@@ -7,15 +7,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import javax.vecmath.Point2d;
+
 public class DynamicLayoutIntegrator<N,E> {
 
-	int iterations = 3;
+	int iterations = 10;
 	
 	ArrayList<DynamicLayout<N,E>> dinamicLayouts = new ArrayList<>();
 	
 	ArrayList<Integer> enforceFactors = new ArrayList<>();
 	
-	Map<N,Point2D> nodes = new HashMap<>();
+	Map<N,Point2d> nodes = new HashMap<>();
 	
 	public void addDynamicLayoutToStack(DynamicLayout<N,E> dl) {
 		
@@ -30,7 +32,7 @@ public class DynamicLayoutIntegrator<N,E> {
 	
 	}
 
-	public Point2D dataForNode(N id) {
+	public Point2d dataForNode(N id) {
 
 		return nodes.get(id);
 	}
@@ -42,8 +44,8 @@ public class DynamicLayoutIntegrator<N,E> {
 
 		for(DynamicLayout<N,E> dinaLay: dinamicLayouts) {
 			for(N node : dinaLay.graph.getVertices()) {
-				Point2D initP = new Point2D.Double();
-				initP.setLocation(r.nextDouble()*100.0, r.nextDouble()*100.0);
+				Point2d initP = new Point2d();
+				initP.set(r.nextDouble()*100.0, r.nextDouble()*100.0);
 				nodes.put(node, initP);
 			}
 		}

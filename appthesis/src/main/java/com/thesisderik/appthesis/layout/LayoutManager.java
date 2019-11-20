@@ -15,6 +15,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.vecmath.Point2d;
+
 import com.thesisderik.appthesis.viz.EdgeViz;
 import com.thesisderik.appthesis.viz.NodeViz;
 import com.thesisderik.appthesis.viz.VizGraphFormat;
@@ -85,12 +87,13 @@ public class LayoutManager {
 		TreeMap<Integer,Graph<String,String>> graphsBuiltOrdered = new TreeMap<>(graphsBuilt);
 		
 		//add layout for subgraphs
-		for(Graph<String,String> currGraph: graphsBuiltOrdered.values()) {
-			dli.addDynamicLayoutToStack(new DynamicLayout<>(currGraph),2);
+		for(int currLayer: graphsBuiltOrdered.navigableKeySet()) {
+			Graph<String,String> currGraph = graphsBuiltOrdered.get(currLayer);
+			dli.addDynamicLayoutToStack(getDinamicLayout(layerLayouts.get(currGraph),currGraph));
 		}
 		
 		//add layout for all nodes, at the end
-		DynamicLayout<String,String> dlgen = new DynamicLayout<>(generalGraph);
+		DynamicLayout<String,String> dlgen = new DynamicSpring<>(generalGraph);
 		dli.addDynamicLayoutToStack(dlgen);
 		
 		dli.execute();
@@ -101,6 +104,36 @@ public class LayoutManager {
 		
 		
 	
+	}
+	
+	static DynamicLayout<String,String> getDinamicLayout(Layouts layout, Graph<String,String> graph){
+		
+
+		switch(layout) {
+		case SPRING:
+			 DynamicSpring<String, String> springLayout = new DynamicSpring<String,String>(graph);
+			 return springLayout;
+		case CIRCLE:
+			DynamicConcentric<String, String> circleLayout = new DynamicConcentric<String,String>(graph);
+			return circleLayout;
+		default: return null;
+		}
+		
+	}
+	
+
+
+	private static void applyCoordinatesDynamic(ArrayList<NodeViz> nodes, DynamicLayoutIntegrator<String, String> dli) {
+
+		
+		//fill the node positions with the general agregate layout data
+		for(NodeViz nodeViz : nodes) {
+			Point2d extracted = dli.dataForNode(nodeViz.getId());
+			nodeViz.setX(extracted.x);
+			nodeViz.setY(extracted.y);
+		}
+		
+		
 	}
 	
 	/*
@@ -267,19 +300,6 @@ public class LayoutManager {
 		
 	}
 
-
-	private static void applyCoordinatesDynamic(ArrayList<NodeViz> nodes, DynamicLayoutIntegrator<String, String> dli) {
-
-		
-		//fill the node positions with the general agregate layout data
-		for(NodeViz nodeViz : nodes) {
-			Point2D extracted = dli.dataForNode(nodeViz.getId());
-			nodeViz.setX(extracted.getX());
-			nodeViz.setY(extracted.getY());
-		}
-		
-		
-	}
 
 
 
