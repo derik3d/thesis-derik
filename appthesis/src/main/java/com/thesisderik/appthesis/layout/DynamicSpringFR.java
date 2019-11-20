@@ -27,8 +27,7 @@ public class DynamicSpringFR<N,E> extends DynamicLayout<N,E>{
 		super(graph);
 	}
 	
-	@Override
-	public void execute(Map<N, Point2d> nodes) {
+	public void execute(Map<N, Point2d> nodes, double annealing) {
 		
 		final Map<N, ArrayList<Point2d>> newVertexValues = new HashMap<>();
 		

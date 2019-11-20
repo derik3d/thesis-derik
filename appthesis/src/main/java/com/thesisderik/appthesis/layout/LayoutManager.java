@@ -86,18 +86,28 @@ public class LayoutManager {
 		//order the groups
 		TreeMap<Integer,Graph<String,String>> graphsBuiltOrdered = new TreeMap<>(graphsBuilt);
 		
+		/*
 		//add layout for subgraphs
 		for(int currLayer: graphsBuiltOrdered.navigableKeySet()) {
 			Graph<String,String> currGraph = graphsBuiltOrdered.get(currLayer);
 			dli.addDynamicLayoutToStack(getDinamicLayout(layerLayouts.get(currGraph),currGraph));
 		}
 		
+		*/
+		
 		//add layout for all nodes, at the end
 		DynamicLayout<String,String> dlgen = new DynamicSpring<>(generalGraph);
 		dli.addDynamicLayoutToStack(dlgen);
-		
+
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println("LINK START");
 		dli.execute();
 
+
+		
 		//integrate result
 		applyCoordinatesDynamic(graphSent.getNodes(), dli);
 		

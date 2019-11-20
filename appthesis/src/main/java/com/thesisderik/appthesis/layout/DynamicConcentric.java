@@ -14,7 +14,7 @@ public class DynamicConcentric<N, E> extends DynamicLayout<N, E> {
 	}
 
 	@Override
-	public void execute(Map<N, Point2d> nodes) {
+	public void execute(Map<N, Point2d> nodes, double annealing) {
 		
 		Point2d center;
 		

@@ -1,4 +1,5 @@
 package com.thesisderik.appthesis;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
 import org.springframework.web.client.RestTemplate;
 

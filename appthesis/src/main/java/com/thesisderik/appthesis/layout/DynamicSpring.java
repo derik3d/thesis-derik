@@ -2,6 +2,7 @@ package com.thesisderik.appthesis.layout;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -20,6 +21,9 @@ import edu.uci.ics.jung.graph.Graph;
 
 public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 
+	
+	boolean debugging = true;
+	
 	@FunctionalInterface
 	interface TriFunction<A,B,C,R> {
 
@@ -31,266 +35,119 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 	    }
 	}
 
-	double desiredEdgeLength = 100;
-	double desiredVertexSeparation = 50;
-	double stepSize = 0.02;
+	double targetEdgeLength = 50;
+	double edgeLengthMultiplier = 10;
+	double desiredVertexSeparation = 100;
+	double repellingMultiplier = 20;
+	double concentricDistance = 500;
+	double concentricMultiplier = 1000;
+	double stepSize = 0.002;
 	
 	
 	public DynamicSpring(Graph<N, E> graph) {
 		super(graph);
 	}
 	
-	public void old(Map<N, Point2d> nodes) {
-		
-		
-		double stepSize = 0.02;
-		double repulsiveBody = -1;
-		double repulsiveSpring = -1;
-		double desiredEdgeLength = 10;
-		
-		
-		Map<N, ArrayList<Point2d>> forcesExperimentedBy = new HashMap<>();
-
-
-		BinaryOperator<Point2d> sum = (a,b) -> {
-			Point2d res = new Point2d();
-			res.add(a);
-			res.add(b);
-			return res;
-		};
-		
-		
-		for(N vertex : graph.getVertices()) {
-			
-			Point2d initial = nodes.get(vertex);
-			
-			
-			for(N otherVertex : graph.getVertices()) {
-				if(vertex != otherVertex) {
-					
-					//VERTEX VERTEX CALCULATIONS
-					
-					Point2d target = nodes.get(otherVertex);
-					
-					Point2d calculated = new Point2d();
-	
-					double distance = initial.distance(target);
-					
-					Point2d directionNorm = new Point2d();
-					directionNorm.set(target.x - initial.x , target.y - initial.y );
-					directionNorm.set(directionNorm.x / distance, directionNorm.y / distance );
-					
-					Point2d forceExperimented = new Point2d();
-					
-					forceExperimented.set(directionNorm.x*repulsiveBody/(distance*distance), directionNorm.y*repulsiveBody/(distance*distance));
-				
-					if(forcesExperimentedBy.get(vertex) instanceof Object) {
-						forcesExperimentedBy.get(vertex).add(forceExperimented);
-					}
-					else {
-						forcesExperimentedBy.put(vertex, new ArrayList<>());
-						forcesExperimentedBy.get(vertex).add(forceExperimented);
-					}
-					
-					
-					
-					//EDGES CALCULATIONS
-					
-					
-					for( E incidentEdge : graph.getIncidentEdges(vertex)) {
-						
-						Point2d springExperimentedForce = new Point2d();
-						
-						Point2d targetSpring = null;
-						
-						Point2d targetSpringNorm = new Point2d();
-						
-						for(N springTarget : graph.getIncidentVertices(incidentEdge)) {
-							if(!springTarget.equals(vertex)) {
-								targetSpring = nodes.get(springTarget);
-								break;
-							}
-						}
-						
-						double distanceSpring = initial.distance(targetSpring);
-						
-						targetSpringNorm.set( targetSpring.x - initial.x , targetSpring.y - initial.y );
-						targetSpringNorm.set( targetSpringNorm.x * distanceSpring , targetSpringNorm.y * distanceSpring );						
-						
-						springExperimentedForce.set(-repulsiveSpring *( distanceSpring - desiredEdgeLength) * targetSpringNorm.x , -repulsiveSpring *( distanceSpring - desiredEdgeLength) * targetSpringNorm.y);
-						
-
-						if(forcesExperimentedBy.get(vertex) instanceof Object) {
-							forcesExperimentedBy.get(vertex).add(springExperimentedForce);
-						}
-						else {
-							forcesExperimentedBy.put(vertex, new ArrayList<>());
-							forcesExperimentedBy.get(vertex).add(springExperimentedForce);
-						}
-						
-					}
-			
-				}
-				
-			}	
-			
-		}
-		
-		
-		BiConsumer<N, ArrayList<Point2d>> processForces = (n, forces) -> {
-
-			System.out.println();
-			System.out.println();
-			System.out.println(n);
-
-			System.out.println();
-			System.out.println("initial");
-			System.out.println(nodes.get(n));
-			
-			Point2d forcesResult = forces.stream().reduce(sum).get();
-			
-
-			System.out.println("forces");
-			System.out.println(forcesResult);
-			
-			Point2d initial = nodes.get(n);
-			forcesResult.scale(stepSize);
-			
-
-			System.out.println("scaled");
-			System.out.println(forcesResult);
-			
-			initial.add(forcesResult);
-			
-
-			System.out.println("final");
-			System.out.println(nodes.get(n));
-			
-		};
-		
-		
-		forcesExperimentedBy.forEach(processForces);
-
-		
-		
-	}
-		
-	
+	double annealingReduction;
 	
 	@Override
-	public void execute(Map<N, Point2d> nodes){
+	public void execute(final Map<N, Point2d> nodes, double annealingReduction){
 		
-		System.out.println();
-		System.out.println();
+		Long lStartTime  = new Date().getTime();
 		
-		System.out.println(nodes);
+		this.annealingReduction = annealingReduction;
+		
+		if(debugging)System.out.println();
+		if(debugging)System.out.println();
+		
+		if(debugging)System.out.println(nodes);
 		
 		
 		Random r = new Random();
 		
-		final Map<N, ArrayList<Point2d>> newVertexValues = new HashMap<>();
-
-		Function<N , ArrayList<Point2d> > getDeltasList = vertexName -> {
-				
-				ArrayList<Point2d> deltasVertexList;
-				
-				//get or create the list
-				synchronized(newVertexValues) {
-					if(!((deltasVertexList = newVertexValues.get(vertexName)) instanceof Object)) {
-						deltasVertexList = new ArrayList<>();
-						newVertexValues.put(vertexName, deltasVertexList);
-					}
-				}
-				
-				return deltasVertexList;
-		};
+		final Map<N, ArrayList<Point2d>> summaryOfForces = new HashMap<>();
 		
-		TriFunction<Point2d, Point2d, Double, Point2d> normalizedVector = (p0,p1, distance) -> {
+		ArrayList<Double> error = new ArrayList<>();
+		
+		Consumer<E> dynamicProcessEdges = edge -> {
 			
-			if(distance==0) {
-				return new Point2d((r.nextDouble()*2)-1,(r.nextDouble()*2)-1);
+			//obtener los vertices asociados a este edge
+			Collection<N> incidentVerticesPrev = graph.getIncidentVertices(edge);
+			//guardarlso en un arraylist para accederlos en un orden definido
+			ArrayList<N> incidentVertices = new ArrayList<>(incidentVerticesPrev);
+						
+			//load vertices positions on a list
+			ArrayList<Point2d> verticesPositions = new ArrayList<>();
+			for(N aVertice : incidentVertices)
+				verticesPositions.add(nodes.get(aVertice));
+			
+			//calcular la distancia entre los dos vertices
+			double distance = getDistance(verticesPositions.get(0),verticesPositions.get(1));
+
+			//save error
+			error.add(Math.abs(targetEdgeLength - distance));
+
+			//linear force desired (inverted), calculat la fuerza ejercida
+			double forceDesired = forceCalculatorSpring(distance, targetEdgeLength);
+			
+
+			//unitary direction vector
+			Point2d directionNormalized = normalizeVector(verticesPositions.get(1), verticesPositions.get(0), distance);
+					
+			//only atraction force
+			if(forceDesired<0) {
+				//operate first vertex
+				N vertex = incidentVertices.get(0);
+				
+				calculateAddAForce(directionNormalized, forceDesired, vertex, summaryOfForces);
+					
+	
+				//operate second vertex
+				vertex = incidentVertices.get(1);
+				calculateAddAForce(directionNormalized, -forceDesired, vertex, summaryOfForces);
 			}
 			
-			p1.set(p1.x-p0.x, p1.y-p0.y);
-			p1.set(p1.x/distance, p1.y/distance);
-			
-			return p1;
-		};
-		
-		BiConsumer<Point2d, ArrayList<Point2d>> addToVertexDeltas = (deltaCalculated, deltasVertexList) -> {
-			//add to the delta list the new delta
-			synchronized(deltasVertexList) {
-				deltasVertexList.add(deltaCalculated);
-			}
 			
 		};
 		
-		TriFunction<Point2d, Double, N, Object> addDeltaForce = (directionNormalized, force, vertex) -> {
-			
+		
+		
+		
+		
 
-			//list of deltas
-			ArrayList<Point2d> deltasVertexList = getDeltasList.apply(vertex);
-			
-			
-			//calculate new delta
-			Point2d deltaCalculated = new Point2d();
-			deltaCalculated.set(
-					directionNormalized.x*force,
-					directionNormalized.y*force
-					);
-		
-			
-			addToVertexDeltas.accept(deltaCalculated, deltasVertexList);
-			
-			return null;
-			
-		};
-		
-		BiFunction<Double, Double, Double> forceCalculator = (distance, desiredDistance) -> {
-
-			
-			System.out.println();
-			
-			double deltaDistance = desiredEdgeLength - distance;
-			System.out.printf("distance %f, desiredDistance %f, deltaDistance %f ", distance, desiredDistance, deltaDistance);
-
-			return deltaDistance;
-		};
-		
-		
-		
-		
 		
 		Function<N, Map<N ,Double>> nodeDistance = node -> {
 			
 			Map<N, Double> distances = new HashMap<>();
 			
 			for(N otherNode : graph.getVertices()) {
-				distances.put(otherNode, nodes.get(node).distance(nodes.get(otherNode)));
+				if(!node.equals(otherNode))
+				distances.put(otherNode, getDistance(nodes.get(node),nodes.get(otherNode)));
 			}
 			
 			return distances;
 		};
 		
 		
-		
+		//NODES NODES
 		Consumer<N> dynamicProcessNodeRepulsion = n -> {
 			
+			//save distances to all the other nodes
 			Map<N ,Double> distances = nodeDistance.apply(n);
 			
 			for(N otherNode : distances.keySet()) {
 				
-				double forceDesired = forceCalculator.apply(distances.get(otherNode), desiredVertexSeparation);
+				double forceDesired = forceCalculatorRepelling(distances.get(otherNode), desiredVertexSeparation);
 				
-				//only if the force is for separation
-				if(forceDesired != 0) {
+				//only if the force is atration
+				if(forceDesired > 0) {
 					
 					
 					//direction vector
-					Point2d directionNormalized = normalizedVector.apply(nodes.get(otherNode), nodes.get(n) , distances.get(otherNode));
+					Point2d directionNormalized = normalizeVector(nodes.get(otherNode), nodes.get(n) , distances.get(otherNode));
 					
 					//force adder and calculator
-					addDeltaForce.apply(directionNormalized, forceDesired, n);
+					calculateAddAForce(directionNormalized, forceDesired, n, summaryOfForces);
 						
 					
 				}
@@ -299,103 +156,232 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 				
 		};
 		
-		
-		
-		
 
-		BiConsumer<N, ArrayList<Point2d>> summarize = (vname, deltas) -> {
-
-			if(deltas instanceof Object && deltas.size()>0) {
-
-				System.out.println();
-				System.out.println("name "+vname);
-
-				
-				BinaryOperator<Point2d> sum = (a,b) -> {
-					a.add(b);
-					return a;
-				};
-				
-				System.out.println();
-				System.out.println(deltas);
-				
-				Point2d resultPoint = deltas.stream().reduce(sum).get();
-				resultPoint.set(resultPoint.x , resultPoint.y );
-				
-				
-				System.out.println("fuerzas "+resultPoint);
-
-				
-				resultPoint.scale(stepSize);
-				
-				System.out.println("after scale "+resultPoint);
-
-				
-				resultPoint.add(nodes.get(vname));
-				
-
-				
-				System.out.println("punto antes "+nodes.get(vname));
-				System.out.println("punto ahora "+resultPoint);
-				
-				nodes.put(vname, resultPoint);
-			}
-			
-		};
-
-		Consumer<E> dynamicProcessEdges = edge -> {
+		//HHHOOOLLLEEE
+		Consumer<N> dynamicProcessHoleRepulsion = n -> {
 			
 			
-			Collection<N> incidentVerticesPrev = graph.getIncidentVertices(edge);
-			ArrayList<N> incidentVertices = new ArrayList<>(incidentVerticesPrev);
+			Point2d otherNodeCoord = new Point2d(300,300);
+			
+			double distance = getDistance(nodes.get(n),otherNodeCoord);
+				
+			double forceDesired = forceCalculatorConcentric( distance , concentricDistance);
+			
+
+			//save error
+			error.add(Math.abs(concentricDistance - distance));
+			
+			
+			//only if the force is atration
+			if(forceDesired != 0) {
+				
+				
+				//direction vector
+				Point2d directionNormalized = normalizeVector(otherNodeCoord, nodes.get(n) ,distance);
+				
+				//force adder and calculator
+				calculateAddAForce(directionNormalized, forceDesired, n, summaryOfForces);
 						
-			
-			//load vertices positions on a list
-			ArrayList<Point2d> verticesPositions = new ArrayList<>();
-			incidentVertices.forEach(v -> verticesPositions.add(nodes.get(v)));
-			
-			double distance = verticesPositions.get(0).distance(verticesPositions.get(1));
-
-
-
-			//linear force desired (inverted)
-			double forceDesired = forceCalculator.apply(distance, desiredEdgeLength);
-			
-
-			//direction vector
-			Point2d directionNormalized = normalizedVector.apply(verticesPositions.get(1), verticesPositions.get(0), distance);
 					
-			
-			
-			for(int i = 0; i<2; i++) {
-			
-				N vertex = incidentVertices.get(i);
+			}
 				
 				
-				//invert the direction for the other vertex
-				if(i==1) {
-					forceDesired = forceDesired*-1;
-				}
-				
-				
-				addDeltaForce.apply(directionNormalized, forceDesired, vertex);
-				
-				
-			};
-			newVertexValues.forEach(summarize);
-
-			
 		};
 		
+		
+		
+
+				
 		graph.getEdges().stream().forEach(dynamicProcessEdges);
 		
-		//graph.getVertices().stream().forEach(dynamicProcessNodeRepulsion);
+		graph.getVertices().stream().forEach(dynamicProcessNodeRepulsion);
 		
-		newVertexValues.forEach(summarize);
+		graph.getVertices().stream().forEach(dynamicProcessHoleRepulsion);
+				
 		
 		
 		
-		System.out.println(graph.getEdges().size());
+		
+		for(Map.Entry<N, ArrayList<Point2d>> entry: summaryOfForces.entrySet())
+			integrateForces(entry.getKey(), entry.getValue(), nodes);
+		
+		
+		
+		
+		
+		if(debugging)System.out.println(graph.getEdges().size());
+		
+		double sumError = error.stream().reduce(0.0, (a,b) -> a+b).doubleValue();
+
+		if(debugging)System.out.println("error: " + (sumError/error.size()));
+		
+		long lEndTime = new Date().getTime();
+		
+		long difference = lEndTime - lStartTime ;
+		
+		if(debugging)System.out.println("duration: " + difference);
+
+		
+
 	}
 
+	
+
+	private Double getDistance(Point2d p0, Point2d p1) {
+		return p0.distance(p1);
+	}
+
+
+
+	ArrayList<Point2d> getForcesList(N vertexName, Map<N, ArrayList<Point2d>> summaryOfForces ){
+		
+		ArrayList<Point2d> deltasVertexList;
+		
+		//get or create the list
+		synchronized(summaryOfForces) {
+			if(!((deltasVertexList = summaryOfForces.get(vertexName)) instanceof Object)) {
+				deltasVertexList = new ArrayList<>();
+				summaryOfForces.put(vertexName, deltasVertexList);
+			}
+		}
+		
+		return deltasVertexList;
+	}
+	
+	
+	Point2d normalizeVector(Point2d p0,Point2d p1, double distance){
+		
+		Point2d res = new Point2d();
+		
+		res.add(p1);
+		res.sub(p0);
+		res.scale(1/distance);
+		
+		return res;
+	}
+	
+
+	
+	 void addToVertexForces(Point2d forceCalculated, ArrayList<Point2d> forcesVertexList){
+		//add to the delta list the new delta
+		synchronized(forcesVertexList) {
+			forcesVertexList.add(forceCalculated);
+		}
+		
+	}
+	 
+
+		
+
+	void calculateAddAForce(Point2d directionNormalized,double force,N vertex, Map<N,ArrayList<Point2d>> summaryOfForces){
+		
+	
+		//list of forces
+		ArrayList<Point2d> deltasVertexList = getForcesList(vertex, summaryOfForces);
+	
+	
+		//calculate new force
+		Point2d deltaCalculated = new Point2d();
+		deltaCalculated.set(
+				directionNormalized.x*force,
+				directionNormalized.y*force
+				);
+	
+		
+		addToVertexForces(deltaCalculated, deltasVertexList);
+				
+	}
+	 
+
+	
+	double forceCalculatorSpring(double distance, double desiredDistance){
+
+		
+		if(debugging)System.out.println();
+		
+		double deltaDistance = targetEdgeLength - distance;
+		if(debugging)System.out.printf("distance %f, desiredDistance %f, deltaDistance %f ", distance, desiredDistance, deltaDistance);
+
+		return deltaDistance*edgeLengthMultiplier;
+	}
+	 
+
+	
+	double forceCalculatorRepelling(double distance, double desiredDistance){
+
+		
+		if(debugging)System.out.println();
+		
+		double deltaDistance = desiredDistance / distance * distance;
+		if(debugging)System.out.printf("distance %f, desiredDistance %f, deltaDistance %f ", distance, desiredDistance, deltaDistance);
+
+		return deltaDistance*repellingMultiplier;
+	}
+	
+
+	 
+
+	
+	double forceCalculatorConcentric(double distance, double desiredDistance){
+
+		
+		if(debugging)System.out.println();
+		
+		double deltaDistance = targetEdgeLength - distance;
+		if(debugging)System.out.printf("distance %f, desiredDistance %f, deltaDistance %f ", distance, desiredDistance, deltaDistance);
+
+		return deltaDistance*concentricMultiplier;
+	}
+
+
+	void integrateForces(N vname, ArrayList<Point2d> forces, Map<N, Point2d> nodes){
+
+		if(forces instanceof Object && forces.size()>0) {
+
+			if(debugging)System.out.println();
+			if(debugging)System.out.println();
+			if(debugging)System.out.println();
+			if(debugging)System.out.println("name "+vname);
+
+			
+			BinaryOperator<Point2d> sum = (a,b) -> {
+				a.add(b);
+				return a;
+			};
+			
+			if(debugging)System.out.println();
+			if(debugging)System.out.println(forces);
+			
+			Point2d resultPoint = forces.stream().reduce(sum).get();
+			resultPoint.set(resultPoint.x , resultPoint.y );
+			
+			
+			if(debugging)System.out.println("fuerzas "+resultPoint);
+
+			
+			resultPoint.scale(stepSize);
+			resultPoint.scale(annealingReduction);
+			
+			
+			if(debugging)System.out.println("after scale "+resultPoint);
+
+			
+			resultPoint.add(nodes.get(vname));
+			
+
+			
+			if(debugging)System.out.println("punto antes "+nodes.get(vname));
+			if(debugging)System.out.println("punto ahora "+resultPoint);
+			if(debugging)System.out.println();
+			if(debugging)System.out.println();
+			
+			
+			nodes.put(vname, resultPoint);
+		}
+		
+	}
+
+	
+	
+	
 }

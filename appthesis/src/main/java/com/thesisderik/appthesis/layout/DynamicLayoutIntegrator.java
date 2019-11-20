@@ -54,7 +54,7 @@ public class DynamicLayoutIntegrator<N,E> {
 			
 			for(int layTimes = 0; layTimes < enforceFactors.get(currLay)*iterations; layTimes++ ) {
 				
-				dinamicLayouts.get(currLay).execute( nodes );
+				dinamicLayouts.get(currLay).execute( nodes , 1);
 				
 			}
 			

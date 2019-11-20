@@ -95,6 +95,7 @@ public class SimpleGraphRepoTests {
 		iSimpleGraphManager.createRelation("Graph2","C","B");
 		iSimpleGraphManager.createRelation("Graph2","A","D");
 		iSimpleGraphManager.createRelation("Graph2","D","A");
+		iSimpleGraphManager.createRelation("aasdf","3530","C");
 
 		
 		//iSimpleGraphManager.createRelation("GraphChem","3527","3530");
@@ -110,11 +111,15 @@ public class SimpleGraphRepoTests {
 		iSimpleGraphManager.createGroupRel("chemnodes","3530");
 		//iSimpleGraphManager.createGroupRel("chemnodes","3304");
 		
-		
+
 		iSimpleGraphManager.createGroupRel("mygroup1","A");
 		iSimpleGraphManager.createGroupRel("mygroup1","B");
 		iSimpleGraphManager.createGroupRel("mygroup1","C");
 		iSimpleGraphManager.createGroupRel("mygroup1","D");
+		iSimpleGraphManager.createGroupRel("mygroup1","E");
+		iSimpleGraphManager.createGroupRel("mygroup1","F");
+		iSimpleGraphManager.createGroupRel("mygroup1","G");
+		iSimpleGraphManager.createGroupRel("mygroup1","H");
 		
 		iSimpleGraphManager.createGroupRel("mygroup2","A");
 		iSimpleGraphManager.createGroupRel("mygroup2","B");

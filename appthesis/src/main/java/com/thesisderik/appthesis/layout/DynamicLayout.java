@@ -27,5 +27,5 @@ public abstract class DynamicLayout<N,E> {
 		return graph.getVertices();
 	}
 
-	public abstract void execute(Map<N, Point2d> nodes);
+	public abstract void execute(Map<N, Point2d> nodes, double annealingReduction);
 }
