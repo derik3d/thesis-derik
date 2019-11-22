@@ -70,6 +70,8 @@ public class LayoutManager {
 		System.out.println();
 		System.out.println(nodeLayers);
 		System.out.println();
+		System.out.println(layerLayouts);
+		System.out.println();
 		
 
 
@@ -92,8 +94,8 @@ public class LayoutManager {
 			Graph<String,String> currGraph = graphsBuiltOrdered.get(currLayer);
 			dli.addDynamicLayoutToStack(getDinamicLayout(layerLayouts.get(currGraph),currGraph));
 		}
-		
 		*/
+		
 		
 		//add layout for all nodes, at the end
 		DynamicLayout<String,String> dlgen = new DynamicSpring<>(generalGraph);

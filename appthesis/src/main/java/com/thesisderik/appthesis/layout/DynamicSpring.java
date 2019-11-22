@@ -22,7 +22,7 @@ import edu.uci.ics.jung.graph.Graph;
 public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 
 	
-	boolean debugging = true;
+	boolean debugging = false;
 	
 	@FunctionalInterface
 	interface TriFunction<A,B,C,R> {
@@ -35,15 +35,31 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 	    }
 	}
 
-	double targetEdgeLength = 50;
-	double edgeLengthMultiplier = 10;
+
+	Point2d concentricCenter = new Point2d(50,50);
+	N concentricNode = null;
+	
+	double targetEdgeLength = 100;
+	double edgeLengthMultiplier = 1;
+	
 	double desiredVertexSeparation = 100;
-	double repellingMultiplier = 20;
-	double concentricDistance = 500;
-	double concentricMultiplier = 1000;
-	double stepSize = 0.002;
+	double repellingMultiplier = 100;
 	
+	double concentricDistance = 50;
+	double concentricMultiplier = 100;
 	
+	double stepSize = 0.2;
+	
+	//disable force calculations on
+	Set<N> disabledForceNodesForEdges = null;
+	Set<N> disabledForceNodesForRepelling = null;
+	
+	//their forces dont affect other nodes
+	Set<N> draggedNodesForEdges = null;
+	Set<N> draggedNodesForRepelling = null;
+	
+	Set<N> customRepellingSeparation = null;
+		
 	public DynamicSpring(Graph<N, E> graph) {
 		super(graph);
 	}
@@ -59,16 +75,21 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 		
 		if(debugging)System.out.println();
 		if(debugging)System.out.println();
-		
 		if(debugging)System.out.println(nodes);
 		
 		
-		Random r = new Random();
 		
 		final Map<N, ArrayList<Point2d>> summaryOfForces = new HashMap<>();
-		
 		ArrayList<Double> error = new ArrayList<>();
 		
+		
+		
+		
+		
+		/*
+		
+		
+		Random r = new Random();
 		Consumer<E> dynamicProcessEdges = edge -> {
 			
 			//obtener los vertices asociados a este edge
@@ -97,20 +118,19 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 			//only atraction force
 			if(forceDesired<0) {
 				//operate first vertex
-				N vertex = incidentVertices.get(0);
-				
-				calculateAddAForce(directionNormalized, forceDesired, vertex, summaryOfForces);
+				N vertexA = incidentVertices.get(0);
+				calculateAddAForce(directionNormalized, forceDesired, vertexA, summaryOfForces);
 					
 	
 				//operate second vertex
-				vertex = incidentVertices.get(1);
-				calculateAddAForce(directionNormalized, -forceDesired, vertex, summaryOfForces);
+				N vertexB = incidentVertices.get(1);
+				calculateAddAForce(directionNormalized, -forceDesired, vertexB, summaryOfForces);
 			}
 			
 			
 		};
 		
-		
+		*/
 		
 		
 		
@@ -137,66 +157,81 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 			
 			for(N otherNode : distances.keySet()) {
 				
-				double forceDesired = forceCalculatorRepelling(distances.get(otherNode), desiredVertexSeparation);
+				double distanceToOtherNode = distances.get(otherNode);
+				
+				double forceDesiredRepelling = forceCalculatorRepelling(distanceToOtherNode , desiredVertexSeparation);
+				
+				Point2d directionNormalized = normalizeVector(nodes.get(otherNode), nodes.get(n) , distanceToOtherNode);
+
 				
 				//only if the force is atration
-				if(forceDesired > 0) {
+				if(forceDesiredRepelling != 0) {
 					
 					
 					//direction vector
-					Point2d directionNormalized = normalizeVector(nodes.get(otherNode), nodes.get(n) , distances.get(otherNode));
 					
 					//force adder and calculator
-					calculateAddAForce(directionNormalized, forceDesired, n, summaryOfForces);
+					calculateAddAForce(directionNormalized, forceDesiredRepelling, n, summaryOfForces);
 						
 					
 				}
 				
-			}
-				
-		};
-		
-
-		//HHHOOOLLLEEE
-		Consumer<N> dynamicProcessHoleRepulsion = n -> {
-			
-			
-			Point2d otherNodeCoord = new Point2d(300,300);
-			
-			double distance = getDistance(nodes.get(n),otherNodeCoord);
-				
-			double forceDesired = forceCalculatorConcentric( distance , concentricDistance);
-			
-
-			//save error
-			error.add(Math.abs(concentricDistance - distance));
-			
-			
-			//only if the force is atration
-			if(forceDesired != 0) {
-				
-				
-				//direction vector
-				Point2d directionNormalized = normalizeVector(otherNodeCoord, nodes.get(n) ,distance);
-				
-				//force adder and calculator
-				calculateAddAForce(directionNormalized, forceDesired, n, summaryOfForces);
-						
+				if(graph.findEdge(n, otherNode) instanceof Object || graph.findEdge(otherNode, n) instanceof Object ) {
 					
-			}
+					double forceDesiredSpring = forceCalculatorSpring(distanceToOtherNode , desiredVertexSeparation);
+					
+
+					//only atraction force
+					if(forceDesiredSpring != 0) {
+						
+						calculateAddAForce(directionNormalized, forceDesiredSpring, n, summaryOfForces);
+						
+					}
+					
+				}
 				
+				
+				if(concentricCenter instanceof Object) {
+					
+					double distanceConcentric = getDistance(nodes.get(n),concentricCenter);
+						
+					double forceDesiredConcentric = forceCalculatorConcentric( distanceConcentric , concentricDistance);
+					
+
+					//save error
+					error.add(Math.abs(concentricDistance - distanceConcentric));
+					
+					
+					if(forceDesiredConcentric != 0) {
+						
+						
+						//direction vector
+						Point2d directionNormalizedConcentric = normalizeVector(concentricCenter, nodes.get(n) ,distanceConcentric);
+						
+						//force adder and calculator
+						calculateAddAForce(directionNormalizedConcentric, forceDesiredConcentric, n, summaryOfForces);
+								
+							
+					}
+					
+				}
+				
+				
+			}
+			
 				
 		};
 		
 		
 		
+		
 
-				
-		graph.getEdges().stream().forEach(dynamicProcessEdges);
+		
+		//graph.getEdges().stream().forEach(dynamicProcessEdges);
 		
 		graph.getVertices().stream().forEach(dynamicProcessNodeRepulsion);
 		
-		graph.getVertices().stream().forEach(dynamicProcessHoleRepulsion);
+		//graph.getVertices().stream().forEach(dynamicProcessHoleRepulsion);
 				
 		
 		
@@ -221,6 +256,39 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 		
 		if(debugging)System.out.println("duration: " + difference);
 
+		
+/*
+		//HHHOOOLLLEEE
+		Consumer<N> dynamicProcessHoleRepulsion = n -> {
+			
+
+			Point2d otherNodeCoord = concentricCenter;
+			
+			double distance = getDistance(nodes.get(n),otherNodeCoord);
+				
+			double forceDesired = forceCalculatorConcentric( distance , concentricDistance);
+			
+
+			//save error
+			error.add(Math.abs(concentricDistance - distance));
+			
+			
+			if(forceDesired != 0) {
+				
+				
+				//direction vector
+				Point2d directionNormalized = normalizeVector(otherNodeCoord, nodes.get(n) ,distance);
+				
+				//force adder and calculator
+				calculateAddAForce(directionNormalized, forceDesired, n, summaryOfForces);
+						
+					
+			}
+				
+				
+		};
+		
+	*/
 		
 
 	}
