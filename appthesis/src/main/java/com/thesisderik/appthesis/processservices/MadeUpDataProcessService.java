@@ -2,6 +2,7 @@ package com.thesisderik.appthesis.processservices;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -46,11 +47,25 @@ public class MadeUpDataProcessService extends BaseProcessService{
 		Function<ArrayList<String>, String> add = arr -> {
 			
 			double ans = 0;
-			
+			boolean numberFound = true;
+		
 			for(String val : arr) {
-				ans+= Double.parseDouble(val);
+				if(val.length()>0) {
+					try {
+						ans+= Double.parseDouble(val);
+						numberFound = true;
+					}catch(Exception ex) {
+						
+					}
+				}
 			}
-			return ""+ans;
+			
+			if(numberFound) {
+				return ""+ans;
+			}else {
+				Collections.sort(arr);
+				return String.join("_", arr);
+			}
 		};
 		
 		operators.put("ADD",add);
@@ -58,12 +73,27 @@ public class MadeUpDataProcessService extends BaseProcessService{
 		Function<ArrayList<String>, String> top = arr -> {
 			
 			double ans = 0;
-			
+			boolean numberFound = true;
+		
 			for(String val : arr) {
-				if(Double.parseDouble(val)>ans)
-					ans=Double.parseDouble(val);
+				if(val.length()>0) {
+					try {
+						if(Double.parseDouble(val)>ans) {
+							ans=Double.parseDouble(val);
+						}
+						numberFound = true;
+					}catch(Exception ex) {
+						
+					}
+				}
 			}
-			return ""+ans;
+			
+			if(numberFound) {
+				return ""+ans;
+			}else {
+				Collections.sort(arr);
+				return String.join("_", arr);
+			}
 		};
 		
 		operators.put("TOP",top);
