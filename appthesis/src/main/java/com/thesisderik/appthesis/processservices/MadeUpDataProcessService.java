@@ -47,9 +47,9 @@ public class MadeUpDataProcessService extends BaseProcessService{
 			
 			double ans = 0;
 			
-			for(String val : arr)
+			for(String val : arr) {
 				ans+= Double.parseDouble(val);
-			
+			}
 			return ""+ans;
 		};
 		

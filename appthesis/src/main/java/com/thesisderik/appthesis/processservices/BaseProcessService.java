@@ -12,7 +12,6 @@ public abstract class BaseProcessService implements IProcessService{
 	public static ExperimentResultsFileDataStructure fileToStructure(ArrayList<String> file) {
 		
 
-		System.out.println(file);
 
 		ExperimentResultsFileDataStructure erde = new ExperimentResultsFileDataStructure();
 		
@@ -24,7 +23,6 @@ public abstract class BaseProcessService implements IProcessService{
 		ArrayList<ArrayList<String>> tempCont = new ArrayList<>();
 		
 		for(String row : file.get(1).split("\n")) {
-			
 			if(firstRow) {
 				if(row.length()>2) {
 					erde.setFirstRow(new ArrayList<>(Arrays.asList( row.split(",")) ));
@@ -40,6 +38,8 @@ public abstract class BaseProcessService implements IProcessService{
 			}
 			
 		}
+		
+		erde.setDataRows(tempCont);
 				
 		return erde;
 		

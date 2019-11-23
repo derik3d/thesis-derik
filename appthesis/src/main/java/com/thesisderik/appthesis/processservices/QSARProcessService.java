@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -79,9 +80,15 @@ public class QSARProcessService extends BaseProcessService{
 	        
 	        resultsTags.addAll(dataStructure.getFirstRow().subList(1, dataStructure.getFirstRow().size()));
 	        
+	        
+	        
 			for(int i =0; i<dataForEveryInstance.size();i++) {
-		        
-				result.add(new ArrayList<String>(dataStructure.getDataRows().get(i).subList(1, dataStructure.getDataRows().get(i).size())));
+				
+				int size = dataStructure.getDataRows().get(i).size();
+				List<String> subList = dataStructure.getDataRows().get(i).subList(1, size);
+				ArrayList<String> ansArr = new ArrayList<String>();
+		        ansArr.addAll(subList);
+				result.add(ansArr);
 			}
 	        
 	        

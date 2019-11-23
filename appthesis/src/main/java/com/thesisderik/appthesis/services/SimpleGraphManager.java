@@ -22,6 +22,7 @@ import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.thesisderik.appthesis.interfaces.IExperimentDataIntegrator;
 import com.thesisderik.appthesis.interfaces.ISimpleGraphManager;
 import com.thesisderik.appthesis.layout.HierarchyRelation;
 import com.thesisderik.appthesis.layout.LayoutItem;
@@ -58,7 +59,7 @@ import com.thesisderik.appthesis.viz.QueryVizFormat;
 import com.thesisderik.appthesis.viz.VizGraphFormat;
 
 @Service
-public class SimpleGraphManager implements ISimpleGraphManager {
+public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataIntegrator {
 	
 	final String defaultSeparator = "_CMDSEP_";
 	final String defaultFeatureName = "NAME";
