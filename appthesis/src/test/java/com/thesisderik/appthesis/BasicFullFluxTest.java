@@ -79,10 +79,11 @@ public class BasicFullFluxTest {
     	
     	//LOAD GRAPH
 
-		File file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
+		//File file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
+		File file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00010.xml");
 		final InputStream inputStream = new FileInputStream(file);		
     	
-    	iGraphManagerService.processSbml(inputStream);
+    	iGraphManagerService.processKgml(inputStream);
     	
     	
     	
