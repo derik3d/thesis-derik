@@ -59,14 +59,10 @@ public class LayoutManager {
 
 	
 	public static void layoutGraph(
-			VizGraphFormat graphSent, Map<Integer,
-			Integer> hierarchy ,
-			Map<Integer,Layouts> layerLayouts ,
+			VizGraphFormat graphSent, Map<Integer,Layouts> layerLayouts ,
 			Map<Integer, Set<String>> nodeLayers) {
 		
 
-		System.out.println();
-		System.out.println(hierarchy);
 		System.out.println();
 		System.out.println(nodeLayers);
 		System.out.println();
@@ -88,18 +84,18 @@ public class LayoutManager {
 		//order the groups
 		TreeMap<Integer,Graph<String,String>> graphsBuiltOrdered = new TreeMap<>(graphsBuilt);
 		
-		/*
+		
 		//add layout for subgraphs
 		for(int currLayer: graphsBuiltOrdered.navigableKeySet()) {
 			Graph<String,String> currGraph = graphsBuiltOrdered.get(currLayer);
-			dli.addDynamicLayoutToStack(getDinamicLayout(layerLayouts.get(currGraph),currGraph));
+			dli.addDynamicLayoutToStack(getDinamicLayout(layerLayouts.get(currLayer),currGraph),0);
 		}
-		*/
+		
 		
 		
 		//add layout for all nodes, at the end
 		DynamicLayout<String,String> dlgen = new DynamicSpring<>(generalGraph);
-		dli.addDynamicLayoutToStack(dlgen);
+		dli.addDynamicLayoutToStack(dlgen,1);
 
 		System.out.println();
 		System.out.println();
@@ -126,9 +122,13 @@ public class LayoutManager {
 			 DynamicSpring<String, String> springLayout = new DynamicSpring<String,String>(graph);
 			 return springLayout;
 		case CIRCLE:
-			DynamicConcentric<String, String> circleLayout = new DynamicConcentric<String,String>(graph);
+			DynamicSpring<String, String> circleLayout = new DynamicSpring<String,String>(graph);
+			circleLayout.concentricMultiplier = 10;
+			circleLayout.repellingMultiplier = 10;
 			return circleLayout;
-		default: return null;
+		default: 
+			 DynamicSpring<String, String> springLayoutgen = new DynamicSpring<String,String>(graph);
+			 return springLayoutgen;
 		}
 		
 	}

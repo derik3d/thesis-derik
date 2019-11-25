@@ -888,35 +888,16 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 		}
 		
 		
-		//son -> parent
-		Map<Integer,Integer> layerHierarchy = parseHierarchy(data.getRelations());
 		
 		Map<Integer,Layouts> layersLayouts = layersLayouts(data.getRelations());
 		
-		Map<Integer, Set<String>> nodesGroups = unfoldDataForLayout(res.getNodes().stream().map(NodeViz::getId).collect(Collectors.toSet()), data.getLayoutItems() , layerHierarchy);
+		Map<Integer, Set<String>> nodesGroups = unfoldDataForLayout(res.getNodes().stream().map(NodeViz::getId).collect(Collectors.toSet()), data.getLayoutItems() );
 		
-		LayoutManager.layoutGraph(res, layerHierarchy, layersLayouts,nodesGroups);
+		LayoutManager.layoutGraph(res, layersLayouts, nodesGroups);
 		
 		
 		
 		return res;
-	}
-	
-	public Map<Integer,Integer> parseHierarchy(List<HierarchyRelation> relations){
-		
-		Map<Integer,Integer> mapRes = new HashMap<>();
-		
-		if(relations instanceof Object) {
-			for(HierarchyRelation rel : relations) {
-				if(rel.isEnabled()) {
-					if(rel.getSon()<rel.getFather())
-						mapRes.put(rel.getSon(), rel.getFather());
-				}
-			}
-		}
-		
-		return mapRes;
-		
 	}
 
 	
@@ -927,8 +908,7 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 		if(relations instanceof Object) {
 			for(HierarchyRelation rel : relations) {
 				if(rel.isEnabled()) {
-					if(rel.getSon()<rel.getFather())
-						mapRes.put(rel.getSon(), rel.getLay());
+						mapRes.put(rel.getLayerNumber(), rel.getLay());
 				}
 			}
 		}
@@ -937,9 +917,13 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 		
 	}
 	
-	public Map<Integer, Set<String>> unfoldDataForLayout(Set<String> nodes, List<LayoutItem> layItems, Map<Integer,Integer> relations){
+	public Map<Integer, Set<String>> unfoldDataForLayout(Set<String> nodes, List<LayoutItem> layItems){
 		
 		Map<Integer, Set<String>> nodeGroupsForLayout = new HashMap<>();
+
+		System.out.println();
+		System.out.println();
+		System.out.println(layItems);
 		
 		if(layItems instanceof Object) {
 			
@@ -954,8 +938,11 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 			for(LayoutItem it: layItems) {
 				if(it.isEnabled()) {
 					
-					nodeGroupsForLayout.put(it.getLayer(), getFilteredNodes(nodes, it));
-					
+					if(nodeGroupsForLayout.containsKey(it.getLayer())) {
+						nodeGroupsForLayout.get(it.getLayer()).addAll(getFilteredNodes(nodes, it));
+					}else {
+						nodeGroupsForLayout.put(it.getLayer(), getFilteredNodes(nodes, it));
+					}
 					if(nodes.size()==0) {
 						break;
 					}

@@ -343,7 +343,7 @@
 			</ul>
 			
 			
-			<label >layout hierarchy relations</label><br>
+			<label >layout for layers</label><br>
 			<ul>			
 			<li th:each="hieItem, hieItemStat : ${listHierarchyLay}">
 			  
@@ -357,18 +357,13 @@
 			  
 				  	
 				  	
-				  	<input type=number step="1" th:field="*{relations[__${hieItemStat.index}__].son}">
+				  	<input type=number step="1" th:field="*{relations[__${hieItemStat.index}__].layerNumber}">
 
     				<label  >layer</label>
 					<br>
 					
 					
 					
-				  	
-				  	<input type=number step="1" th:field="*{relations[__${hieItemStat.index}__].father}">
-
-    				<label  >parent layer</label>
-					<br>
 				  	
 				  	
 			        
