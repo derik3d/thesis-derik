@@ -64,28 +64,27 @@ public class GraphManagerTests {
 
 
 
-		File file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
-		final InputStream inputStream = new FileInputStream(file);		
+			
     	
     	
-    	iGraphManagerService.processSbml(inputStream);
-    	//iGraphManagerService.processSbml("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
-    	//iGraphManagerService.processSbml("classpath:testdata/biologicalsourcefiles/sbmlfiles/e_coli_corefrombigg.xml");
-    	//iGraphManagerService.processSbml("classpath:testdata/biologicalsourcefiles/sbmlfiles/recon2model.v02.xml");
-  	/*
-    	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00010.xml");
-    	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00020.xml");
-    	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00030.xml");
-    	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00040.xml");
-    	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00051.xml");
-    	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00053.xml");
-    	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00500.xml");
-    	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00520.xml");
-    	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00620.xml");
-    	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00630.xml");
-    	iGraphManagerService.processKgml("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00640.xml");
+    	//processSBML("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
+    	//processSBML("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
+    	//processSBML("classpath:testdata/biologicalsourcefiles/sbmlfiles/e_coli_corefrombigg.xml");
+    	//pending//processSBML("classpath:testdata/biologicalsourcefiles/sbmlfiles/recon2model.v02.xml");
+  	
+    	processKGML("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00010.xml");
+    	processKGML("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00020.xml");
+    	processKGML("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00030.xml");
+    	processKGML("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00040.xml");
+    	processKGML("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00051.xml");
+    	processKGML("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00053.xml");
+    	processKGML("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00500.xml");
+    	processKGML("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00520.xml");
+    	processKGML("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00620.xml");
+    	processKGML("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00630.xml");
+    	processKGML("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00640.xml");
     	
-    	*/
+    	
 
 
 		int a=0;
@@ -95,5 +94,26 @@ public class GraphManagerTests {
 
     	
     }    
+    
+    
+    void processKGML(String path) throws Exception{
+    	
+    	iGraphManagerService.processKgml(getInputStream(path));
+    	
+    }
+    
+    
+    void processSBML(String path) throws Exception{
+    	
+    	iGraphManagerService.processSbml(getInputStream(path));
+    	
+    }
+    
+    InputStream getInputStream(String path) throws Exception{
+    	
+    	File file = ResourceUtils.getFile(path);
+		return new FileInputStream(file);	
+
+    }
     
 }
