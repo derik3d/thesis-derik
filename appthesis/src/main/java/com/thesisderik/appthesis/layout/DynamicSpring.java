@@ -39,32 +39,35 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 	Point2d concentricCenter = new Point2d(50,50);
 	N concentricNode = null;
 	
-	double targetEdgeLength = 100;
+	double targetEdgeLength = 50;
 	double edgeLengthMultiplier = 1;
 	
-	double desiredVertexSeparation = 100;
-	double repellingMultiplier = 100;
+	double desiredVertexSeparation = 10;
+	double repellingMultiplier = 1; // 0 0.01 1 10
 	
-	double concentricDistance = 50;
-	double concentricMultiplier = 100;
+	double concentricDistance = 10;
+	double concentricMultiplier =0; //0 1 10 100 500 1000
 	
-	double stepSize = 0.2;
+	double stepSize = 0.05;
 	
 	//disable force calculations on
-	Set<N> disabledForceNodesForEdges = null;
-	Set<N> disabledForceNodesForRepelling = null;
+	public Set<N> ignoreForceCalcualtionsNodes = null;
+	
+	
+	public Set<N> disabledForceNodesForEdges = null;
+	public Set<N> disabledForceNodesForRepelling = null;
 	
 	//their forces dont affect other nodes
-	Set<N> draggedNodesForEdges = null;
-	Set<N> draggedNodesForRepelling = null;
+	public Set<N> draggedNodesForEdges = null;
+	public Set<N> draggedNodesForRepelling = null;
 	
-	Set<N> customRepellingSeparation = null;
-		
+	public Set<N> customRepellingSeparation = null;
+			
 	public DynamicSpring(Graph<N, E> graph) {
 		super(graph);
 	}
 	
-	double annealingReduction;
+	double annealingReduction = 1;
 	
 	@Override
 	public void execute(final Map<N, Point2d> nodes, double annealingReduction){
@@ -77,6 +80,7 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 		if(debugging)System.out.println();
 		if(debugging)System.out.println(nodes);
 		
+		//System.out.println(graph.getVertices().size());
 		
 		
 		final Map<N, ArrayList<Point2d>> summaryOfForces = new HashMap<>();
@@ -84,57 +88,6 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 		
 		
 		
-		
-		
-		/*
-		
-		
-		Random r = new Random();
-		Consumer<E> dynamicProcessEdges = edge -> {
-			
-			//obtener los vertices asociados a este edge
-			Collection<N> incidentVerticesPrev = graph.getIncidentVertices(edge);
-			//guardarlso en un arraylist para accederlos en un orden definido
-			ArrayList<N> incidentVertices = new ArrayList<>(incidentVerticesPrev);
-						
-			//load vertices positions on a list
-			ArrayList<Point2d> verticesPositions = new ArrayList<>();
-			for(N aVertice : incidentVertices)
-				verticesPositions.add(nodes.get(aVertice));
-			
-			//calcular la distancia entre los dos vertices
-			double distance = getDistance(verticesPositions.get(0),verticesPositions.get(1));
-
-			//save error
-			error.add(Math.abs(targetEdgeLength - distance));
-
-			//linear force desired (inverted), calculat la fuerza ejercida
-			double forceDesired = forceCalculatorSpring(distance, targetEdgeLength);
-			
-
-			//unitary direction vector
-			Point2d directionNormalized = normalizeVector(verticesPositions.get(1), verticesPositions.get(0), distance);
-					
-			//only atraction force
-			if(forceDesired<0) {
-				//operate first vertex
-				N vertexA = incidentVertices.get(0);
-				calculateAddAForce(directionNormalized, forceDesired, vertexA, summaryOfForces);
-					
-	
-				//operate second vertex
-				N vertexB = incidentVertices.get(1);
-				calculateAddAForce(directionNormalized, -forceDesired, vertexB, summaryOfForces);
-			}
-			
-			
-		};
-		
-		*/
-		
-		
-		
-
 		
 		Function<N, Map<N ,Double>> nodeDistance = node -> {
 			
@@ -152,10 +105,15 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 		//NODES NODES
 		Consumer<N> dynamicProcessNodeRepulsion = n -> {
 			
+
+			if(ignoreForceCalcualtionsNodes instanceof Object && ignoreForceCalcualtionsNodes.contains(n))
+				return;
+			
 			//save distances to all the other nodes
 			Map<N ,Double> distances = nodeDistance.apply(n);
 			
 			for(N otherNode : distances.keySet()) {
+				
 				
 				double distanceToOtherNode = distances.get(otherNode);
 				
@@ -164,8 +122,8 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 				Point2d directionNormalized = normalizeVector(nodes.get(otherNode), nodes.get(n) , distanceToOtherNode);
 
 				
-				//only if the force is atration
-				if(forceDesiredRepelling != 0) {
+				//only if the force is repelling
+				if(forceDesiredRepelling > 0) {
 					
 					
 					//direction vector
@@ -182,7 +140,7 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 					
 
 					//only atraction force
-					if(forceDesiredSpring != 0) {
+					if(forceDesiredSpring < 0) {
 						
 						calculateAddAForce(directionNormalized, forceDesiredSpring, n, summaryOfForces);
 						
@@ -256,40 +214,6 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 		
 		if(debugging)System.out.println("duration: " + difference);
 
-		
-/*
-		//HHHOOOLLLEEE
-		Consumer<N> dynamicProcessHoleRepulsion = n -> {
-			
-
-			Point2d otherNodeCoord = concentricCenter;
-			
-			double distance = getDistance(nodes.get(n),otherNodeCoord);
-				
-			double forceDesired = forceCalculatorConcentric( distance , concentricDistance);
-			
-
-			//save error
-			error.add(Math.abs(concentricDistance - distance));
-			
-			
-			if(forceDesired != 0) {
-				
-				
-				//direction vector
-				Point2d directionNormalized = normalizeVector(otherNodeCoord, nodes.get(n) ,distance);
-				
-				//force adder and calculator
-				calculateAddAForce(directionNormalized, forceDesired, n, summaryOfForces);
-						
-					
-			}
-				
-				
-		};
-		
-	*/
-		
 
 	}
 
@@ -370,7 +294,7 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 		double deltaDistance = targetEdgeLength - distance;
 		if(debugging)System.out.printf("distance %f, desiredDistance %f, deltaDistance %f ", distance, desiredDistance, deltaDistance);
 
-		return deltaDistance*edgeLengthMultiplier;
+		return deltaDistance*edgeLengthMultiplier*annealingReduction;
 	}
 	 
 
@@ -383,7 +307,7 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 		double deltaDistance = desiredDistance / distance * distance;
 		if(debugging)System.out.printf("distance %f, desiredDistance %f, deltaDistance %f ", distance, desiredDistance, deltaDistance);
 
-		return deltaDistance*repellingMultiplier;
+		return deltaDistance*repellingMultiplier*annealingReduction;
 	}
 	
 
@@ -398,7 +322,7 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 		double deltaDistance = targetEdgeLength - distance;
 		if(debugging)System.out.printf("distance %f, desiredDistance %f, deltaDistance %f ", distance, desiredDistance, deltaDistance);
 
-		return deltaDistance*concentricMultiplier;
+		return deltaDistance*concentricMultiplier*annealingReduction;
 	}
 
 
