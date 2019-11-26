@@ -85,17 +85,25 @@ public class LayoutManager {
 		TreeMap<Integer,Graph<String,String>> graphsBuiltOrdered = new TreeMap<>(graphsBuilt);
 		
 		
+
+		//add layout for all nodes, at the end
+		DynamicSpring<String,String> dlgen = new DynamicSpring<>(generalGraph);
+
+		//dlgen.ignoreForceCalcualtionsNodes = new HashSet<String>();
+		
+		
 		//add layout for subgraphs
 		for(int currLayer: graphsBuiltOrdered.navigableKeySet()) {
 			Graph<String,String> currGraph = graphsBuiltOrdered.get(currLayer);
-			dli.addDynamicLayoutToStack(getDinamicLayout(layerLayouts.get(currLayer),currGraph),0);
+			dli.addDynamicLayoutToStack(getDinamicLayout(layerLayouts.get(currLayer),currGraph),1);
+			//dlgen.ignoreForceCalcualtionsNodes.addAll(currGraph.getVertices());
+			
 		}
 		
+
+		dli.addDynamicLayoutToStack(dlgen,7);
 		
 		
-		//add layout for all nodes, at the end
-		DynamicLayout<String,String> dlgen = new DynamicSpring<>(generalGraph);
-		dli.addDynamicLayoutToStack(dlgen,1);
 
 		System.out.println();
 		System.out.println();
@@ -120,11 +128,23 @@ public class LayoutManager {
 		switch(layout) {
 		case SPRING:
 			 DynamicSpring<String, String> springLayout = new DynamicSpring<String,String>(graph);
+
+
+			 //springLayout.targetEdgeLength = 50;
+			 //springLayout.edgeLengthMultiplier = 3;
+				
+			 //springLayout.desiredVertexSeparation = 10;
+			 //springLayout.repellingMultiplier = 1; // 0 0.01 1 10
+				
+			 springLayout.concentricDistance = 1;
+			 springLayout.concentricMultiplier =0; //0 1 10 100 500 1000
+			 
 			 return springLayout;
 		case CIRCLE:
 			DynamicSpring<String, String> circleLayout = new DynamicSpring<String,String>(graph);
-			circleLayout.concentricMultiplier = 10;
-			circleLayout.repellingMultiplier = 10;
+			circleLayout.concentricDistance = 10;
+			circleLayout.concentricMultiplier = 100;
+			circleLayout.repellingMultiplier = 100;
 			return circleLayout;
 		default: 
 			 DynamicSpring<String, String> springLayoutgen = new DynamicSpring<String,String>(graph);
