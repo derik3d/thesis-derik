@@ -90,18 +90,19 @@ public class LayoutManager {
 		DynamicSpring<String,String> dlgen = new DynamicSpring<>(generalGraph);
 
 		//dlgen.ignoreForceCalcualtionsNodes = new HashSet<String>();
-		
+		dlgen.clusters = new ArrayList<>();
 		
 		//add layout for subgraphs
 		for(int currLayer: graphsBuiltOrdered.navigableKeySet()) {
 			Graph<String,String> currGraph = graphsBuiltOrdered.get(currLayer);
 			dli.addDynamicLayoutToStack(getDinamicLayout(layerLayouts.get(currLayer),currGraph),1);
 			//dlgen.ignoreForceCalcualtionsNodes.addAll(currGraph.getVertices());
+			dlgen.clusters.add(new HashSet<>(currGraph.getVertices()));
 			
 		}
 		
 
-		dli.addDynamicLayoutToStack(dlgen,7);
+		dli.addDynamicLayoutToStack(dlgen,1);
 		
 		
 
@@ -136,7 +137,7 @@ public class LayoutManager {
 			 //springLayout.desiredVertexSeparation = 10;
 			 //springLayout.repellingMultiplier = 1; // 0 0.01 1 10
 				
-			 springLayout.concentricDistance = 1;
+			 springLayout.concentricDistance = 10;
 			 springLayout.concentricMultiplier =0; //0 1 10 100 500 1000
 			 
 			 return springLayout;

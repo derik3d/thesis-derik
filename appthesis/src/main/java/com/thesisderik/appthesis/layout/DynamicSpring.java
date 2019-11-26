@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -62,6 +63,18 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 	public Set<N> draggedNodesForRepelling = null;
 	
 	public Set<N> customRepellingSeparation = null;
+	
+	public List<Set<N>> clusters = null;
+	
+
+	double clusterRepellingDistance = 5;
+	double repellingMultiplierCluster = 0.2;
+	
+	
+	double clusterPullingDistance = 20;
+	double pullingMultiplierCluster = 4;
+	
+	
 			
 	public DynamicSpring(Graph<N, E> graph) {
 		super(graph);
@@ -143,6 +156,46 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 					if(forceDesiredSpring < 0) {
 						
 						calculateAddAForce(directionNormalized, forceDesiredSpring, n, summaryOfForces);
+						
+					}
+					
+				}
+				
+				if(clusters instanceof Object) {
+					
+					int clusterNode = -1, clusterOtherNode = -1;
+					for(int i=0; i<clusters.size(); i++) {
+						
+						if(clusters.get(i).contains(n) &&  clusterNode == -1)
+							clusterNode = i;
+						
+						if(clusters.get(i).contains(otherNode) &&  clusterOtherNode == -1)
+							clusterOtherNode = i;
+						
+						if(clusterNode!=-1 && clusterOtherNode!=-1) {
+							
+							//diff clusters
+							if(clusterNode != clusterOtherNode) {
+								
+								
+								double forceDesiredRepellingCluster = forceCalculatorRepellingCluster(distanceToOtherNode , clusterRepellingDistance);
+								//force adder and calculator
+								if(forceDesiredRepellingCluster>0)
+									calculateAddAForce(directionNormalized, forceDesiredRepellingCluster, n, summaryOfForces);
+									
+								
+							}else {//same cluster
+								
+
+								double forceDesiredPullingCluster = forceCalculatorPullingCluster(distanceToOtherNode , clusterPullingDistance);
+								//force adder and calculator
+								if(forceDesiredPullingCluster<0)
+									calculateAddAForce(directionNormalized, forceDesiredPullingCluster, n, summaryOfForces);
+									
+								
+							}
+							break;
+						}
 						
 					}
 					
@@ -309,8 +362,34 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 
 		return deltaDistance*repellingMultiplier*annealingReduction;
 	}
+	 
+
+	
+	double forceCalculatorRepellingCluster(double distance, double desiredDistance){
+
+		
+		if(debugging)System.out.println();
+		
+		double deltaDistance = desiredDistance / distance * distance;
+		if(debugging)System.out.printf("distance %f, desiredDistance %f, deltaDistance %f ", distance, desiredDistance, deltaDistance);
+
+		return deltaDistance*pullingMultiplierCluster*annealingReduction;
+	}
 	
 
+	 
+
+	
+	double forceCalculatorPullingCluster(double distance, double desiredDistance){
+
+		
+		if(debugging)System.out.println();
+		
+		double deltaDistance = targetEdgeLength - distance;
+		if(debugging)System.out.printf("distance %f, desiredDistance %f, deltaDistance %f ", distance, desiredDistance, deltaDistance);
+
+		return deltaDistance*repellingMultiplierCluster*annealingReduction;
+	}
 	 
 
 	
