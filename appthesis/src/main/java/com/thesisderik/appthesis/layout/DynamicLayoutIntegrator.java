@@ -11,7 +11,7 @@ import javax.vecmath.Point2d;
 
 public class DynamicLayoutIntegrator<N,E> {
 
-	int iterations = 20;
+	int iterations = 10;
 	
 	ArrayList<DynamicLayout<N,E>> dinamicLayouts = new ArrayList<>();
 	
@@ -45,19 +45,21 @@ public class DynamicLayoutIntegrator<N,E> {
 		for(DynamicLayout<N,E> dinaLay: dinamicLayouts) {
 			for(N node : dinaLay.graph.getVertices()) {
 				Point2d initP = new Point2d();
-				initP.set(r.nextDouble()*100.0, r.nextDouble()*100.0);
+				initP.set(100.0+r.nextDouble()*80.0, 45.0+r.nextDouble()*10.0);
 				nodes.put(node, initP);
 			}
 		}
 
-		for(int currLay = 0; currLay< dinamicLayouts.size(); currLay++) {
-			
-			for(int layTimes = 0; layTimes < enforceFactors.get(currLay)*iterations; layTimes++ ) {
+		for(int k=0; k<iterations; k++) {
+			for(int currLay = 0; currLay< dinamicLayouts.size(); currLay++) {
 				
-				dinamicLayouts.get(currLay).execute( nodes , 1);
+				for(int layTimes = 0; layTimes < enforceFactors.get(currLay); layTimes++ ) {
+					
+					dinamicLayouts.get(currLay).execute( nodes , 1);
+					
+				}
 				
 			}
-			
 		}
 		
 	}
