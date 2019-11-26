@@ -137,15 +137,15 @@ public class LayoutManager {
 			 //springLayout.desiredVertexSeparation = 10;
 			 //springLayout.repellingMultiplier = 1; // 0 0.01 1 10
 				
-			 springLayout.concentricDistance = 10;
-			 springLayout.concentricMultiplier =0; //0 1 10 100 500 1000
+			 //springLayout.concentricDistance = 5;
+			 //springLayout.concentricMultiplier = 0.5; //0 1 10 100 500 1000
 			 
 			 return springLayout;
 		case CIRCLE:
 			DynamicSpring<String, String> circleLayout = new DynamicSpring<String,String>(graph);
-			circleLayout.concentricDistance = 10;
-			circleLayout.concentricMultiplier = 100;
-			circleLayout.repellingMultiplier = 100;
+			
+			circleLayout.concentricDistance = 5;
+			circleLayout.concentricMultiplier = 0.5; //0 1 10 100 500 1000
 			return circleLayout;
 		default: 
 			 DynamicSpring<String, String> springLayoutgen = new DynamicSpring<String,String>(graph);

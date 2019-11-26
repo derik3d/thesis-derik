@@ -37,7 +37,7 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 	}
 
 
-	Point2d concentricCenter = new Point2d(50,50);
+	Point2d concentricCenter = null;
 	N concentricNode = null;
 	
 	double targetEdgeLength = 50;
@@ -98,6 +98,32 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 		
 		final Map<N, ArrayList<Point2d>> summaryOfForces = new HashMap<>();
 		ArrayList<Double> error = new ArrayList<>();
+		
+		
+		
+		
+		//get concentric center
+		if(concentricMultiplier!=0) {
+			
+			if(concentricNode instanceof Object) {
+
+				concentricCenter = new Point2d();
+				concentricCenter.add(nodes.get(concentricNode));
+			}else {
+				
+				concentricCenter = new Point2d();
+				
+				Consumer<N> getSumNodes = n -> {
+					concentricCenter.add(nodes.get(n));
+				};
+				
+				graph.getVertices().stream().forEach(getSumNodes);
+				
+				concentricCenter.scale(1.0/((double)graph.getVertices().size()));
+				
+			}
+			
+		}
 		
 		
 		
