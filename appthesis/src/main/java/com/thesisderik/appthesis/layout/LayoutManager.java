@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,7 @@ public class LayoutManager {
 	
 	public static void layoutGraph(
 			VizGraphFormat graphSent, Map<Integer,Layouts> layerLayouts ,
-			Map<Integer, Set<String>> nodeLayers) {
+			Map<Integer, Set<String>> nodeLayers, Set<String> draggedNodes) {
 		
 
 		System.out.println();
@@ -70,7 +71,23 @@ public class LayoutManager {
 		System.out.println();
 		
 
+		
+		ArrayList<String> explodeNodes = new ArrayList<>();
+		explodeNodes.add("3418-R__35");
+		explodeNodes.add("3324-R__33");
+		explodeNodes.add("3368-P__47");
+		explodeNodes.add("3411-P__34");
 
+		System.out.println(graphSent.getNodes().size());
+		System.out.println();
+		
+		
+		processExplodeNodes(graphSent.getNodes(), graphSent.getEdges(), nodeLayers, draggedNodes , explodeNodes);
+
+
+		System.out.println(graphSent.getNodes().size());
+		System.out.println();
+		
 		
 		//get a general map with all vertices and edges
 		Graph<String,String> generalGraph = buildGeneralGraph(graphSent);
@@ -88,6 +105,7 @@ public class LayoutManager {
 
 		//add layout for all nodes, at the end
 		DynamicSpring<String,String> dlgen = new DynamicSpring<>(generalGraph);
+		dlgen.ignoreForceCalcualtionsOtherNodes = draggedNodes;
 
 		//dlgen.ignoreForceCalcualtionsNodes = new HashSet<String>();
 		dlgen.clusters = new ArrayList<>();
@@ -95,7 +113,9 @@ public class LayoutManager {
 		//add layout for subgraphs
 		for(int currLayer: graphsBuiltOrdered.navigableKeySet()) {
 			Graph<String,String> currGraph = graphsBuiltOrdered.get(currLayer);
-			dli.addDynamicLayoutToStack(getDinamicLayout(layerLayouts.get(currLayer),currGraph),1);
+			DynamicSpring<String, String> lay = getDinamicLayout(layerLayouts.get(currLayer),currGraph);
+			lay.ignoreForceCalcualtionsOtherNodes = draggedNodes;
+			dli.addDynamicLayoutToStack(lay,1);
 			//dlgen.ignoreForceCalcualtionsNodes.addAll(currGraph.getVertices());
 			dlgen.clusters.add(new HashSet<>(currGraph.getVertices()));
 			
@@ -123,7 +143,93 @@ public class LayoutManager {
 	
 	}
 	
-	static DynamicLayout<String,String> getDinamicLayout(Layouts layout, Graph<String,String> graph){
+	private static void processExplodeNodes(ArrayList<NodeViz> nodes, ArrayList<EdgeViz> edges,
+			Map<Integer, Set<String>> nodeLayers, Set<String> draggedNodes, ArrayList<String> explodeNodes) {
+
+		
+		
+		
+		for(String explode: explodeNodes) {
+			
+			Predicate<EdgeViz> isRelated = ed -> {
+
+
+				if(ed.getSource().equals(explode) || ed.getTarget().equals(explode))
+					return true;
+				else
+					return false;
+			
+			};
+			
+			
+			Predicate<NodeViz> findThisNode = ed -> {
+				if(ed.getId().equals(explode))
+					return true;
+				else
+					return false;
+				
+			};
+			
+			//find current nodeviz object
+			NodeViz currNodeViz = nodes.stream().filter(findThisNode).findAny().get();
+			
+			
+			
+			Set<EdgeViz> toFix = edges.stream().filter(isRelated).collect(Collectors.toSet());
+			
+			
+			int i = 0;
+			
+			Set<String> newNames = new HashSet<>();
+			
+			System.out.println("processing "+  currNodeViz);
+			
+			for(EdgeViz ed: toFix){
+			
+				//make a copy for every relation
+				NodeViz cloned = currNodeViz.clone();
+				//change name
+				
+				String newName = "(" + i++ + ")_"+currNodeViz.getId();
+				newNames.add(newName);
+				cloned.setId(newName);
+				cloned.setLabel(newName);
+				//add to list
+				nodes.add(cloned);
+				
+				
+				//create new relations
+
+				if(ed.getSource().equals(explode))
+					ed.setSource(cloned.getId());
+				else
+					ed.setTarget(cloned.getId());
+				
+				
+				
+			}
+			
+			
+			for(Set<String> nodesForLayer : nodeLayers.values()) {
+				
+				if(nodesForLayer.contains(explode)) {
+					nodesForLayer.remove(explode);
+					nodesForLayer.addAll(newNames);
+				}
+				
+			}
+
+			if(draggedNodes.contains(explode)) {
+				draggedNodes.remove(explode);
+				draggedNodes.addAll(newNames);
+			}
+			
+		}
+		
+		
+	}
+
+	static DynamicSpring<String, String> getDinamicLayout(Layouts layout, Graph<String,String> graph){
 		
 
 		switch(layout) {

@@ -2,8 +2,43 @@ package com.thesisderik.appthesis.viz;
 
 import java.util.ArrayList;
 
-public class NodeViz {
+public class NodeViz{
 	
+	
+	public NodeViz clone() {
+
+		NodeViz newInstance = new NodeViz();
+		
+		newInstance.id = this.id;
+		
+		newInstance.label = this.label;
+		
+		newInstance.x = this.x;
+		
+		newInstance.y = this.y;
+		
+		newInstance.size =  this.size;
+		
+		newInstance.colora0=this.colora0;
+		
+		newInstance.colorb0=this.colorb0;
+		
+		newInstance.colorc0=this.colorc0;
+		
+		newInstance.colord0=this.colord0;
+		
+		newInstance.colora1=this.colora1;
+		 
+		newInstance.colorb1=this.colorb1;
+		
+		newInstance.colorc1=this.colorc1;
+		
+		newInstance.colord1=this.colord1;
+		
+		return newInstance;
+		
+	}
+
 	private String id;
 	
 	private String label;

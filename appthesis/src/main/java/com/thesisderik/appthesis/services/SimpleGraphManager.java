@@ -886,14 +886,32 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 			ev.setId("edge "+num);
 			res.addEdge(ev);
 		}
+
+		Set<String> draggedNodes = null;
+	
+		PlainGroup compound = simpleGroupDAO.findByName("GP_COMPOUND_NODE");
 		
+		if(compound instanceof Object) {
+			
+			Predicate<NodeGroupRelation> fromSelectedAndHasGroup = gnrel -> {
+				
+				return gnrel.getGroup().getId() == compound.getId() && nodes.contains(gnrel.getNode());
+				
+			};
+			
+			draggedNodes = relSimpleNodeGroupDAO.findAll().stream()
+					.filter(fromSelectedAndHasGroup).map(NodeGroupRelation::getNode)
+					.map(PlainNode::getName).collect(Collectors.toSet());
+			
+		}
 		
+
 		
 		Map<Integer,Layouts> layersLayouts = layersLayouts(data.getRelations());
 		
 		Map<Integer, Set<String>> nodesGroups = unfoldDataForLayout(res.getNodes().stream().map(NodeViz::getId).collect(Collectors.toSet()), data.getLayoutItems() );
 		
-		LayoutManager.layoutGraph(res, layersLayouts, nodesGroups);
+		LayoutManager.layoutGraph(res, layersLayouts, nodesGroups, draggedNodes);
 		
 		
 		

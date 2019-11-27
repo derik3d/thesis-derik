@@ -53,6 +53,8 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 	
 	//disable force calculations on
 	public Set<N> ignoreForceCalcualtionsNodes = null;
+	public Set<N> ignoreForceCalcualtionsOtherNodes = null;
+	
 	
 	
 	public Set<N> disabledForceNodesForEdges = null;
@@ -153,13 +155,21 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 			
 			for(N otherNode : distances.keySet()) {
 				
+				if(ignoreForceCalcualtionsOtherNodes instanceof Object && ignoreForceCalcualtionsOtherNodes.contains(otherNode))
+					continue;
+				
 				
 				double distanceToOtherNode = distances.get(otherNode);
 				
-				double forceDesiredRepelling = forceCalculatorRepelling(distanceToOtherNode , desiredVertexSeparation);
+				double forceDesiredRepelling = 0;
+
+				//if 
+				if(!ignoreForceCalcualtionsOtherNodes.contains(n))
+					forceDesiredRepelling = forceCalculatorRepelling(distanceToOtherNode , desiredVertexSeparation);
+				 
 				
 				Point2d directionNormalized = normalizeVector(nodes.get(otherNode), nodes.get(n) , distanceToOtherNode);
-
+				
 				
 				//only if the force is repelling
 				if(forceDesiredRepelling > 0) {
@@ -175,7 +185,16 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 				
 				if(graph.findEdge(n, otherNode) instanceof Object || graph.findEdge(otherNode, n) instanceof Object ) {
 					
-					double forceDesiredSpring = forceCalculatorSpring(distanceToOtherNode , desiredVertexSeparation);
+					
+					
+					
+					double forceDesiredSpring;
+					
+					//if not affects other, try to stay close
+					if(ignoreForceCalcualtionsOtherNodes.contains(n))
+						forceDesiredSpring = forceCalculatorSpring(distanceToOtherNode , 0.1);
+					else//normal
+						forceDesiredSpring = forceCalculatorSpring(distanceToOtherNode , desiredVertexSeparation);
 					
 
 					//only atraction force
