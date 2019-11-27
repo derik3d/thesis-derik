@@ -6,9 +6,11 @@ import java.awt.Dimension;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Consumer;
@@ -70,13 +72,23 @@ public class LayoutManager {
 		System.out.println(layerLayouts);
 		System.out.println();
 		
-
+		
+		
 		
 		ArrayList<String> explodeNodes = new ArrayList<>();
-		explodeNodes.add("3418-R__35");
-		explodeNodes.add("3324-R__33");
-		explodeNodes.add("3368-P__47");
-		explodeNodes.add("3411-P__34");
+		
+		
+		explodeNodes = getMostConnectedNodes(graphSent.getNodes() , graphSent.getEdges() ,draggedNodes);
+
+		
+		
+		draggedNodes = null;
+
+			
+		//explodeNodes.add("3418-R__35");
+		//explodeNodes.add("3324-R__33");
+		//explodeNodes.add("3368-P__47");
+		//explodeNodes.add("3411-P__34");
 
 		System.out.println(graphSent.getNodes().size());
 		System.out.println();
@@ -143,6 +155,49 @@ public class LayoutManager {
 	
 	}
 	
+	private static ArrayList<String> getMostConnectedNodes(ArrayList<NodeViz> allNodes, ArrayList<EdgeViz> allEdges, Set<String> compoundNodes) {
+		
+		
+		int howMany = 0;
+		
+		
+		ArrayList<String> res = new ArrayList<>();
+		
+		Function<NodeViz ,Integer> getConnections = n -> {
+			
+			Integer conn = (int) allEdges.stream().filter(edge -> { return edge.getSource().equals(n.getId()) ||   edge.getTarget().equals(n.getId()); } ).count();
+			
+			return conn;
+			
+		};
+		
+		Map<String,Integer> allConectivities = allNodes.stream().collect(Collectors.toMap(NodeViz::getId, getConnections));
+		
+		
+		
+		Comparator<Entry<String, Integer>> comparator = new Comparator<Entry<String, Integer>>() {
+			@Override
+			public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
+				return -(o1.getValue().compareTo(o2.getValue()));
+			}
+		};
+		
+		
+		
+		Predicate<Entry<String, Integer>> isCompound = entry -> {
+			
+			return compoundNodes.contains(entry.getKey());
+			
+		};
+		
+		
+		res.addAll( allConectivities.entrySet().stream().filter(isCompound).sorted(comparator).limit(howMany).map(Map.Entry::getKey).collect(Collectors.toSet()) );
+		
+		
+		
+		return res;
+	}
+
 	private static void processExplodeNodes(ArrayList<NodeViz> nodes, ArrayList<EdgeViz> edges,
 			Map<Integer, Set<String>> nodeLayers, Set<String> draggedNodes, ArrayList<String> explodeNodes) {
 
@@ -219,7 +274,7 @@ public class LayoutManager {
 				
 			}
 
-			if(draggedNodes.contains(explode)) {
+			if(draggedNodes instanceof Object && draggedNodes.contains(explode)) {
 				draggedNodes.remove(explode);
 				draggedNodes.addAll(newNames);
 			}
@@ -250,8 +305,8 @@ public class LayoutManager {
 		case CIRCLE:
 			DynamicSpring<String, String> circleLayout = new DynamicSpring<String,String>(graph);
 			
-			circleLayout.concentricDistance = 5;
-			circleLayout.concentricMultiplier = 0.5; //0 1 10 100 500 1000
+			//circleLayout.concentricDistance = 5;
+			//circleLayout.concentricMultiplier = 0.5; //0 1 10 100 500 1000
 			return circleLayout;
 		default: 
 			 DynamicSpring<String, String> springLayoutgen = new DynamicSpring<String,String>(graph);

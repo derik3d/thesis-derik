@@ -11,7 +11,7 @@ import javax.vecmath.Point2d;
 
 public class DynamicLayoutIntegrator<N,E> {
 
-	int iterations = 10;
+	int iterations = 300;
 	
 	ArrayList<DynamicLayout<N,E>> dinamicLayouts = new ArrayList<>();
 	

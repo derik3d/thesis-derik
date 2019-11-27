@@ -49,7 +49,7 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 	double concentricDistance = 10;
 	double concentricMultiplier =0; //0 1 10 100 500 1000
 	
-	double stepSize = 0.05;
+	double stepSize = 0.01;
 	
 	//disable force calculations on
 	public Set<N> ignoreForceCalcualtionsNodes = null;
@@ -74,7 +74,7 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 	
 	
 	double clusterPullingDistance = 20;
-	double pullingMultiplierCluster = 4;
+	double pullingMultiplierCluster = 1;
 	
 	
 			
@@ -164,7 +164,9 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 				double forceDesiredRepelling = 0;
 
 				//if 
-				if(!ignoreForceCalcualtionsOtherNodes.contains(n))
+				if(ignoreForceCalcualtionsOtherNodes instanceof Object && ignoreForceCalcualtionsOtherNodes.contains(n))
+					forceDesiredRepelling = forceCalculatorRepelling(distanceToOtherNode , desiredVertexSeparation);//customizable
+				else
 					forceDesiredRepelling = forceCalculatorRepelling(distanceToOtherNode , desiredVertexSeparation);
 				 
 				
@@ -191,10 +193,10 @@ public class DynamicSpring<N,E> extends DynamicLayout<N,E>{
 					double forceDesiredSpring;
 					
 					//if not affects other, try to stay close
-					if(ignoreForceCalcualtionsOtherNodes.contains(n))
-						forceDesiredSpring = forceCalculatorSpring(distanceToOtherNode , 0.1);
+					if(ignoreForceCalcualtionsOtherNodes instanceof Object && ignoreForceCalcualtionsOtherNodes.contains(n))
+						forceDesiredSpring = forceCalculatorSpring(distanceToOtherNode , targetEdgeLength);//change
 					else//normal
-						forceDesiredSpring = forceCalculatorSpring(distanceToOtherNode , desiredVertexSeparation);
+						forceDesiredSpring = forceCalculatorSpring(distanceToOtherNode , targetEdgeLength);
 					
 
 					//only atraction force
