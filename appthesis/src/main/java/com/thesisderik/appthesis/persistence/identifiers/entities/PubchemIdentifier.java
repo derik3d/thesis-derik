@@ -17,7 +17,7 @@ public class PubchemIdentifier {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "NAME", unique = true, nullable = false, length = 100)
+	@Column(name = "NAME", unique = true, nullable = false)
 	private String name;
 
 	public PubchemIdentifier( String name) {
