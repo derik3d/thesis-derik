@@ -150,9 +150,11 @@ public class NamesIntegrator implements INamesIntegrator{
 			//not found a result
 			else {
 				
-				if(saveError)
+				if(saveError) {
+					if(name.length()>160)
+						name = name.substring(0,160);
 					iNamesIdentifiersService.saveErrorFound(new ErrorFound(name,"Sbml"));
-				
+				}
 				pubchemIdentifier = null;
 				
 			}
