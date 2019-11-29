@@ -40,7 +40,7 @@ public class NodeFeatureRelation implements Comparable<NodeFeatureRelation>{
     @ManyToOne
 	private PlainFeature feature;
 	
-	@Column(name = "VALUE",  nullable = false, length = 200)
+	@Column(name = "VALUE",  nullable = false)
 	private String value;
 	
 	

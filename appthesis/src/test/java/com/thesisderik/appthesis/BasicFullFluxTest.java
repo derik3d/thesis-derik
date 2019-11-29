@@ -80,10 +80,10 @@ public class BasicFullFluxTest {
     	//LOAD GRAPH
 
 		//File file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/sbmlfiles/ecoli_core_model.xml");
-		File file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00010.xml");
-		final InputStream inputStream = new FileInputStream(file);		
+		//File file = ResourceUtils.getFile("classpath:testdata/biologicalsourcefiles/kgmlfiles/hsa00010.xml");
+		//final InputStream inputStream = new FileInputStream(file);		
     	
-    	iGraphManagerService.processKgml(inputStream);
+    	//iGraphManagerService.processKgml(inputStream);
     	
     	
     	
@@ -95,7 +95,7 @@ public class BasicFullFluxTest {
 		
     	
 
-		
+		/*
 		//LOAD SMILES
 		
 		iSimpleGraphManager.createExperiment(
@@ -107,15 +107,17 @@ public class BasicFullFluxTest {
 				"",
 				"SMILES_PROPERTY"
 				);
+				
+				*/
 		
-		ExperimentRequestFileDataStructure data0 = iSimpleGraphManager.getExperimentData("smilesbasic");
-		iAnalysisService.processData(data0);
+		//ExperimentRequestFileDataStructure data0 = iSimpleGraphManager.getExperimentData("smilesbasic");
+		//iAnalysisService.processData(data0);
 		
 		
 		
 		
 		//LOAD QSAR DATA
-		
+		/*
 		iSimpleGraphManager.createExperiment(
 				"qsarloaddescriptors",
 				"sirve para cargar los descriptores qsar de padel",
@@ -126,10 +128,7 @@ public class BasicFullFluxTest {
 				"QSAR_DESCR"
 				);
 		
-		ExperimentRequestFileDataStructure data1 = iSimpleGraphManager.getExperimentData("qsarloaddescriptors");
-		iAnalysisService.processData(data1);
 
-		
 		iSimpleGraphManager.createExperiment(
 				"qsarloadfingerprints",
 				"sirve para cargar los fingerprint qsar de padel",
@@ -139,11 +138,15 @@ public class BasicFullFluxTest {
 				"fingerprints",
 				"QSAR_FINGPR"
 				);
+		*/
+		
+		ExperimentRequestFileDataStructure data1 = iSimpleGraphManager.getExperimentData("qsarloaddescriptors");
+		iAnalysisService.processData(data1);
+
 		
 
 
 		ExperimentRequestFileDataStructure data2 = iSimpleGraphManager.getExperimentData("qsarloadfingerprints");
-
 		iAnalysisService.processData(data2);
 		
 		

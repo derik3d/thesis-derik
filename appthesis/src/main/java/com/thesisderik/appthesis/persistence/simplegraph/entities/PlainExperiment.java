@@ -61,7 +61,7 @@ public class PlainExperiment implements Comparable<PlainExperiment>{
 	private String featureNameOverride;
 	
 
-	@Column(name = "MODEL_OBJECT_DATA",  nullable = true, length = 3000)
+	@Column(name = "MODEL_OBJECT_DATA",  nullable = true)
 	private String modelObjectData;
 	
 

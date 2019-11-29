@@ -218,10 +218,13 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 		
 		nfr.setValue(value);
 		
-		nfr = relSimpleNodeFeatureDAO.save(nfr);
+		System.out.println(nfr);
 		
-		return nfr;
-
+		if(value instanceof Object) {
+			nfr = relSimpleNodeFeatureDAO.save(nfr);
+			return nfr;
+		}
+		else return null;
 	}
 
 	@Override

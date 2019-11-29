@@ -46,6 +46,8 @@ public class SmilesCrawlerProcessService extends BaseProcessService{
 	String getSMILES(ArrayList<Integer> ignoreList, int instanceIndex, String name){
 		
 		
+		
+		
 		ResponseData res = iNamesCrawlerService.fromPubchemIdGetSmiles(name);		
 				
 		if(res==null) {
