@@ -138,18 +138,35 @@ public class BasicFullFluxTest {
 				"fingerprints",
 				"QSAR_FINGPR"
 				);
+		
 		*/
 		
-		ExperimentRequestFileDataStructure data1 = iSimpleGraphManager.getExperimentData("qsarloaddescriptors");
-		iAnalysisService.processData(data1);
-
 		
+		
+		//ExperimentRequestFileDataStructure data1 = iSimpleGraphManager.getExperimentData("qsarloaddescriptors");
+		//iAnalysisService.processData(data1);
+
+
+		ExperimentRequestFileDataStructure scallingqsar;
+				
+		scallingqsar =  iSimpleGraphManager.getExperimentDataNotAnalized("qsarloaddescriptors");
+
+		while(scallingqsar.getDataRows().size()>0) {
+			iAnalysisService.processData(scallingqsar);
+			scallingqsar =  iSimpleGraphManager.getExperimentDataNotAnalized("qsarloaddescriptors");
+		}
 
 
 		ExperimentRequestFileDataStructure data2 = iSimpleGraphManager.getExperimentData("qsarloadfingerprints");
 		iAnalysisService.processData(data2);
 		
 		
+		scallingqsar =  iSimpleGraphManager.getExperimentDataNotAnalized("qsarloadfingerprints");
+
+		while(scallingqsar.getDataRows().size()>0) {
+			iAnalysisService.processData(scallingqsar);
+			scallingqsar =  iSimpleGraphManager.getExperimentDataNotAnalized("qsarloadfingerprints");
+		}
 		
 		
 		//LOAD MD DATA

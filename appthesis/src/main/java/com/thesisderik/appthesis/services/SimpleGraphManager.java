@@ -218,7 +218,7 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 		
 		nfr.setValue(value);
 		
-		System.out.println(nfr);
+		//System.out.println(nfr);
 		
 		if(value instanceof Object) {
 			nfr = relSimpleNodeFeatureDAO.save(nfr);
@@ -371,13 +371,13 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 		
 		if(ignoringGroups != null) {
 			
-			System.out.println("alf1");
-			System.out.println(ignoringGroups);
+			//System.out.println("alf1");
+			//System.out.println("ignoring size"+ignoringGroups.size());
 
 			ignoringGroupsList = (ArrayList<Long>) ignoringGroups.stream().map(PlainGroup::getId).collect(Collectors.toList());
 		}
 		else {
-			System.out.println("alf2");
+			//System.out.println("alf2");
 
 			ignoringGroupsList=null;
 		}
@@ -411,7 +411,7 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 
 				List<NodeGroupRelation> allRels = (List<NodeGroupRelation>) relSimpleNodeGroupDAO.findAll();
 				
-				System.out.println(ignoringGroupsList);
+				//System.out.println(ignoringGroupsList);
 				
 				List<Long> nodesToIgnore = new ArrayList<>();
 				
@@ -422,7 +422,7 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 								return false;
 							
 							Long currgpid = n.getGroup().getId();
-							System.out.println(currgpid);
+							//System.out.println(currgpid);
 							return ignoringGroupsList.contains(currgpid);
 						
 						} ).map(NodeGroupRelation::getNode).map(PlainNode::getId).collect(Collectors.toList())
@@ -434,7 +434,7 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 				nodesToIgnoreList = null;
 			}
 			
-			System.out.println("ig list: " + nodesToIgnoreList);
+			//System.out.println("ig list size: " + nodesToIgnoreList!=null?nodesToIgnoreList.size():"null");
 		
 			byGroupNodes = new ArrayList<>( groupsUseByGroup.stream().
 				map(NodeGroupRelation::getNode).collect(Collectors.toSet()) );
@@ -641,7 +641,7 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 		PlainExperiment experiment = simpleExperimentDAO.findByFeatureNameOverride(uqName);
 
 		ExperimentRequestFileDataStructure data = getExperimentData(experiment.getTitle());
-		System.out.println(data);
+		//System.out.println(data);
 		return data.buildCSVFile().get(1);
 	}
 
@@ -811,8 +811,8 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 						
 						NodeGroupRelation findByGroupAndNode = relSimpleNodeGroupDAO.findByGroupAndNode(pg, plainNode);
 
-						System.out.println("node: "+ plainNode);
-						System.out.println("group: "+ pg);
+						//System.out.println("node: "+ plainNode);
+						//System.out.println("group: "+ pg);
 
 						if(findByGroupAndNode instanceof Object) {
 							
@@ -1065,11 +1065,11 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 		
 		PlainGroup groupFound = simpleGroupDAO.findByName(groupResultName);
 		
-		System.out.println(groupFound);
+		//System.out.println(groupFound);
 
 		
 		if(groupFound!=null) {
-			System.out.println("adding");
+			//System.out.println("adding");
 
 			groupIgnore.add(groupFound);
 		}

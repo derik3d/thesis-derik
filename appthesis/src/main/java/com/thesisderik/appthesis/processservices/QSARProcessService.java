@@ -28,6 +28,7 @@ public class QSARProcessService extends BaseProcessService{
 	
 	public ResultFormat setData(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames, String dataFileName) {
 		
+		ArrayList<Integer> ignoreList = new ArrayList<>();
 		ArrayList<String> resultsTags = new ArrayList<>();
 		ArrayList<ArrayList<String>> result = new ArrayList<>();
 		
@@ -35,8 +36,13 @@ public class QSARProcessService extends BaseProcessService{
 			File input = new ClassPathResource("datapadel/"+args+"input.smi").getFile();
 
 			StringBuilder dataToAnalize = new StringBuilder();
+			
+			int max=1;//batches limit example 10
+			
+			if(dataForEveryInstance.size()<max)
+				max = dataForEveryInstance.size();
 
-			for(int i =0; i<dataForEveryInstance.size();i++) {
+			for(int i =0; i<max;i++) {
 
 				dataToAnalize.append(dataForEveryInstance.get(i).get(1) + "\t" + dataForEveryInstance.get(i).get(0) + "\n");
 			}
@@ -51,7 +57,8 @@ public class QSARProcessService extends BaseProcessService{
 			
 			String[] cmdArgs = {
 					"-maxruntime",
-					"-1",
+					"30000",
+					"-removesalt",
 					"-"+args,
 					"-dir",
 					input.getPath(),
@@ -59,10 +66,15 @@ public class QSARProcessService extends BaseProcessService{
 					output.getAbsolutePath(),
                     "-retainorder"
 			};
-			
-	        PaDELDescriptorApp.getApplication().launchCommandLine(cmdArgs);
-			
-	        StringBuilder sb = new StringBuilder();
+			boolean error= false;
+			try {
+				PaDELDescriptorApp.getApplication().launchCommandLine(cmdArgs);
+			}catch (Exception ex) {
+				error= true;
+				ex.printStackTrace();
+			}
+			Thread.sleep(500);
+			StringBuilder sb = new StringBuilder();
 	        
 	        FileReader fr = 
 	        	      new FileReader(output); 
@@ -84,11 +96,19 @@ public class QSARProcessService extends BaseProcessService{
 	        
 			for(int i =0; i<dataForEveryInstance.size();i++) {
 				
-				int size = dataStructure.getDataRows().get(i).size();
-				List<String> subList = dataStructure.getDataRows().get(i).subList(1, size);
-				ArrayList<String> ansArr = new ArrayList<String>();
-		        ansArr.addAll(subList);
-				result.add(ansArr);
+				if(i<max) {
+				
+					int size = dataStructure.getDataRows().get(i).size();
+					List<String> subList = dataStructure.getDataRows().get(i).subList(1, size);
+					ArrayList<String> ansArr = new ArrayList<String>();
+			        ansArr.addAll(subList);
+					result.add(ansArr);
+				
+				}else {
+					result.add(null);
+
+					ignoreList.add(i);
+				}
 			}
 	        
 	        
@@ -102,7 +122,7 @@ public class QSARProcessService extends BaseProcessService{
 		}
 
 		
-		return new ResultFormat(result, resultsTags, null);
+		return new ResultFormat(result, resultsTags, ignoreList);
 		
 	}
 	
