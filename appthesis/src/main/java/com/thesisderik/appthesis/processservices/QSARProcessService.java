@@ -13,14 +13,22 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.stereotype.Service;
 
 import com.thesisderik.appthesis.persistence.simplegraph.datastructure.ExperimentResultsFileDataStructure;
 
-
+@Service
 public class QSARProcessService extends BaseProcessService{
 	
 	
+
+    @Autowired
+    private TaskExecutor taskExecutor;
+	
+    
 	public String getServiceName(){
 		return  "QSAR";
 	}

@@ -47,6 +47,9 @@ public class AnalysisService implements IAnalysisService {
 	SmilesCrawlerProcessService smilesCrawlerProcessService;
 	
 	@Autowired
+	QSARProcessService qSARProcessService;
+	
+	@Autowired
 	MachineLearningProcessService machineLearningProcessService;
 	
 	@Autowired
@@ -95,7 +98,7 @@ public class AnalysisService implements IAnalysisService {
 	public ArrayList<String> getServices() {
 		
 		suscribedServices.add(new StatisticsProcessService());
-		suscribedServices.add(new QSARProcessService());		
+		suscribedServices.add(qSARProcessService);		
 		suscribedServices.add(smilesCrawlerProcessService);
 		suscribedServices.add(machineLearningProcessService);
 		suscribedServices.add(madeUpDataProcessService);
