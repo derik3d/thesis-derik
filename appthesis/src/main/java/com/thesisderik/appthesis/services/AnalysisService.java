@@ -14,6 +14,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -93,7 +95,7 @@ public class AnalysisService implements IAnalysisService {
 
 	}
 	
-
+	@PostConstruct
 	@Override
 	public ArrayList<String> getServices() {
 		
@@ -132,7 +134,7 @@ public class AnalysisService implements IAnalysisService {
 		ResultFormat resultFormat = service.setData(serviceArgs, dataForInstances , featureNames, data.getUQName());		
 		
 		
-		if(resultFormat.getResultData() == null)
+		if(resultFormat == null  || resultFormat.getResultData() == null)
 			return;
 		
 		ArrayList<String> resultsTags = resultFormat.getFeatureNames();
