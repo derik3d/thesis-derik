@@ -15,6 +15,7 @@ import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -134,7 +135,15 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 	@Override
 	public PlainFeature doFeature(String featureName) {
 		
+
 		PlainFeature feature = simpleFeatureDAO.findByName(featureName);
+		
+		if(feature!=null) {
+			return feature;
+		}
+		
+		synchronized(simpleFeatureDAO){
+		 feature = simpleFeatureDAO.findByName(featureName);
 		
 		if(feature!=null) {
 			return feature;
@@ -145,7 +154,7 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 		feature.setName(featureName);
 		feature = simpleFeatureDAO.save(feature);
 		return feature;
-		
+		}
 	}
 	
 	@Override
@@ -186,17 +195,29 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 	@Override
 	public PlainGroup doGroup(String groupName) {
 		
+		
+
+		
 		PlainGroup group = simpleGroupDAO.findByName(groupName);
 		
 		if(group!=null) {
 			return group;
 		}
 		
-		group = new PlainGroup();
 		
-		group.setName(groupName);
-		group = simpleGroupDAO.save(group);
-		return group;
+		synchronized(simpleGroupDAO){
+			 group = simpleGroupDAO.findByName(groupName);
+			
+			if(group!=null) {
+				return group;
+			}
+			
+			group = new PlainGroup();
+			
+			group.setName(groupName);
+			group = simpleGroupDAO.save(group);
+			return group;
+		}
 	}
 
 	
@@ -210,21 +231,20 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 		
 		NodeFeatureRelation nfr = relSimpleNodeFeatureDAO.findByNodeAndFeature(node, feature);
 		
-		if(nfr==null) {
+		if(nfr==null && value instanceof Object) {
 			nfr = new NodeFeatureRelation();
 			nfr.setNode(node);
 			nfr.setFeature(feature);
-		}
-		
-		nfr.setValue(value);
-		
-		//System.out.println(nfr);
-		
-		if(value instanceof Object) {
+			nfr.setValue(value);
+			
+			//System.out.println(nfr);
+			
 			nfr = relSimpleNodeFeatureDAO.save(nfr);
+			
 			return nfr;
 		}
-		else return null;
+		
+		else return nfr;
 	}
 
 	@Override
@@ -268,11 +288,10 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 			ngr = new NodeGroupRelation();
 			ngr.setGroup(group);
 			ngr.setNode(node);
-		}
-		
-		ngr = relSimpleNodeGroupDAO.save(ngr);
-		
-		return ngr;
+			ngr = relSimpleNodeGroupDAO.save(ngr);
+			return ngr;
+		}else
+			return ngr;
 	}
 
 
@@ -599,10 +618,42 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 	public void integrateExperimentResult(ExperimentResultsFileDataStructure expRes) {
 
 		
+		
 		ArrayList<ArrayList<String>> nodes = expRes.getDataRows();
 		 
 		ArrayList<String> namesRow = expRes.getFirstRow(); 
 
+		
+		
+		
+		
+		
+		
+		Consumer<? super ArrayList<String>> createGroupRelation = row -> {
+			
+			createGroupRel(resultGroupSegment + expRes.getFileName(), row.get(0));
+			
+			IntConsumer createFeature = index -> {
+				
+				createFeature(resultFeatureSegment + expRes.getFileName() + resultPropertyName + namesRow.get(index) + resultDimentionSegment + index, row.get(index), row.get(0));
+				
+			};
+			
+			
+			IntStream.range(1, row.size()).forEach( createFeature );
+			
+		};
+		nodes.stream().forEach( createGroupRelation );
+		
+		
+		
+		
+		
+		
+		
+		
+		/*
+		
 		for(int i = 0; i< nodes.size(); i++) {
 			
 			ArrayList<String> row = nodes.get(i);
@@ -614,6 +665,11 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 			}
 			
 		}
+		
+		
+		
+		*/
+		
 		
 	}
 
