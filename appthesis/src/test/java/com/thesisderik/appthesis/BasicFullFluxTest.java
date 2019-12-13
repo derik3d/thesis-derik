@@ -90,8 +90,8 @@ public class BasicFullFluxTest {
     	
     	//LOAD PROCESS SERVICES
 
-		for(String serviceName : iAnalysisService.getServices())
-			iSimpleGraphManager.doTask(serviceName);
+		//for(String serviceName : iAnalysisService.getServices())
+		//	iSimpleGraphManager.doTask(serviceName);
 		
     	
 

@@ -741,6 +741,15 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 	}
 
 	@Override
+	public String getExperimentDataRawContentByGroupNodes(String uqName) {
+		
+		PlainGroup plainGroup = simpleGroupDAO.findByName(uqName);
+		Set<String> set = relSimpleNodeGroupDAO.findAllByGroup(plainGroup).stream().map(NodeGroupRelation::getNode).map(PlainNode::getName).collect(Collectors.toSet());
+
+		return "name"+"\n"+String.join("\n", set)+"\n";
+	}
+
+	@Override
 	public boolean saveModelDataWithExperimentUQName(String uqName, String modelObjectData,String modelClassesData, String modelFeaturesData) {
 
 

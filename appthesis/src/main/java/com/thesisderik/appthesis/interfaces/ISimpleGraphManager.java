@@ -95,6 +95,8 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 	
 
 	public String getExperimentDataRawContentUQName(String uqName);
+	
+	public String getExperimentDataRawContentByGroupNodes(String uqName);
 
 	public boolean saveModelDataWithExperimentUQName(String uqName, String modelObjectData,String modelClassesData, String modelFeaturesData);
 
