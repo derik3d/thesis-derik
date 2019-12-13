@@ -2,6 +2,7 @@ package com.thesisderik.appthesis.services;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -295,10 +296,33 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 	}
 
 
+
+	@Override
+	public PlainExperiment createExperiment(String title, String description, ArrayList<String> groups, ArrayList<String> features,
+			String targetTask, String taskQuery) {
+
+		return createExperiment(title,description,groups,features,targetTask,taskQuery,"");
+		
+	}
+	
+
 	@Override
 	public PlainExperiment createExperiment(String title, String description,
 			ArrayList<String> groups, ArrayList<String> features,
 			String taskName, String taskQuery, String featureNameOverride) {
+		
+		return  createExperiment(title, description, groups, features,
+				taskName, taskQuery, featureNameOverride);
+		
+	}
+	
+
+	
+
+	@Override
+	public PlainExperiment createExperiment(String title, String description,
+			ArrayList<String> groups, ArrayList<String> features,
+			String taskName, String taskQuery, String featureNameOverride, ArrayList<String> addFeaturesOfFTGroups) {
 		
 
 		PlainTask task = simpleTaskDAO.findByName(taskName);
@@ -310,12 +334,35 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 		Set<PlainGroup> plainGroups = simpleGroupDAO.findAllByNameIn(groups);
 		Set<PlainFeature> plainFeatures = simpleFeatureDAO.findAllByNameIn(features);
 		
+		if(addFeaturesOfFTGroups instanceof Object) {
+			
+			for(String aGroupName : addFeaturesOfFTGroups) {
+				plainFeatures.addAll(getFeaturesOfGroup(aGroupName));
+			}
+			
+		}
+		
+		
 		return  createExperiment(title, description, plainGroups, plainFeatures,
 			 task, taskQuery, featureNameOverride);
 		
 	}
-	
-	
+
+	private Collection<? extends PlainFeature> getFeaturesOfGroup(String aGroupName) {
+		
+		
+		if(aGroupName.contains(resultGroupSegment)) {
+			
+			
+			aGroupName.replace(resultGroupSegment, resultFeatureSegment);
+			
+			return simpleFeatureDAO.findByNameStartsWith(aGroupName);
+
+			
+		}
+		
+		return null;
+	}
 
 	@Override
 	public PlainExperiment createExperiment(String title,
@@ -367,14 +414,6 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 
 		
 		return pe;
-	}
-
-	@Override
-	public PlainExperiment createExperiment(String title, String description, ArrayList<String> groups, ArrayList<String> features,
-			String targetTask, String taskQuery) {
-
-		return createExperiment(title,description,groups,features,targetTask,taskQuery,"");
-		
 	}
 	
 	

@@ -1,6 +1,7 @@
 package com.thesisderik.appthesis.simplerepositories;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 
 import org.springframework.data.repository.CrudRepository;
@@ -19,5 +20,7 @@ public interface SimpleFeatureDAO extends CrudRepository<PlainFeature, Long>{
 	Set<PlainFeature> findAllByNameIn(ArrayList<String> feature);
 
 	PlainFeature findByName(String featureName);
+
+	Collection<? extends PlainFeature> findByNameStartsWith(String aGroupName);
 
 }
