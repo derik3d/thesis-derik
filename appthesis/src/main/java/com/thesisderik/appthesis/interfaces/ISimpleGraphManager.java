@@ -129,6 +129,10 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 
 	public InfoNodeFormat getSimpleNodeDataFormat(String nodeName);
 
+	PlainExperiment createExperiment(String title, String description, ArrayList<String> groups,
+			ArrayList<String> features, String taskName, String taskQuery, String featureNameOverride,
+			ArrayList<String> addFeaturesOfFTGroups);
+
 
 
 }
