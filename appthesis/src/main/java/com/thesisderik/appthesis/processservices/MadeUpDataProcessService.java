@@ -30,135 +30,290 @@ public class MadeUpDataProcessService extends BaseProcessService{
 	public ResultFormat setData(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames, String dataFileName) {
 		
 
-		ArrayList<String> resultsTags = new ArrayList<>();
-		ArrayList<Integer> ignoreList = new ArrayList<>();
-		ArrayList<ArrayList<String>> result = new ArrayList<>();
 
-		
-		//pref none
-		Set<String> featuresToEnforceAllNodes = new HashSet<>();
-		
-		Set<String> featuresToRemove = new HashSet<>();
+		Set<String> featuresToRemove =  new HashSet<>();
 		featuresToRemove.add("NAME");
+		featuresToRemove.add("METABOLITE_TYPE");
+		featuresToRemove.add("RESULT_FT_SMILES_PROPERTY_PROPNAME_SMILES_DIM_1");
 		
-		
-		Map<String,Function<ArrayList<String>,String>> operators = new HashMap<>();
-		
-		Function<ArrayList<String>, String> add = arr -> {
-			
-			double ans = 0;
-			boolean numberFound = true;
-		
-			for(String val : arr) {
-				if(val.length()>0) {
-					try {
-						ans+= Double.parseDouble(val);
-						numberFound = true;
-					}catch(Exception ex) {
-						
-					}
-				}
-			}
-			
-			if(numberFound) {
-				return ""+ans;
-			}else {
-				Collections.sort(arr);
-				return String.join("_", arr);
-			}
-		};
-		
-		operators.put("ADD",add);
-		
-		Function<ArrayList<String>, String> top = arr -> {
-			
-			double ans = 0;
-			boolean numberFound = true;
-		
-			for(String val : arr) {
-				if(val.length()>0) {
-					try {
-						if(Double.parseDouble(val)>ans) {
-							ans=Double.parseDouble(val);
-						}
-						numberFound = true;
-					}catch(Exception ex) {
-						
-					}
-				}
-			}
-			
-			if(numberFound) {
-				return ""+ans;
-			}else {
-				Collections.sort(arr);
-				return String.join("_", arr);
-			}
-		};
-		
-		operators.put("TOP",top);
-		
-		
-		
-		ArrayList<ArrayList<Map<String,String>>> recolectedDataFromAllNodes = new ArrayList<>();
+		Map<String,Function<ArrayList<String>,String>> operators = loadOperators();
 		
 		for(ArrayList<String> dataOneInstance : dataForEveryInstance) {
 			
 			//fur now just need names and must be the only property
 			String nodeName = dataOneInstance.get(0);
 			
+			System.out.println(nodeName);
+			
+			//get names of related nodes
 			Set<String> relatedNodesNames = iSimpleGraphManager.getRelatedNodesForNodeByNodeName(nodeName);
-			
-			ArrayList<Map<String,String>> dataRecolectedForANode = new ArrayList<>();
-			
-			ArrayList<String> commonFeatures = null;
+			System.out.println(relatedNodesNames);
+
+			//properties of every node
+			ArrayList<Map<String,String>> dataForANode = new ArrayList<>();
 			
 			for(String aNodeName : relatedNodesNames) {
-				//prop -> data
+
+
 				Map<String,String> propDataForInstance = iSimpleGraphManager.getMappedDataOfNodeByName(aNodeName);
-				
+			
 				removeKeysFromMap(propDataForInstance, featuresToRemove);
 				
-				dataRecolectedForANode.add(propDataForInstance);
 				
-				if(commonFeatures instanceof Object) {
-					commonFeatures.retainAll(propDataForInstance.keySet());
-				}else {
-					commonFeatures = new ArrayList<>();
-					commonFeatures.addAll(propDataForInstance.keySet());
-				}
+				//System.out.println(propDataForInstance.size());
 				
-				
+				if(propDataForInstance.size() == 2325)
+					dataForANode.add(propDataForInstance);
 				
 			}
 			
-			final ArrayList<String> commonFeaturesFinal = new ArrayList<>();
-			commonFeaturesFinal.addAll(commonFeatures);
+			
+			
+			
 
-		
-			
-			System.out.println(commonFeatures);
-			
-			//remove features not present on all nodes related to a node
-			for(Map<String,String> propDataForRelatedNode :dataRecolectedForANode) {
+
+				Map<String,ArrayList<String>> dataAnStepCloser = new HashMap<>();
 				
-				propDataForRelatedNode.keySet().removeIf(n ->{ return !commonFeaturesFinal.contains(n);} );
+				//notContinue if a reaction have less than two nodes
+				if(dataForANode.size()<2)continue;
 				
-				for(Map.Entry<String, String> prop : propDataForRelatedNode.entrySet()) {
-					if(!commonFeatures.contains(prop.getKey()))
-						propDataForRelatedNode.remove(prop.getKey());
+				//getting on every dim all the values of a feature
+				for(Map<String,String> oneNodeData : dataForANode) {
+					
+					for(Map.Entry<String, String> nodeFeature : oneNodeData.entrySet()) {
+					
+						if(dataAnStepCloser.containsKey(nodeFeature.getKey())) {
+							dataAnStepCloser.get(nodeFeature.getKey()).add(nodeFeature.getValue());
+						}else{
+							dataAnStepCloser.put(nodeFeature.getKey(), new ArrayList<>());
+							dataAnStepCloser.get(nodeFeature.getKey()).add(nodeFeature.getValue());
+						}
+						
+					}
 				}
 				
-			}
-			
-			recolectedDataFromAllNodes.add(dataRecolectedForANode);
-			
-			System.out.println(dataRecolectedForANode);
+				//having a prop - > arrvals
+				//appy operators
+				
+				Map<String,String> uniformDataForNode = new HashMap<>();
+				
+				for(Map.Entry<String,ArrayList<String>> dimDataForNode: dataAnStepCloser.entrySet()) {
+					
+					for(Map.Entry<String,Function<ArrayList<String>,String>> op : operators.entrySet()) {
+						
+						String keyy = ""+op.getKey()+"_"+dimDataForNode.getKey();
+						String valuee = op.getValue().apply(dimDataForNode.getValue());
+						
+						if(valuee != null)
+							uniformDataForNode.put( keyy, valuee);
+						
+					}
+					
+				}
+				
 
-			
+				
+				if(uniformDataForNode.size()==6975)
+					saveData(nodeName,uniformDataForNode);
+
 		}
 		
 		
+		
+		
+		return null;
+		
+	}
+		
+		
+		
+		private void saveData(String nodeName, Map<String, String> uniformDataForNode) {
+
+			
+			
+			//RESULT_GP_QSAR_FINGPR
+			//
+			
+			
+			//iSimpleGraphManager.createGroupRel("GROUP_MD_DATA", nodeName);
+			iSimpleGraphManager.createGroupRel("RESULT_GP_MD_DATA", nodeName);
+
+			for(Map.Entry<String, String> feature : uniformDataForNode.entrySet()) {
+
+				//iSimpleGraphManager.createFeature("FEATURE_MD_DATA_" + feature.getKey(), feature.getValue(), nodeName);
+				iSimpleGraphManager.createFeature("RESULT_FT_MD_DATA_PROPNAME_" + feature.getKey(), feature.getValue(), nodeName);
+			}
+			
+			System.out.println("DONE ONE");
+			
+		
+		}
+
+
+		public ResultFormat setDataOLD(String args, ArrayList<ArrayList<String>> dataForEveryInstance,ArrayList<String> featureNames, String dataFileName) {
+	
+		
+		
+		ArrayList<String> resultsTags = new ArrayList<>();
+		ArrayList<Integer> ignoreList = new ArrayList<>();
+		ArrayList<ArrayList<String>> result = new ArrayList<>();
+
+		
+		
+		//load operators
+		Map<String,Function<ArrayList<String>,String>> operators = loadOperators();
+		
+		
+		if(dataForEveryInstance.size()>2) {
+			for(int aa=3; aa<dataForEveryInstance.size();aa++)
+				ignoreList.add(aa);
+			
+			//just some data
+			dataForEveryInstance = new ArrayList<>( dataForEveryInstance.subList(0, 2));
+		}
+		
+		
+		//pref none
+		Set<String> featuresToEnforceAllNodes = new HashSet<>();
+		
+		Set<String> featuresToRemove =  new HashSet<>();
+		featuresToRemove.add("NAME");
+		featuresToRemove.add("METABOLITE_TYPE");
+		featuresToRemove.add("RESULT_FT_SMILES_PROPERTY_PROPNAME_SMILES_DIM_1");
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//get data from nodes
+		ArrayList<ArrayList<Map<String,String>>> recolectedDataFromAllNodes = getDataFromAllNodes(dataForEveryInstance,featuresToRemove);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+		//unify data with operators
+		ArrayList<Map<String,String>> unifiedDataForEveryNode = unifyDataWithOperators(recolectedDataFromAllNodes, operators);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//to build the result array all nodes must have the same properties or ignore nodes with missing properties
+		//ignore features or ignore nodes to enforce features
+		
+		//remove nodes that dont have the required propertiess
+		
+		
+		
+		for( int i = 0; i < unifiedDataForEveryNode.size(); i++) {
+			Map<String,String> dataForNode = unifiedDataForEveryNode.get(i);
+			boolean removeThis = false;
+			
+			
+			if(dataForNode.size()<100)
+				removeThis = true;
+			
+			/*
+			for(String feature : featuresToEnforceAllNodes) {
+				if(!dataForNode.keySet().contains(feature)) {
+					removeThis = true;
+					break;
+				}
+			}
+			*/
+			
+			
+			if(removeThis) {
+				unifiedDataForEveryNode.set(i, null);
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//find features shared for all, then remove the features not shared by all nodes
+		
+
+		
+		Set<String> featuresShared = null; 
+		
+
+		featuresShared = new HashSet<>();
+		
+		for(Map<String,String> dataForNode : unifiedDataForEveryNode) {
+			
+			if(dataForNode != null) {
+				Set<String> currNodeFeat = dataForNode.keySet();
+				
+				//if(featuresShared instanceof Object) {
+					//featuresShared.retainAll(currNodeFeat);
+				//}else {
+//					featuresShared = new HashSet<>();
+					featuresShared.addAll(currNodeFeat);
+				//}
+			}
+			
+		}
+		
+		//features to really use
+		resultsTags.addAll(featuresShared);
+		
+		//remove nodes not compilant
+		
+		for( int i = 0; i < unifiedDataForEveryNode.size(); i++) {
+			Map<String,String> dataForNode = unifiedDataForEveryNode.get(i);
+			
+			if(dataForNode instanceof Object) {
+				result.add(getDataOrderedByFeatures(resultsTags, dataForNode));
+			}else {
+				result.add(null);
+				ignoreList.add(i);
+			}
+			
+		}
+
+		System.out.println("okidoki");
+		return new ResultFormat(result, resultsTags, ignoreList);
+	}
+	
+
+	private ArrayList<Map<String, String>> unifyDataWithOperators(ArrayList<ArrayList<Map<String, String>>> recolectedDataFromAllNodes, Map<String, Function<ArrayList<String>, String>> operators) {
+		
+
 
 		//unify data with operators
 		
@@ -192,7 +347,11 @@ public class MadeUpDataProcessService extends BaseProcessService{
 				
 				for(Map.Entry<String,Function<ArrayList<String>,String>> op : operators.entrySet()) {
 					
-					uniformDataForNode.put(""+dimDataForNode.getKey()+"_"+op.getKey(), op.getValue().apply(dimDataForNode.getValue()));
+					String keyy = ""+op.getKey()+"_"+dimDataForNode.getKey();
+					String valuee = op.getValue().apply(dimDataForNode.getValue());
+					
+					if(valuee != null)
+						uniformDataForNode.put( keyy, valuee);
 					
 				}
 				
@@ -202,65 +361,88 @@ public class MadeUpDataProcessService extends BaseProcessService{
 			
 		}
 		
+		return unifiedDataForEveryNode;
 		
-		//to build the result array all nodes must have the same properties or ignore nodes with missing properties
-		//ignore features or ignore nodes to enforce features
-		
-		//remove nodes that dont have the required propertiess
-		
-		for( int i = 0; i < unifiedDataForEveryNode.size(); i++) {
-			Map<String,String> dataForNode = unifiedDataForEveryNode.get(i);
-			boolean removeThis = false;
-			for(String feature : featuresToEnforceAllNodes) {
-				if(!dataForNode.keySet().contains(feature)) {
-					removeThis = true;
-					break;
-				}
-			}
-			if(removeThis) {
-				unifiedDataForEveryNode.set(i, null);
-			}
-		}
-		
-		//find features shared for all, then remove the features not shared by all nodes
-		
-		Set<String> featuresShared = null; 
-		
-		for(Map<String,String> dataForNode : unifiedDataForEveryNode) {
-			
-			if(dataForNode != null) {
-				Set<String> currNodeFeat = dataForNode.keySet();
-				
-				if(featuresShared instanceof Object) {
-					featuresShared.retainAll(currNodeFeat);
-				}else {
-					featuresShared = new HashSet<>();
-					featuresShared.addAll(currNodeFeat);
-				}
-			}
-			
-		}
-		
-		//features to really use
-		resultsTags.addAll(featuresShared);
-		
-		//remove nodes not compilant
-		
-		for( int i = 0; i < unifiedDataForEveryNode.size(); i++) {
-			Map<String,String> dataForNode = unifiedDataForEveryNode.get(i);
-			
-			if(dataForNode instanceof Object) {
-				result.add(getDataOrderedByFeatures(resultsTags, dataForNode));
-			}else {
-				result.add(null);
-				ignoreList.add(i);
-			}
-			
-		}
-		
-		return new ResultFormat(result, resultsTags, ignoreList);
 	}
-	
+
+
+	private ArrayList<ArrayList<Map<String, String>>> getDataFromAllNodes(ArrayList<ArrayList<String>> dataForEveryInstance, Set<String> featuresToRemove) {
+		
+
+
+		
+		
+		
+		ArrayList<ArrayList<Map<String,String>>> recolectedDataFromAllNodes = new ArrayList<>();
+		
+		for(ArrayList<String> dataOneInstance : dataForEveryInstance) {
+			
+			//fur now just need names and must be the only property
+			String nodeName = dataOneInstance.get(0);
+			
+			//get names of related nodes
+			Set<String> relatedNodesNames = iSimpleGraphManager.getRelatedNodesForNodeByNodeName(nodeName);
+			
+			//properties of every node
+			ArrayList<Map<String,String>> dataRecolectedForANode = new ArrayList<>();
+			
+			//ArrayList<String> commonFeatures = null;
+			
+			for(String aNodeName : relatedNodesNames) {
+				//prop -> data
+				Map<String,String> propDataForInstance = iSimpleGraphManager.getMappedDataOfNodeByName(aNodeName);
+			
+				
+				
+				
+				removeKeysFromMap(propDataForInstance, featuresToRemove);
+				
+				dataRecolectedForANode.add(propDataForInstance);
+				
+				/*
+				
+				if(commonFeatures instanceof Object) {
+					commonFeatures.retainAll(propDataForInstance.keySet());
+				}else {
+					commonFeatures = new ArrayList<>();
+					commonFeatures.addAll(propDataForInstance.keySet());
+				}
+				
+				*/
+				
+			}
+			
+			//final ArrayList<String> commonFeaturesFinal = new ArrayList<>();
+			//commonFeaturesFinal.addAll(commonFeatures);
+
+		
+			
+			/*
+			//remove features not present on all nodes related to a node
+			for(Map<String,String> propDataForRelatedNode :dataRecolectedForANode) {
+				
+				propDataForRelatedNode.keySet().removeIf(n ->{ return !commonFeaturesFinal.contains(n);} );
+				
+				for(Map.Entry<String, String> prop : propDataForRelatedNode.entrySet()) {
+					if(!commonFeatures.contains(prop.getKey()))
+						propDataForRelatedNode.remove(prop.getKey());
+				}
+				
+			}
+			*/
+			recolectedDataFromAllNodes.add(dataRecolectedForANode);
+			
+
+			
+		}
+		
+		
+		return recolectedDataFromAllNodes;
+		
+		
+	}
+
+
 	private void removeKeysFromMap(Map<String, String> aMap, Set<String> keysToRemove) {
 		
 		for(String rem : keysToRemove) {
@@ -279,7 +461,138 @@ public class MadeUpDataProcessService extends BaseProcessService{
 			res.add(dataForNode.get(feature));
 		}
 		
+
 		return res;
+	}
+	
+	
+
+	private Map<String, Function<ArrayList<String>, String>> loadOperators() {
+		
+		
+		Map<String, Function<ArrayList<String>, String>> operators = new HashMap<>();
+
+		
+
+		Function<ArrayList<String>, String> add = arr -> {
+			
+			double ans = 0;
+			boolean numberFound = false;
+		
+			for(String val : arr) {
+				if(val.length()>0) {
+					try {
+						ans+= Double.parseDouble(val);
+						numberFound = true;
+					}catch(Exception ex) {
+						
+					}
+				}
+			}
+			
+			if(numberFound) {
+				return ""+ans;
+			}else {
+				//Collections.sort(arr);
+				//return String.join("CAT_", arr);
+				return null;
+			}
+		};
+		
+		//operators.put("ADD",add);
+		
+
+		Function<ArrayList<String>, String> prom = arr -> {
+			
+			double ans = 0;
+			double divisor = 0.0;
+			boolean numberFound = false;
+		
+			for(String val : arr) {
+				if(val.length()>0) {
+					try {
+						ans+= Double.parseDouble(val);
+						divisor++;
+						
+						numberFound = true;
+					}catch(Exception ex) {
+						
+					}
+				}
+			}
+			
+			if(numberFound) {
+				return ""+(ans/divisor);
+			}else {
+				//Collections.sort(arr);
+				//return String.join("CAT_", arr);
+				return null;
+			}
+		};
+		
+		operators.put("PROM",prom);
+		
+		Function<ArrayList<String>, String> top = arr -> {
+			
+			double ans = Double.NEGATIVE_INFINITY;
+			boolean numberFound = false;
+		
+			for(String val : arr) {
+				if(val.length()>0) {
+					try {
+						if(Double.parseDouble(val)>ans) {
+							ans=Double.parseDouble(val);
+						}
+						numberFound = true;
+					}catch(Exception ex) {
+						
+					}
+				}
+			}
+			
+			if(numberFound) {
+				return ""+ans;
+			}else {
+				//Collections.sort(arr);
+				//return String.join("CAT_", arr);
+				return null;
+			}
+		};
+		
+		operators.put("TOP",top);
+		
+
+		Function<ArrayList<String>, String> bot = arr -> {
+			
+			double ans = Double.POSITIVE_INFINITY;
+			boolean numberFound = false;
+		
+			for(String val : arr) {
+				if(val.length()>0) {
+					try {
+						if(Double.parseDouble(val)<ans) {
+							ans=Double.parseDouble(val);
+						}
+						numberFound = true;
+					}catch(Exception ex) {
+						
+					}
+				}
+			}
+			
+			if(numberFound) {
+				return ""+ans;
+			}else {
+				//Collections.sort(arr);
+				//return String.join("CAT_", arr);
+				return null;
+			}
+		};
+		
+		operators.put("BOT",bot);
+		
+		return operators;
+		
 	}
 	
 	
