@@ -146,6 +146,8 @@ public class BasicFullFluxTest {
 		//ExperimentRequestFileDataStructure data1 = iSimpleGraphManager.getExperimentData("qsarloaddescriptors");
 		//iAnalysisService.processData(data1);
 
+		
+		/*
 
 		ExperimentRequestFileDataStructure scallingqsar;
 				
@@ -185,11 +187,40 @@ public class BasicFullFluxTest {
 		ExperimentRequestFileDataStructure dataM = iSimpleGraphManager.getExperimentData("testmd");
 		iAnalysisService.processData(dataM);
 
+		*/
+    
+		
+		
+		//CREATE EXPERIMENTS FOR GETTING DATA INTO 
 		
 		
 		
+
+
+		iSimpleGraphManager.createExperiment(
+				"compound combined qsar",
+				"for statistical analysis",
+				new ArrayList<String>(Arrays.asList("GP_COMPOUND_NODE")),
+				new ArrayList<String>(Arrays.asList("NAME")),
+				"ML",
+				"",
+				"ML_PROP_COMPOUND",
+				new ArrayList<String>(Arrays.asList("RESULT_GP_QSAR_DESCR","RESULT_GP_QSAR_FINGPR"))
+				);
 		
 		
+
+
+		iSimpleGraphManager.createExperiment(
+				"reaction combined qsar",
+				"for statistical analysis",
+				new ArrayList<String>(Arrays.asList("GP_REACTION_NODE")),
+				new ArrayList<String>(Arrays.asList("NAME")),
+				"ML",
+				"",
+				"ML_PROP_REACTION",
+				new ArrayList<String>(Arrays.asList("RESULT_GP_MD_DATA"))
+				);
 		
 		
 		
