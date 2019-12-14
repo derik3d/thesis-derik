@@ -198,7 +198,7 @@ public class BasicFullFluxTest {
 
 
 		iSimpleGraphManager.createExperiment(
-				"compound combined qsar",
+				"compound_combined_qsar",
 				"for statistical analysis",
 				new ArrayList<String>(Arrays.asList("GP_COMPOUND_NODE")),
 				new ArrayList<String>(Arrays.asList("NAME")),
@@ -212,7 +212,7 @@ public class BasicFullFluxTest {
 
 
 		iSimpleGraphManager.createExperiment(
-				"reaction combined qsar",
+				"reaction_combined_qsar",
 				"for statistical analysis",
 				new ArrayList<String>(Arrays.asList("GP_REACTION_NODE")),
 				new ArrayList<String>(Arrays.asList("NAME")),

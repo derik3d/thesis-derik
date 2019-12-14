@@ -332,11 +332,15 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 		}
 		
 		Set<PlainGroup> plainGroups = simpleGroupDAO.findAllByNameIn(groups);
+		
+		
+		
+		
 		Set<PlainFeature> plainFeatures = simpleFeatureDAO.findAllByNameIn(features);
 		
 		if(addFeaturesOfFTGroups instanceof Object) {
 			
-			for(String aGroupName : addFeaturesOfFTGroups) {
+			for(String aGroupName : addFeaturesOfFTGroups) {;
 				plainFeatures.addAll(getFeaturesOfGroup(aGroupName));
 			}
 			
@@ -354,7 +358,7 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 		if(aGroupName.contains(resultGroupSegment)) {
 			
 			
-			aGroupName.replace(resultGroupSegment, resultFeatureSegment);
+			aGroupName = aGroupName.replace(resultGroupSegment, resultFeatureSegment);
 			
 			return simpleFeatureDAO.findByNameStartsWith(aGroupName);
 
