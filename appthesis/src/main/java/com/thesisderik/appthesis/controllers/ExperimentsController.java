@@ -39,6 +39,22 @@ public class ExperimentsController {
 	}
 
 	
+
+
+	
+	
+	@RequestMapping(value = "getGroupsData/", produces = "text/plain")
+	public ResponseEntity<String> getGroupsData() {
+
+		String res = iSimpleGraphManager.getGroupsDataRaw();
+		
+		if (res == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+		
+		return new ResponseEntity<>(res,HttpStatus.OK);
+	}
+	
 	
 	@RequestMapping(value = "byGroupNodes/", produces = "text/plain")
 	public ResponseEntity<String> getDataForTrainNodesByGroup(@RequestParam(value="uqname", defaultValue="") String uqName) {

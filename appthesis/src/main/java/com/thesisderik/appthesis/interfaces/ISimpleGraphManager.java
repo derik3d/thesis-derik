@@ -135,6 +135,8 @@ public interface ISimpleGraphManager extends IExperimentDataIntegrator{
 			ArrayList<String> features, String taskName, String taskQuery, String featureNameOverride,
 			ArrayList<String> addFeaturesOfFTGroups);
 
+	public String getGroupsDataRaw();
+
 
 
 }

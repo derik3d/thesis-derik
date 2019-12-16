@@ -1253,6 +1253,73 @@ public class SimpleGraphManager implements ISimpleGraphManager, IExperimentDataI
 		
 		return res;
 	}
+
+	@Override
+	public String getGroupsDataRaw() {
+		// 
+
+		
+
+		
+		List<PlainGroup> plainGroups = (List<PlainGroup>) simpleGroupDAO.findAll();
+		
+		
+		List<String> plainGroupsNames = plainGroups.stream().map(PlainGroup::getName).collect(Collectors.toList());
+		
+		String returnString = "NAMES";
+		
+		for(String plainGroupName : plainGroupsNames) {
+			returnString+=",";
+			returnString+=plainGroupName.length()>20?plainGroupName.substring(0,20):plainGroupName;
+
+		}
+		returnString+="\n";
+		
+
+		Map<String,Set<String>> dataOfGroup = new HashMap<>();
+		
+		Set<String> nodeNames = new HashSet<>();
+		
+		for(PlainGroup plainGroup : plainGroups) {
+		
+			Set<String> nodeNamesOfGroup = relSimpleNodeGroupDAO.findAllByGroup(plainGroup).stream().map(NodeGroupRelation::getNode).map(PlainNode::getName).collect(Collectors.toSet());
+		
+			dataOfGroup.put(plainGroup.getName(), nodeNamesOfGroup);
+			
+			nodeNames.addAll(nodeNamesOfGroup);
+			
+		}
+		
+		
+		for(String nodeName : nodeNames) {
+			
+			String row = nodeName;
+			
+			for(String plainGroup: plainGroupsNames) {
+				
+				row+=",";
+				
+				
+				if(dataOfGroup.get(plainGroup).contains(nodeName))
+					row+=1;
+				else
+					row+=0;
+				
+			}
+			
+			row+="\n";
+			
+			
+			returnString+=row;
+			
+			
+		}
+		
+		
+		
+		
+		return returnString;
+	}
 	
 	
 	
